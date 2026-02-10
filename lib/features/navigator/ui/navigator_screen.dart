@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:refer_app/core/constants/colors.dart';
 import 'package:refer_app/features/home/home_screen.dart';
+import 'package:refer_app/features/menu/ui/menu_view.dart';
 import 'package:refer_app/features/navigator/app/cubit/navigator_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -84,7 +85,7 @@ class NavigatorScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               HomeScreen(),
-              SizedBox.shrink(),
+              MenuView(),
               SizedBox.shrink(),
               SizedBox.shrink(),
             ],
