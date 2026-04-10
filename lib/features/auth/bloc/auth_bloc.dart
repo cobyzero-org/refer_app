@@ -19,7 +19,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<RegisterRequested>((event, emit) async {
       emit(AuthLoading());
-      final success = await _repository.signup(event.name, event.email, event.password);
+      final success = await _repository.signup(
+        event.name,
+        event.email,
+        event.password,
+        keepUpdated: event.keepUpdated,
+      );
       if (success) {
         emit(AuthAuthenticated());
       } else {

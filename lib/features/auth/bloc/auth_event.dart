@@ -10,5 +10,6 @@ class RegisterRequested extends AuthEvent {
   final String name;
   final String email;
   final String password;
-  RegisterRequested(this.name, this.email, this.password);
+  final bool keepUpdated;
+  RegisterRequested(this.name, this.email, this.password, {this.keepUpdated = false});
 }

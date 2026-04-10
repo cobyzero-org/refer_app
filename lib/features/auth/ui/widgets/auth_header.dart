@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../../core/theme.dart';
 
 class AuthHeader extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final String? title;
+  final String? subtitle;
 
-  const AuthHeader({
-    super.key,
-    this.title = "Welcome back.",
-    this.subtitle = "The perfect roast is just a sign-in away.",
-  });
+  const AuthHeader({super.key, this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         _buildLogo(),
         const SizedBox(height: 40),
         Text(
-          title,
+          title ?? l10n.welcomeBack,
           style: Theme.of(context).textTheme.displayMedium,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(
-          subtitle,
+          subtitle ?? l10n.welcomeSubtitle,
           style: Theme.of(context).textTheme.bodyMedium,
           textAlign: TextAlign.center,
         ),

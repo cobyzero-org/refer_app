@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../core/di.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -23,6 +24,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (context) => sl<AuthBloc>(),
       child: Scaffold(
@@ -53,27 +55,27 @@ class _AuthScreenState extends State<AuthScreen> {
                         const AuthHeader(),
                         const SizedBox(height: 48),
                         AuthInputField(
-                          label: "EMAIL",
-                          hint: "name@editorialroast.com",
+                          label: l10n.email,
+                          hint: l10n.emailHint,
                           controller: _email,
                         ),
                         const SizedBox(height: 24),
                         AuthInputField(
-                          label: "PASSWORD",
-                          hint: "........",
+                          label: l10n.password,
+                          hint: l10n.passwordHint,
                           controller: _password,
                           isPassword: true,
                         ),
                         const SizedBox(height: 12),
-                        _buildForgotPasswordBtn(),
+                        _buildForgotPasswordBtn(l10n),
                         const SizedBox(height: 32),
-                        _buildSignInBtn(context, state),
+                        _buildSignInBtn(context, state, l10n),
                         const SizedBox(height: 48),
                         const AuthDivider(),
                         const SizedBox(height: 40),
-                        _buildSocialRow(),
+                        _buildSocialRow(l10n),
                         const SizedBox(height: 48),
-                        _buildSignupLink(),
+                        _buildSignupLink(l10n),
                       ],
                     );
                   },
@@ -86,17 +88,18 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  Widget _buildForgotPasswordBtn() {
+  Widget _buildForgotPasswordBtn(AppLocalizations l10n) {
     return Align(
       alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {},
-        child: const Text("Forgot Password?"),
-      ),
+      child: TextButton(onPressed: () {}, child: Text(l10n.forgotPassword)),
     );
   }
 
-  Widget _buildSignInBtn(BuildContext context, AuthState state) {
+  Widget _buildSignInBtn(
+    BuildContext context,
+    AuthState state,
+    AppLocalizations l10n,
+  ) {
     return ElevatedButton(
       onPressed: state is AuthLoading
           ? null
@@ -114,24 +117,24 @@ class _AuthScreenState extends State<AuthScreen> {
                 strokeWidth: 2,
               ),
             )
-          : const Row(
+          : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Sign In"),
-                SizedBox(width: 10),
-                Icon(Icons.arrow_forward, size: 18),
+                Text(l10n.signIn),
+                const SizedBox(width: 10),
+                const Icon(Icons.arrow_forward, size: 18),
               ],
             ),
     );
   }
 
-  Widget _buildSocialRow() {
+  Widget _buildSocialRow(AppLocalizations l10n) {
     return Row(
       children: [
         Expanded(
           child: AuthSocialButton(
             icon: Icons.g_mobiledata,
-            label: "Google",
+            label: l10n.google,
             onPressed: () {},
           ),
         ),
@@ -139,7 +142,7 @@ class _AuthScreenState extends State<AuthScreen> {
         Expanded(
           child: AuthSocialButton(
             icon: Icons.apple,
-            label: "Apple",
+            label: l10n.apple,
             onPressed: () {},
           ),
         ),
@@ -147,17 +150,17 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  Widget _buildSignupLink() {
+  Widget _buildSignupLink(AppLocalizations l10n) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account?",
+          l10n.dontHaveAccount,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         TextButton(
           onPressed: () => context.go('/signup'),
-          child: const Text("Sign up"),
+          child: Text(l10n.signUp),
         ),
       ],
     );

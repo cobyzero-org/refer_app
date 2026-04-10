@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../core/theme.dart';
 
 class RewardsCard extends StatelessWidget {
-  const RewardsCard({super.key});
+  final int stars;
+  final double progress;
+  final String nextRewardMessage;
+
+  const RewardsCard({
+    super.key,
+    required this.stars,
+    required this.progress,
+    this.nextRewardMessage = "until your next free artisanal brew",
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +45,7 @@ class RewardsCard extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
-                "85",
+                "$stars",
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   color: Colors.white,
                   fontSize: 56,
@@ -55,7 +64,7 @@ class RewardsCard extends StatelessWidget {
           _buildProgressBar(),
           const SizedBox(height: 16),
           Text(
-            "15 more stars until your next free artisanal brew",
+            nextRewardMessage,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Colors.white70,
               fontSize: 12,
@@ -76,7 +85,7 @@ class RewardsCard extends StatelessWidget {
       ),
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
-        widthFactor: 0.85,
+        widthFactor: progress.clamp(0.0, 1.0),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,

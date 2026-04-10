@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../core/di.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -25,6 +26,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (context) => sl<AuthBloc>(),
       child: Scaffold(
@@ -38,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   listener: (context, state) {
                     if (state is AuthAuthenticated) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Account created successfully!")),
+                        SnackBar(content: Text(l10n.accountCreatedSuccess)),
                       );
                       context.go('/main');
                     }
@@ -55,33 +57,33 @@ class _SignupScreenState extends State<SignupScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const AuthHeader(
-                          title: "Create Account",
-                          subtitle: "Begin your sensory journey with us.",
+                        AuthHeader(
+                          title: l10n.createAccount,
+                          subtitle: l10n.signupSubtitle,
                         ),
                         const SizedBox(height: 48),
                         AuthInputField(
-                          label: "Full Name",
-                          hint: "Elias Thorne",
+                          label: l10n.fullName,
+                          hint: l10n.fullNameHint,
                           controller: _name,
                         ),
                         const SizedBox(height: 24),
                         AuthInputField(
-                          label: "Email",
-                          hint: "elias@editorialroast.com",
+                          label: l10n.email,
+                          hint: l10n.emailHint,
                           controller: _email,
                         ),
                         const SizedBox(height: 24),
                         AuthInputField(
-                          label: "Password",
-                          hint: "........",
+                          label: l10n.password,
+                          hint: l10n.passwordHint,
                           controller: _password,
                           isPassword: true,
                         ),
                         const SizedBox(height: 24),
                         AuthInputField(
-                          label: "Confirm Password",
-                          hint: "........",
+                          label: l10n.confirmPassword,
+                          hint: l10n.passwordHint,
                           controller: _confirmPassword,
                           isPassword: true,
                         ),
@@ -89,13 +91,13 @@ class _SignupScreenState extends State<SignupScreen> {
                         _buildCheckboxRow(
                           value: _acceptTerms,
                           onChanged: (v) => setState(() => _acceptTerms = v!),
-                          label: "I accept the Terms and Conditions and Privacy Policy.",
+                          label: l10n.acceptTerms,
                         ),
                         const SizedBox(height: 12),
                         _buildCheckboxRow(
                           value: _keepUpdated,
                           onChanged: (v) => setState(() => _keepUpdated = v!),
-                          label: "Keep me updated with seasonal collections and exclusive roastery news.",
+                          label: l10n.keepUpdated,
                         ),
                         const SizedBox(height: 32),
                         ElevatedButton(
@@ -104,7 +106,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               : () {
                                   if (_password.text != _confirmPassword.text) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Passwords do not match")),
+                                      SnackBar(content: Text(l10n.passwordsDoNotMatch)),
                                     );
                                     return;
                                   }
@@ -113,6 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                           _name.text,
                                           _email.text,
                                           _password.text,
+                                          keepUpdated: _keepUpdated,
                                         ),
                                       );
                                 },
@@ -125,12 +128,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text("Create Account"),
+                              : Text(l10n.createAccount),
                         ),
                         const SizedBox(height: 24),
                         TextButton(
                           onPressed: () => context.go('/auth'),
-                          child: const Text("Already have an account? Sign In"),
+                          child: Text(l10n.alreadyHaveAccount),
                         ),
                       ],
                     );

@@ -4,16 +4,16 @@ class BrewCard extends StatelessWidget {
   final String title;
   final String description;
   final String price;
-  final String rating;
-  final String imagePath;
+  final String? rating;
+  final String imageUrl;
 
   const BrewCard({
     super.key,
     required this.title,
     required this.description,
     required this.price,
-    required this.rating,
-    required this.imagePath,
+    this.rating,
+    required this.imageUrl,
   });
 
   @override
@@ -70,8 +70,8 @@ class BrewCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(24),
       child: Stack(
         children: [
-          Image.asset(
-            imagePath,
+          Image.network(
+            imageUrl,
             height: 300,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -81,30 +81,31 @@ class BrewCard extends StatelessWidget {
               child: const Icon(Icons.coffee, size: 50),
             ),
           ),
-          Positioned(
-            bottom: 16,
-            left: 16,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.star, color: Colors.amber, size: 14),
-                  const SizedBox(width: 4),
-                  Text(
-                    rating,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+          if (rating != null)
+            Positioned(
+              bottom: 16,
+              left: 16,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.star, color: Colors.amber, size: 14),
+                    const SizedBox(width: 4),
+                    Text(
+                      rating!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
