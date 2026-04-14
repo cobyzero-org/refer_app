@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../home/ui/home_screen.dart';
 import '../../stars/ui/stars_screen.dart';
-import '../../search/ui/search_screen.dart';
+import '../../orders/ui/orders_screen.dart';
 import '../../settings/ui/settings_screen.dart';
+import '../../cart/bloc/cart_bloc.dart';
 import '../../../core/theme.dart';
+import '../../../core/di.dart';
 
 class MainNavigator extends StatefulWidget {
   const MainNavigator({super.key});
@@ -18,7 +21,7 @@ class _MainNavigatorState extends State<MainNavigator> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const StarsScreen(),
-    const SearchScreen(),
+    const OrdersScreen(),
     const SettingsScreen(),
   ];
 
@@ -82,9 +85,9 @@ class _MainNavigatorState extends State<MainNavigator> {
                       onTap: () => setState(() => _selectedIndex = 1),
                     ),
                     _NavBarItem(
-                      icon: Icons.search_rounded,
-                      unselectedIcon: Icons.search_rounded,
-                      label: "Search",
+                      icon: Icons.receipt_long_rounded,
+                      unselectedIcon: Icons.receipt_long_outlined,
+                      label: "Orders",
                       isSelected: _selectedIndex == 2,
                       onTap: () => setState(() => _selectedIndex = 2),
                     ),

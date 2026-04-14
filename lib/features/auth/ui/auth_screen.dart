@@ -7,9 +7,7 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import 'widgets/auth_input_field.dart';
-import 'widgets/auth_social_button.dart';
 import 'widgets/auth_header.dart';
-import 'widgets/auth_divider.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -19,8 +17,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _email = TextEditingController();
-  final _password = TextEditingController();
+  final _email = TextEditingController(text: 'admin@admin.com');
+  final _password = TextEditingController(text: 'admin');
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +69,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         const SizedBox(height: 32),
                         _buildSignInBtn(context, state, l10n),
                         const SizedBox(height: 48),
-                        const AuthDivider(),
-                        const SizedBox(height: 40),
-                        _buildSocialRow(l10n),
-                        const SizedBox(height: 48),
+                        //const AuthDivider(),
+                        //const SizedBox(height: 40),
+                        //_buildSocialRow(l10n),
+                        //const SizedBox(height: 48),
                         _buildSignupLink(l10n),
                       ],
                     );
@@ -128,7 +126,7 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  Widget _buildSocialRow(AppLocalizations l10n) {
+  /*Widget _buildSocialRow(AppLocalizations l10n) {
     return Row(
       children: [
         Expanded(
@@ -148,7 +146,7 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       ],
     );
-  }
+  }*/
 
   Widget _buildSignupLink(AppLocalizations l10n) {
     return Row(

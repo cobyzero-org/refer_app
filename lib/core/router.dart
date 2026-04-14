@@ -5,7 +5,8 @@ import '../features/auth/ui/auth_screen.dart';
 import '../features/auth/ui/signup_screen.dart';
 import '../features/navigator/ui/main_navigator.dart';
 import '../features/product_details/ui/product_details_screen.dart';
-import '../core/models/product.dart';
+import '../features/cart/ui/cart_screen.dart';
+import '../features/search/ui/search_screen.dart';
 
 final router = GoRouter(
   initialLocation: '/',
@@ -37,9 +38,17 @@ final router = GoRouter(
     GoRoute(
       path: '/product/:id',
       builder: (context, state) {
-        final product = state.extra as Product;
-        return ProductDetailsScreen(product: product);
+        final id = state.pathParameters['id']!;
+        return ProductDetailsScreen(productId: id);
       },
+    ),
+    GoRoute(
+      path: '/cart',
+      builder: (context, state) => const CartScreen(),
+    ),
+    GoRoute(
+      path: '/search',
+      builder: (context, state) => const SearchScreen(),
     ),
   ],
 );

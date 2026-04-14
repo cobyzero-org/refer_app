@@ -9,6 +9,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this._repository) : super(AuthInitial()) {
     on<LoginRequested>((event, emit) async {
       emit(AuthLoading());
+      if (event.email.isEmpty || event.password.isEmpty) {
+        emit(AuthError("Please fill in all fields"));
+        return;
+      }
       final success = await _repository.login(event.email, event.password);
       if (success) {
         emit(AuthAuthenticated());

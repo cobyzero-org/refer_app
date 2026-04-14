@@ -1,54 +1,103 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:refer_app/features/cart/bloc/cart_bloc.dart';
+import 'package:refer_app/features/cart/bloc/cart_event.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
+import 'package:refer_app/features/cart/bloc/cart_state.dart';
+import '../../../core/di.dart';
 import '../../../core/models/product.dart';
+import '../bloc/product_details_bloc.dart';
+import '../bloc/product_details_event.dart';
+import '../bloc/product_details_state.dart';
 import '../widgets/size_selector.dart';
 import '../widgets/choice_selector.dart';
 import '../widgets/enhancement_toggle.dart';
 
-class ProductDetailsScreen extends StatefulWidget {
-  final Product product;
+import '../widgets/product_details_skeleton.dart';
 
-  const ProductDetailsScreen({super.key, required this.product});
+class ProductDetailsScreen extends StatefulWidget {
+  final String productId;
+
+  const ProductDetailsScreen({super.key, required this.productId});
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  late String _selectedSize;
-  late String _selectedMilk;
-  bool _extraShot = false;
-  bool _sweetener = false;
+  String? _selectedSizeId;
+  String? _selectedTypeId;
+  final Set<String> _selectedEnhancementIds = {};
 
   @override
   void initState() {
     super.initState();
-    _selectedSize = 'Grande';
-    _selectedMilk = 'Oat Milk';
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    // Fallback for initial state if localization is needed for choices
-    // Wait, the choices from the image are specific.
-    // I should probably localize them in the .arb though.
+    return BlocProvider(
+      create: (context) =>
+          sl<ProductDetailsBloc>()
+            ..add(ProductDetailsRequested(widget.productId)),
+      child: BlocConsumer<ProductDetailsBloc, ProductDetailsState>(
+        listener: (context, state) {
+          if (state is ProductDetailsLoaded) {
+            if (_selectedSizeId == null &&
+                state.product.availableSizes.isNotEmpty) {
+              setState(() {
+                _selectedSizeId = state.product.availableSizes.first.id;
+              });
+            }
+            if (_selectedTypeId == null && state.product.types.isNotEmpty) {
+              setState(() {
+                _selectedTypeId = state.product.types.first.id;
+              });
+            }
+          }
+        },
+        builder: (context, state) {
+          if (state is ProductDetailsLoading) {
+            return const ProductDetailsSkeleton();
+          }
 
-    return Scaffold(
-      body: CustomScrollView(
-        paintOrder: SliverPaintOrder.lastIsTop,
-        slivers: [
-          _buildSliverAppBar(context, l10n),
-          SliverToBoxAdapter(child: _buildProductContent(l10n)),
-        ],
+          if (state is ProductDetailsError) {
+            return Scaffold(
+              appBar: AppBar(),
+              body: Center(child: Text(state.message)),
+            );
+          }
+
+          if (state is ProductDetailsLoaded) {
+            final product = state.product;
+            return Scaffold(
+              body: CustomScrollView(
+                paintOrder: SliverPaintOrder.lastIsTop,
+                slivers: [
+                  _buildSliverAppBar(context, l10n, product),
+                  SliverToBoxAdapter(
+                    child: _buildProductContent(l10n, product),
+                  ),
+                ],
+              ),
+              bottomNavigationBar: _buildBottomBar(l10n, product),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
       ),
-      bottomNavigationBar: _buildBottomBar(l10n),
     );
   }
 
-  Widget _buildSliverAppBar(BuildContext context, AppLocalizations l10n) {
+  Widget _buildSliverAppBar(
+    BuildContext context,
+    AppLocalizations l10n,
+    Product product,
+  ) {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return SliverAppBar(
@@ -63,7 +112,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         onPressed: () => context.pop(),
       ),
       title: Text(
-        widget.product.name,
+        product.name,
         style: const TextStyle(
           color: Color(0xFF1E3932),
           fontSize: 14,
@@ -73,9 +122,50 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: const Icon(Icons.favorite, color: Color(0xFF1E3932)),
-          onPressed: () {},
+        BlocBuilder<CartBloc, CartState>(
+          builder: (context, state) {
+            int itemCount = 0;
+            if (state is CartLoaded) {
+              itemCount = state.items.length;
+            }
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Color(0xFF1E3932),
+                  ),
+                  onPressed: () => context.push('/cart'),
+                ),
+                if (itemCount > 0)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1E3932),
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        itemCount.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
@@ -84,7 +174,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           fit: StackFit.expand,
           children: [
             Image.network(
-              widget.product.imageUrl,
+              product.imageUrl,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) =>
                   const Icon(Icons.coffee, size: 100, color: Colors.grey),
@@ -116,7 +206,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildProductContent(AppLocalizations l10n) {
+  Widget _buildProductContent(AppLocalizations l10n, Product product) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -144,7 +234,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.product.name,
+                      product.name,
                       style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w900,
@@ -156,7 +246,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
               ),
               Text(
-                "\$${widget.product.price.toStringAsFixed(2)}",
+                "\$${_calculateCurrentPrice(product).toStringAsFixed(2)}",
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w900,
@@ -167,7 +257,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            widget.product.description,
+            product.description,
             style: TextStyle(
               fontSize: 15,
               color: Colors.grey.shade600,
@@ -178,52 +268,88 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           _buildHeading(l10n.selectSize),
           const SizedBox(height: 16),
           SizeSelector(
-            sizes: [l10n.tall, l10n.grande, l10n.venti],
-            selectedSize: _selectedSize == 'Tall'
-                ? l10n.tall
-                : (_selectedSize == 'Grande' ? l10n.grande : l10n.venti),
-            onSizeSelected: (s) => setState(
-              () => _selectedSize = s == l10n.tall
-                  ? 'Tall'
-                  : (s == l10n.grande ? 'Grande' : 'Venti'),
-            ),
+            sizes: product.availableSizes,
+            selectedSizeId: _selectedSizeId ?? '',
+            onSizeSelected: (size) => setState(() => _selectedSizeId = size.id),
           ),
           const SizedBox(height: 40),
           _buildHeading(l10n.milkChoice),
           const SizedBox(height: 20),
           ChoiceSelector(
-            choices: [l10n.wholeMilk, l10n.oatMilk, l10n.almondMilk],
-            selectedChoice: _selectedMilk == 'Whole Milk'
-                ? l10n.wholeMilk
-                : (_selectedMilk == 'Oat Milk'
-                      ? l10n.oatMilk
-                      : l10n.almondMilk),
-            onChoiceSelected: (c) => setState(
-              () => _selectedMilk = c == l10n.wholeMilk
-                  ? 'Whole Milk'
-                  : (c == l10n.oatMilk ? 'Oat Milk' : 'Almond Milk'),
-            ),
+            choices: product.types,
+            selectedChoiceId: _selectedTypeId ?? '',
+            onChoiceSelected: (type) =>
+                setState(() => _selectedTypeId = type.id),
           ),
           const SizedBox(height: 40),
           _buildHeading(l10n.enhancements),
           const SizedBox(height: 12),
-          EnhancementToggle(
-            icon: Icons.add_circle,
-            label: l10n.extraEspresso,
-            price: "+\$1.25",
-            value: _extraShot,
-            onChanged: (v) => setState(() => _extraShot = v),
-          ),
-          EnhancementToggle(
-            icon: Icons.tune_rounded,
-            label: l10n.sweetener,
-            value: _sweetener,
-            onChanged: (v) => setState(() => _sweetener = v),
+          Column(
+            children: product.enhancements.map((enhancement) {
+              return EnhancementToggle(
+                icon: _getEnhancementIcon(enhancement.name),
+                label: enhancement.name,
+                price: enhancement.price > 0
+                    ? "+\$${enhancement.price.toStringAsFixed(2)}"
+                    : null,
+                value: _selectedEnhancementIds.contains(enhancement.id),
+                onChanged: (v) {
+                  setState(() {
+                    if (v) {
+                      _selectedEnhancementIds.add(enhancement.id);
+                    } else {
+                      _selectedEnhancementIds.remove(enhancement.id);
+                    }
+                  });
+                },
+              );
+            }).toList(),
           ),
           const SizedBox(height: 40),
         ],
       ),
     );
+  }
+
+  double _calculateCurrentPrice(Product product) {
+    double price = product.price;
+
+    // Add size price
+    if (_selectedSizeId != null) {
+      final selectedSize = product.availableSizes.firstWhere(
+        (s) => s.id == _selectedSizeId,
+        orElse: () => product.availableSizes.first,
+      );
+      price += selectedSize.price;
+    }
+
+    // Add type price
+    if (_selectedTypeId != null) {
+      final selectedType = product.types.firstWhere(
+        (t) => t.id == _selectedTypeId,
+        orElse: () => product.types.first,
+      );
+      price += selectedType.price;
+    }
+
+    // Add enhancements price
+    for (final id in _selectedEnhancementIds) {
+      final enhancement = product.enhancements.firstWhere((e) => e.id == id);
+      price += enhancement.price;
+    }
+
+    return price;
+  }
+
+  IconData _getEnhancementIcon(String name) {
+    final lowerName = name.toLowerCase();
+    if (lowerName.contains('shot') || lowerName.contains('espresso')) {
+      return Icons.add_circle;
+    }
+    if (lowerName.contains('sweet') || lowerName.contains('sugar')) {
+      return Icons.tune_rounded;
+    }
+    return Icons.auto_awesome;
   }
 
   Widget _buildHeading(String text) {
@@ -238,7 +364,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildBottomBar(AppLocalizations l10n) {
+  Widget _buildBottomBar(AppLocalizations l10n, Product product) {
     return Container(
       padding: const EdgeInsets.fromLTRB(32, 24, 32, 40),
       decoration: BoxDecoration(
@@ -252,7 +378,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          sl<CartBloc>().add(
+            CartAdded(
+              productId: product.id,
+              sizeId: _selectedSizeId,
+              typeId: _selectedTypeId,
+              enhancementIds: _selectedEnhancementIds.toList(),
+              quantity: 1,
+            ),
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("${product.name} added to cart!"),
+              backgroundColor: const Color(0xFF1E3932),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF0C211B),
           foregroundColor: Colors.white,
@@ -262,14 +406,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              l10n.addToOrder,
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+            Row(
+              children: [
+                Text(
+                  l10n.addToOrder,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Icon(Icons.shopping_bag_outlined, size: 20),
+              ],
             ),
-            const SizedBox(width: 12),
-            const Icon(Icons.shopping_bag_outlined, size: 20),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "\$${_calculateCurrentPrice(product).toStringAsFixed(2)}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ],
         ),
       ),

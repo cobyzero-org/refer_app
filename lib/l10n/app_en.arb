@@ -86,5 +86,7 @@
   "wholeMilk": "Whole Milk",
   "oatMilk": "Oat Milk",
   "almondMilk": "Almond Milk",
-  "sensoryRoastSeries": "Sensory Roast Series"
+  "sensoryRoastSeries": "Sensory Roast Series",
+  "searchHint": "Search for coffee, tea, or treats...",
+  "orders": "Orders"
 }

@@ -73,7 +73,7 @@
   "merchandise": "Mercancía",
   "productDetailsTitle": "El Sommelier Sensorial",
   "selectSize": "SELECCIONAR TAMAÑO",
-  "milkChoice": "ELECCIÓN DE LECHE",
+  "milkChoice": "HAZ TU ELECCIÓN",
   "enhancements": "MEJORAS",
   "extraEspresso": "Shot de Espresso Extra",
   "sweetener": "Endulzante",
@@ -86,5 +86,7 @@
   "wholeMilk": "Leche Entera",
   "oatMilk": "Leche de Avena",
   "almondMilk": "Leche de Almendras",
-  "sensoryRoastSeries": "Serie Sensory Roast"
+  "sensoryRoastSeries": "Serie Sensory Roast",
+  "searchHint": "Busca café, té o delicias...",
+  "orders": "Pedidos"
 }

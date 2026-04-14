@@ -6,8 +6,11 @@ import '../../../core/di.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
+import '../../cart/bloc/cart_bloc.dart';
+import '../../cart/bloc/cart_state.dart';
 import '../widgets/brew_card.dart';
 import '../widgets/rewards_card.dart';
+import '../widgets/search_bar_home.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,6 +28,48 @@ class HomeScreen extends StatelessWidget {
           ),
           centerTitle: false,
           actions: [
+            BlocBuilder<CartBloc, CartState>(
+              builder: (context, state) {
+                int itemCount = 0;
+                if (state is CartLoaded) {
+                  itemCount = state.items.length;
+                }
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.shopping_bag_outlined, color: Colors.black87),
+                      onPressed: () => context.push('/cart'),
+                    ),
+                    if (itemCount > 0)
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF1E3932),
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 16,
+                            minHeight: 16,
+                          ),
+                          child: Text(
+                            itemCount.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
             BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
                 String? photoUrl;
@@ -79,6 +124,8 @@ class HomeScreen extends StatelessWidget {
                         l10n.homeSubtitle,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
+                      const SizedBox(height: 24),
+                      const SearchBarHome(),
                       const SizedBox(height: 32),
                       RewardsCard(
                         stars: summary.stars,
@@ -117,7 +164,6 @@ class HomeScreen extends StatelessWidget {
                                   (product) => GestureDetector(
                                     onTap: () => context.push(
                                       '/product/${product.id}',
-                                      extra: product,
                                     ),
                                     child: BrewCard(
                                       title: product.name,

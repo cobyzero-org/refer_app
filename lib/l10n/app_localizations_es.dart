@@ -196,7 +196,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get selectSize => 'SELECCIONAR TAMAÑO';
 
   @override
-  String get milkChoice => 'ELECCIÓN DE LECHE';
+  String get milkChoice => 'HAZ TU ELECCIÓN';
 
   @override
   String get enhancements => 'MEJORAS';
@@ -236,4 +236,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sensoryRoastSeries => 'Serie Sensory Roast';
+
+  @override
+  String get searchHint => 'Busca café, té o delicias...';
+
+  @override
+  String get orders => 'Pedidos';
 }

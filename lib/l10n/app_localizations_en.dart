@@ -235,4 +235,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sensoryRoastSeries => 'Sensory Roast Series';
+
+  @override
+  String get searchHint => 'Search for coffee, tea, or treats...';
+
+  @override
+  String get orders => 'Orders';
 }
