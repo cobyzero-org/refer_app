@@ -5,6 +5,8 @@ class User {
   final String? photoUrl;
   final int stars;
   final bool keepUpdated;
+  final String? phoneNumber;
+  final String? birthDate;
 
   User({
     required this.id,
@@ -13,6 +15,8 @@ class User {
     this.photoUrl,
     this.stars = 0,
     this.keepUpdated = false,
+    this.phoneNumber,
+    this.birthDate,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,21 @@ class User {
       photoUrl: json['photoUrl'],
       stars: json['stars'] ?? 0,
       keepUpdated: json['keepUpdated'] ?? false,
+      phoneNumber: json['phoneNumber'],
+      birthDate: json['birthDate'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'photoUrl': photoUrl,
+      'stars': stars,
+      'keepUpdated': keepUpdated,
+      'phoneNumber': phoneNumber,
+      'birthDate': birthDate,
+    };
   }
 }

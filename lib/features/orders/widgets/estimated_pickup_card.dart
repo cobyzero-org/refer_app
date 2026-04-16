@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
 
 class EstimatedPickupCard extends StatelessWidget {
   const EstimatedPickupCard({super.key});
@@ -17,9 +18,9 @@ class EstimatedPickupCard extends StatelessWidget {
         children: [
           const Icon(Icons.auto_awesome, color: Color(0xFFD4E9E2), size: 28),
           const SizedBox(height: 24),
-          const Text(
-            'Estimated pickup',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.estimatedPickup,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 22,
               fontWeight: FontWeight.w800,
@@ -27,31 +28,11 @@ class EstimatedPickupCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Approximately 6-8 minutes at the 5th Ave Roastery.',
+            AppLocalizations.of(context)!.estimatedPickupDetail,
             style: TextStyle(
               color: Colors.white.withOpacity(0.8),
               fontSize: 16,
               height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD4E9E2),
-                foregroundColor: const Color(0xFF1E3932),
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                'View Directions',
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
             ),
           ),
         ],

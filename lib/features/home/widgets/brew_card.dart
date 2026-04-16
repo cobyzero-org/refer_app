@@ -6,6 +6,7 @@ class BrewCard extends StatelessWidget {
   final String price;
   final String? rating;
   final String imageUrl;
+  final double? width;
 
   const BrewCard({
     super.key,
@@ -14,13 +15,13 @@ class BrewCard extends StatelessWidget {
     required this.price,
     this.rating,
     required this.imageUrl,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 240,
-      margin: const EdgeInsets.only(right: 20),
+    return SizedBox(
+      width: width ?? double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

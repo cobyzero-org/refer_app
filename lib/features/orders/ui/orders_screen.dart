@@ -1,129 +1,157 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
+import '../../../core/di.dart';
+import '../bloc/orders_bloc.dart';
+import '../bloc/orders_event.dart';
+import '../bloc/orders_state.dart';
 import '../widgets/active_order_card.dart';
 import '../widgets/estimated_pickup_card.dart';
-import '../widgets/history_order_card.dart';
 import '../widgets/orders_header.dart';
+import '../widgets/history_widgets.dart'; // To use DetailedOrderCard or similar if needed
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        toolbarHeight: 0, // Hide app bar to use custom header
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            const OrdersHeader(),
-            const SizedBox(height: 40),
-            
-            // Active Orders Section
-            const SizedBox(height: 48),
-            
-            // Active Orders Section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Active Orders',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD4E9E2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    '2 items',
-                    style: TextStyle(
-                      color: Color(0xFF1E3932),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
+    return BlocProvider(
+      create: (context) => sl<OrdersBloc>()..add(OrdersStarted()),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            AppLocalizations.of(context)!.orders,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        body: BlocBuilder<OrdersBloc, OrdersState>(
+          builder: (context, state) {
+            if (state is OrdersLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is OrdersFailure) {
+              return Center(child: Text(state.message));
+            }
+
+            if (state is OrdersLoaded) {
+              final activeOrders = state.orders
+                  .where(
+                    (o) =>
+                        ['ORDERED', 'PREPARING', 'READY'].contains(o['status']),
+                  )
+                  .toList();
+
+              final completedOrders = state.orders
+                  .where(
+                    (o) => ['COMPLETED', 'CANCELLED'].contains(o['status']),
+                  )
+                  .take(3)
+                  .toList(); // Show last 3
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    const OrdersHeader(),
+
+                    if (activeOrders.isNotEmpty) ...[
+                      const SizedBox(height: 48),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.activeOrders,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD4E9E2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.activeCount(activeOrders.length),
+                              style: const TextStyle(
+                                color: Color(0xFF1E3932),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      ...activeOrders
+                          .map(
+                            (order) => Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0),
+                              child: ActiveOrderCard(order: order),
+                            ),
+                          )
+                          .toList(),
+                      const SizedBox(height: 16),
+                      // Optional: Estimated pickup card could be dynamic based on the first active order
+                      const EstimatedPickupCard(),
+                    ],
+
+                    const SizedBox(height: 48),
+                    Text(
+                      AppLocalizations.of(context)!.orderHistory,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 20),
+                    if (completedOrders.isEmpty)
+                      Center(
+                        child: Text(AppLocalizations.of(context)!.noHistoryYet),
+                      )
+                    else
+                      ...completedOrders
+                          .map(
+                            (order) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: DetailedOrderCard(order: order),
+                            ),
+                          )
+                          .toList(),
+
+                    const SizedBox(height: 32),
+                    Center(
+                      child: TextButton(
+                        onPressed: () => context.push('/order-history'),
+                        child: Text(
+                          AppLocalizations.of(context)!.viewFullArchive,
+                          style: const TextStyle(
+                            color: Color(0xFF1E3932),
+                            fontWeight: FontWeight.w800,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            const ActiveOrderCard(),
-            const SizedBox(height: 16),
-            const EstimatedPickupCard(),
-            
-            const SizedBox(height: 48),
-            
-            // Order History Section
-            const Text(
-              'Order History',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const HistoryOrderCard(
-              date: 'OCT 14, 2023',
-              orderId: '8712',
-              title: 'Morning Roast & Pastry',
-              price: '\$14.50',
-              productNames: 'Smoked Vanilla Latte, Espresso Macchiato',
-              imageUrls: [
-                'https://picsum.photos/seed/p1/200/200',
-                'https://picsum.photos/seed/p2/200/200',
-              ],
-            ),
-            const HistoryOrderCard(
-              date: 'OCT 10, 2023',
-              orderId: '8645',
-              title: 'Ethiopian Yirgacheffe (Whole Bean)',
-              price: '\$22.00',
-              productNames: '250g Retail Pack',
-              isReorderAll: false,
-              imageUrls: [
-                'https://picsum.photos/seed/p3/200/200',
-              ],
-            ),
-            const HistoryOrderCard(
-              date: 'SEP 28, 2023',
-              orderId: '8432',
-              title: 'Office Run',
-              price: '\$31.25',
-              productNames: '4 items including Espresso Macchiato, Latte...',
-              imageUrls: [
-                'https://picsum.photos/seed/p4/200/200',
-                'https://picsum.photos/seed/p5/200/200',
-                'https://picsum.photos/seed/p6/200/200',
-                'https://picsum.photos/seed/p7/200/200',
-              ],
-            ),
-            
-            const SizedBox(height: 32),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                  'View full archive (12)',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w800,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 48),
-          ],
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );

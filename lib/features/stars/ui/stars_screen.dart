@@ -1,109 +1,144 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:refer_app/features/stars/widgets/balance_card.dart';
 import 'package:refer_app/features/stars/widgets/reward_redeem_card.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
+import '../../../core/di.dart';
+import '../bloc/stars_bloc.dart';
+import '../bloc/stars_event.dart';
+import '../bloc/stars_state.dart';
 
 class StarsScreen extends StatelessWidget {
   const StarsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Stars Rewards",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return BlocProvider(
+      create: (context) => sl<StarsBloc>()..add(StarsStarted()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.starsRewards,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const BalanceCard(stars: 85),
-            const SizedBox(height: 48),
-            const Text(
-              "Redeem your Stars",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 24),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              childAspectRatio: 1.1,
-              children: const [
-                RewardRedeemCard(
-                  icon: Icons.add_circle_outline,
-                  stars: "25",
-                  description: "Extra Espresso Shot",
+        body: BlocBuilder<StarsBloc, StarsState>(
+          builder: (context, state) {
+            if (state is StarsLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is StarsError) {
+              return Center(child: Text(state.message));
+            }
+
+            if (state is StarsLoaded) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
                 ),
-                RewardRedeemCard(
-                  icon: Icons.bakery_dining_rounded,
-                  stars: "50",
-                  description: "Fresh Bakery Item",
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    BalanceCard(stars: state.balance),
+                    const SizedBox(height: 48),
+                    Text(
+                      AppLocalizations.of(context)!.redeemYourStars,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 1.1,
+                          ),
+                      itemCount: state.rewards.length,
+                      itemBuilder: (context, index) {
+                        final reward = state.rewards[index];
+                        return RewardRedeemCard(
+                          reward: reward,
+                          isDark:
+                              index ==
+                              2, // Just for visual variety matching original
+                          onTap: () {
+                            // Show confirmation dialog or just redeem
+                            context.read<StarsBloc>().add(
+                              RedeemRewardRequested(reward.id),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 48),
+                    Text(
+                      AppLocalizations.of(context)!.earningPerks,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    _buildFeaturedPerk(),
+                    const SizedBox(height: 16),
+                    _buildSimplePerk(
+                      icon: Icons.celebration_rounded,
+                      title: "Birthday Treat",
+                      description:
+                          "On your special day, the roast is on us. Enjoy any handcrafted beverage or food item for free.",
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSimplePerk(
+                      icon: Icons.auto_awesome_rounded,
+                      title: "Early Access",
+                      description:
+                          "Be the first to taste our seasonal limited-edition beans before they hit the general public.",
+                    ),
+                    const SizedBox(height: 48),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Recent Activity",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("View History"),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    _buildActivityItem(
+                      title: "Ethical Blend Pour-over",
+                      subtitle: "Yesterday • Downtown Roast",
+                      stars: "+12 Stars",
+                    ),
+                    const Divider(height: 32),
+                    _buildActivityItem(
+                      title: "Avocado Toast & Flat White",
+                      subtitle: "Nov 22 • West End Roast",
+                      stars: "+34 Stars",
+                    ),
+                    const SizedBox(height: 120),
+                  ],
                 ),
-                RewardRedeemCard(
-                  icon: Icons.local_cafe_rounded,
-                  stars: "100",
-                  description: "Handcrafted Drink",
-                  isDark: true,
-                ),
-                RewardRedeemCard(
-                  icon: Icons.lunch_dining_rounded,
-                  stars: "200",
-                  description: "Lunch Sandwich",
-                ),
-              ],
-            ),
-            const SizedBox(height: 48),
-            const Text(
-              "Earning & Perks",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 24),
-            _buildFeaturedPerk(),
-            const SizedBox(height: 16),
-            _buildSimplePerk(
-              icon: Icons.celebration_rounded,
-              title: "Birthday Treat",
-              description:
-                  "On your special day, the roast is on us. Enjoy any handcrafted beverage or food item for free.",
-            ),
-            const SizedBox(height: 16),
-            _buildSimplePerk(
-              icon: Icons.auto_awesome_rounded,
-              title: "Early Access",
-              description:
-                  "Be the first to taste our seasonal limited-edition beans before they hit the general public.",
-            ),
-            const SizedBox(height: 48),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Recent Activity",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
-                ),
-                TextButton(onPressed: () {}, child: const Text("View History")),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildActivityItem(
-              title: "Ethical Blend Pour-over",
-              subtitle: "Yesterday • Downtown Roast",
-              stars: "+12 Stars",
-            ),
-            const Divider(height: 32),
-            _buildActivityItem(
-              title: "Avocado Toast & Flat White",
-              subtitle: "Nov 22 • West End Roast",
-              stars: "+34 Stars",
-            ),
-            const SizedBox(height: 120),
-          ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );

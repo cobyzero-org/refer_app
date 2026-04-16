@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../core/theme.dart';
 
 class BalanceCard extends StatelessWidget {
@@ -26,12 +27,12 @@ class BalanceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "CURRENT BALANCE",
+            AppLocalizations.of(context)!.currentBalance,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Colors.white54,
-                  letterSpacing: 1.2,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: Colors.white54,
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 12),
           Row(
@@ -41,16 +42,16 @@ class BalanceCard extends StatelessWidget {
               Text(
                 "$stars",
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      color: Colors.white,
-                      fontSize: 56,
-                    ),
+                  color: Colors.white,
+                  fontSize: 56,
+                ),
               ),
               const SizedBox(width: 8),
               Text(
-                "Stars",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white70,
-                    ),
+                AppLocalizations.of(context)!.stars,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: Colors.white70),
               ),
             ],
           ),
@@ -58,7 +59,10 @@ class BalanceCard extends StatelessWidget {
           _buildCenterGauge(),
           const SizedBox(height: 48),
           Text(
-            "15 more Stars until your Artisanal Brew",
+            AppLocalizations.of(context)!.starsRemaining(
+              100 - stars > 0 ? 100 - stars : 0,
+              "Artisanal Brew",
+            ),
             style: TextStyle(
               color: Colors.white.withOpacity(0.9),
               fontSize: 13,
@@ -84,7 +88,9 @@ class BalanceCard extends StatelessWidget {
               value: 0.85,
               strokeWidth: 10,
               backgroundColor: Colors.white.withOpacity(0.1),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFD4E9E2)),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                Color(0xFFD4E9E2),
+              ),
               strokeCap: StrokeCap.round,
             ),
           ),

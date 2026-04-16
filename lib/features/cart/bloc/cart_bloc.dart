@@ -58,6 +58,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   void _onCartCleared(CartCleared event, Emitter<CartState> emit) {
+    socketManager.clearCart();
     emit(CartLoaded(items: [], total: 0.0));
   }
 

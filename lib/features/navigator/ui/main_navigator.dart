@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
 import '../../home/ui/home_screen.dart';
 import '../../stars/ui/stars_screen.dart';
 import '../../orders/ui/orders_screen.dart';
 import '../../settings/ui/settings_screen.dart';
-import '../../cart/bloc/cart_bloc.dart';
 import '../../../core/theme.dart';
-import '../../../core/di.dart';
 
 class MainNavigator extends StatefulWidget {
   const MainNavigator({super.key});
@@ -27,6 +25,8 @@ class _MainNavigatorState extends State<MainNavigator> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: Container(
@@ -54,8 +54,8 @@ class _MainNavigatorState extends State<MainNavigator> {
                       height: 3,
                       margin: const EdgeInsets.symmetric(horizontal: 24),
                       decoration: BoxDecoration(
-                        color: _selectedIndex == index 
-                            ? AppColors.primary 
+                        color: _selectedIndex == index
+                            ? AppColors.primary
                             : Colors.transparent,
                         borderRadius: const BorderRadius.vertical(
                           bottom: Radius.circular(3),
@@ -73,28 +73,28 @@ class _MainNavigatorState extends State<MainNavigator> {
                     _NavBarItem(
                       icon: Icons.home_filled,
                       unselectedIcon: Icons.home_outlined,
-                      label: "Home",
+                      label: l10n.home,
                       isSelected: _selectedIndex == 0,
                       onTap: () => setState(() => _selectedIndex = 0),
                     ),
                     _NavBarItem(
                       icon: Icons.star_rounded,
                       unselectedIcon: Icons.star_outline_rounded,
-                      label: "Stars",
+                      label: l10n.stars,
                       isSelected: _selectedIndex == 1,
                       onTap: () => setState(() => _selectedIndex = 1),
                     ),
                     _NavBarItem(
                       icon: Icons.receipt_long_rounded,
                       unselectedIcon: Icons.receipt_long_outlined,
-                      label: "Orders",
+                      label: l10n.orders,
                       isSelected: _selectedIndex == 2,
                       onTap: () => setState(() => _selectedIndex = 2),
                     ),
                     _NavBarItem(
                       icon: Icons.settings_rounded,
                       unselectedIcon: Icons.settings_outlined,
-                      label: "Settings",
+                      label: l10n.settings,
                       isSelected: _selectedIndex == 3,
                       onTap: () => setState(() => _selectedIndex = 3),
                     ),

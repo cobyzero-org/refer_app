@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
 
 class HistoryOrderCard extends StatelessWidget {
   final String date;
@@ -37,7 +38,7 @@ class HistoryOrderCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '$date • ORDER #$orderId',
+                '$date • ${AppLocalizations.of(context)!.orderNumber(orderId).toUpperCase()}',
                 style: TextStyle(
                   color: Colors.grey.shade600,
                   fontSize: 11,
@@ -77,7 +78,9 @@ class HistoryOrderCard extends StatelessWidget {
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 child: Text(
-                  isReorderAll ? 'Reorder All' : 'Reorder',
+                  isReorderAll
+                      ? AppLocalizations.of(context)!.reorderAll
+                      : AppLocalizations.of(context)!.reorder,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w800,
@@ -136,14 +139,8 @@ class _HistoryImages extends StatelessWidget {
       height: 64,
       child: Stack(
         children: [
-          Positioned(
-            left: 0,
-            child: _ImageFrame(imageUrl: imageUrls[0]),
-          ),
-          Positioned(
-            left: 36,
-            child: _ImageFrame(imageUrl: imageUrls[1]),
-          ),
+          Positioned(left: 0, child: _ImageFrame(imageUrl: imageUrls[0])),
+          Positioned(left: 36, child: _ImageFrame(imageUrl: imageUrls[1])),
           if (imageUrls.length > 2)
             Positioned(
               left: 72,
@@ -152,12 +149,17 @@ class _HistoryImages extends StatelessWidget {
                 height: 64,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
-                  borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+                  borderRadius: const BorderRadius.horizontal(
+                    right: Radius.circular(8),
+                  ),
                 ),
                 child: Center(
                   child: Text(
                     '+${imageUrls.length - 2}',
-                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

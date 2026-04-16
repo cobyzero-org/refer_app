@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../core/theme.dart';
 import '../../../core/bloc/locale_cubit.dart';
+import '../../home/bloc/home_bloc.dart';
+import '../../home/bloc/home_state.dart';
+import '../../../core/di.dart';
+import '../../splash/repository/app_config_repository.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -13,9 +17,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _digitalCardEnabled = true;
-  bool _biometricEnabled = true;
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -38,45 +39,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSettingsItem(
               icon: Icons.person_outline_rounded,
               title: l10n.personalInfo,
-              onTap: () {},
+              onTap: () => context.push('/edit-profile'),
             ),
             _buildSettingsItem(
               icon: Icons.payments_outlined,
               title: l10n.paymentMethods,
               onTap: () {},
             ),
-            _buildSettingsItem(
-              icon: Icons.badge_outlined,
-              title: l10n.digitalRoastCard,
-              trailing: _buildSwitch(
-                value: _digitalCardEnabled,
-                onChanged: (v) => setState(() => _digitalCardEnabled = v),
-              ),
-            ),
             const SizedBox(height: 32),
             _buildSectionHeader(l10n.preferences),
             _buildSettingsItem(
               icon: Icons.history_rounded,
               title: l10n.orderHistory,
-              onTap: () {},
-            ),
-            _buildSettingsItem(
-              icon: Icons.storefront_outlined,
-              title: l10n.favoriteStores,
-              onTap: () {},
-            ),
-            _buildSettingsItem(
-              icon: Icons.notifications_none_rounded,
-              title: l10n.notifications,
-              onTap: () {},
+              onTap: () => context.push('/order-history'),
             ),
             _buildSettingsItem(
               icon: Icons.translate_rounded,
               title: l10n.language,
               onTap: () => _showLanguageSelector(context, l10n),
               trailing: Text(
-                Localizations.localeOf(context).languageCode == 'es' ? l10n.spanish : l10n.english,
-                style: TextStyle(color: Colors.grey.shade500, fontWeight: FontWeight.bold),
+                Localizations.localeOf(context).languageCode == 'es'
+                    ? l10n.spanish
+                    : l10n.english,
+                style: TextStyle(
+                  color: Colors.grey.shade500,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 32),
@@ -85,14 +73,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: Icons.lock_outline_rounded,
               title: l10n.changePassword,
               onTap: () {},
-            ),
-            _buildSettingsItem(
-              icon: Icons.fingerprint_rounded,
-              title: l10n.biometricLogin,
-              trailing: _buildSwitch(
-                value: _biometricEnabled,
-                onChanged: (v) => setState(() => _biometricEnabled = v),
-              ),
             ),
             const SizedBox(height: 32),
             _buildSectionHeader(l10n.supportLegal),
@@ -136,7 +116,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Text(
                 l10n.language,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
               ListTile(
@@ -167,58 +150,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildProfileCard(AppLocalizations l10n) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        String name = "Guest";
+        String? photoUrl;
+        int stars = 0;
+        if (state is HomeLoaded) {
+          name = state.user.name;
+          photoUrl = state.user.photoUrl;
+          stars = state.user.stars;
+        }
+
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 35,
-            backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=elias'),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Elias Thorne",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 35,
+                backgroundImage: NetworkImage(
+                  photoUrl ?? 'https://i.pravatar.cc/150?u=fallback',
                 ),
-                const SizedBox(height: 4),
-                TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: const Size(0, 0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        l10n.viewProfile,
-                        style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Icon(Icons.chevron_right_rounded, size: 16, color: Colors.grey.shade500),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.star_rounded,
+                          color: Color(0xFFD4B16A),
+                          size: 18,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$stars ${l10n.stars}',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -258,17 +260,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title,
           style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         ),
-        trailing: trailing ?? Icon(Icons.chevron_right_rounded, color: Colors.grey.shade400),
+        trailing:
+            trailing ??
+            Icon(Icons.chevron_right_rounded, color: Colors.grey.shade400),
       ),
-    );
-  }
-
-  Widget _buildSwitch({required bool value, required ValueChanged<bool> onChanged}) {
-    return Switch(
-      value: value,
-      onChanged: onChanged,
-      activeColor: const Color(0xFF1E3932),
-      activeTrackColor: const Color(0xFFD4E9E2),
     );
   }
 
@@ -282,7 +277,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           backgroundColor: Colors.grey.shade200,
           foregroundColor: Colors.red.shade700,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -300,9 +297,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildVersionInfo(AppLocalizations l10n) {
+    final version = sl<AppConfigRepository>().cachedConfig?.version ?? '0.0.0';
     return Center(
       child: Text(
-        "${l10n.version} 2.4.1 (659) — The Editorial Roast Inc.",
+        '${l10n.version} $version — Abal Organization',
         style: TextStyle(color: Colors.grey.shade400, fontSize: 11),
       ),
     );

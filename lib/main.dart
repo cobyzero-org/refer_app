@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:refer_app/features/cart/bloc/pickup_time_bloc.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import 'core/theme.dart';
 import 'core/di.dart';
@@ -8,9 +9,14 @@ import 'core/router.dart';
 import 'core/bloc/locale_cubit.dart';
 import 'features/cart/bloc/cart_bloc.dart';
 import 'features/cart/bloc/cart_event.dart';
+import 'features/home/bloc/home_bloc.dart';
+import 'features/home/bloc/home_event.dart';
+import 'features/cart/bloc/locations_bloc.dart';
+import 'core/services/stripe_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await StripeService.init();
   initDI();
   runApp(const MyApp());
 }
@@ -24,6 +30,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider.value(value: sl<LocaleCubit>()),
         BlocProvider.value(value: sl<CartBloc>()..add(CartStarted())),
+        BlocProvider.value(value: sl<HomeBloc>()..add(HomeDataRequested())),
+        BlocProvider.value(value: sl<LocationsBloc>()),
+        BlocProvider(create: (context) => sl<PickupTimeBloc>()),
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {

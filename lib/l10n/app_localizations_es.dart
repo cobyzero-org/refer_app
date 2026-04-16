@@ -12,6 +12,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get welcomeBack => 'Bienvenido de nuevo.';
 
   @override
+  String get home => 'Inicio';
+
+  @override
   String get welcomeSubtitle =>
       'El tostado perfecto está a solo un inicio de sesión.';
 
@@ -61,16 +64,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paymentMethods => 'Métodos de Pago';
 
   @override
-  String get digitalRoastCard => 'Tarjeta Roast Digital';
-
-  @override
   String get preferences => 'PREFERENCIAS';
 
   @override
   String get orderHistory => 'Historial de Pedidos';
-
-  @override
-  String get favoriteStores => 'Tiendas Favoritas';
 
   @override
   String get notifications => 'Notificaciones';
@@ -242,4 +239,148 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get orders => 'Pedidos';
+
+  @override
+  String get stars => 'Estrellas';
+
+  @override
+  String get checkout => 'Finalizar Pedido';
+
+  @override
+  String get pickupLocation => 'Punto de Entrega';
+
+  @override
+  String get pickupTime => 'Tiempo de Entrega';
+
+  @override
+  String get yourOrder => 'Tu Pedido';
+
+  @override
+  String get paymentMethod => 'Método de Pago';
+
+  @override
+  String get orderSummary => 'Resumen del Pedido';
+
+  @override
+  String get subtotal => 'Subtotal';
+
+  @override
+  String get serviceFee => 'Tarifa de Servicio';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get placeOrder => 'Realizar Pedido';
+
+  @override
+  String get orderPlaced => '¡Pedido Realizado!';
+
+  @override
+  String get orderSuccessDetail =>
+      'Tu café artesanal estará listo en 10-15 minutos.';
+
+  @override
+  String get backToHome => 'Volver al Inicio';
+
+  @override
+  String get selectFutureTime => 'Por favor selecciona una hora en el futuro';
+
+  @override
+  String get errorLoadingOrders => 'Error al cargar pedidos';
+
+  @override
+  String get noOrdersFound => 'No hay pedidos realizados';
+
+  @override
+  String get thisMonth => 'ESTE MES';
+
+  @override
+  String get yourCollection => 'TU COLECCIÓN';
+
+  @override
+  String get pastExperiences => 'Experiencias\npasadas';
+
+  @override
+  String get reorder => 'Volver a pedir';
+
+  @override
+  String get statusOrdered => 'ORDENADO';
+
+  @override
+  String get statusPreparing => 'PREPARANDO';
+
+  @override
+  String get statusReady => 'LISTO PARA RECOGER';
+
+  @override
+  String get statusCompleted => 'COMPLETADO';
+
+  @override
+  String get statusCancelled => 'CANCELADO';
+
+  @override
+  String get viewFullMonth => 'Ver todo el mes';
+
+  @override
+  String get yourRituals => 'Tus Rituales';
+
+  @override
+  String get ritualsSubtitle =>
+      'Siguiendo tus antojos actuales y favoritos pasados del tostadero.';
+
+  @override
+  String get activeOrders => 'Pedidos Activos';
+
+  @override
+  String activeCount(int count) {
+    return '$count activos';
+  }
+
+  @override
+  String get noHistoryYet => 'Aún no hay historial';
+
+  @override
+  String get viewFullArchive => 'Ver archivo completo';
+
+  @override
+  String orderNumber(String number) {
+    return 'Pedido #$number';
+  }
+
+  @override
+  String get statusBrewing => 'INFUSIONANDO';
+
+  @override
+  String get estimatedPickup => 'Recogida estimada';
+
+  @override
+  String get estimatedPickupDetail =>
+      'Aproximadamente 6-8 minutos en el tostadero de la 5ta Ave.';
+
+  @override
+  String get viewDirections => 'Ver Direcciones';
+
+  @override
+  String get reorderAll => 'Volver a pedir todo';
+
+  @override
+  String get currentBalance => 'SALDO ACTUAL';
+
+  @override
+  String get starsRewards => 'Recompensas de Estrellas';
+
+  @override
+  String get redeemYourStars => 'Canjea tus Estrellas';
+
+  @override
+  String get earningPerks => 'Ganancias y Beneficios';
+
+  @override
+  String starsRemaining(int count, String reward) {
+    return '$count estrellas más para tu $reward';
+  }
+
+  @override
+  String get recentProducts => 'Productos Recientes';
 }

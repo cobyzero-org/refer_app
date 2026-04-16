@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeBack => 'Welcome back.';
 
   @override
+  String get home => 'Home';
+
+  @override
   String get welcomeSubtitle => 'The perfect roast is just a sign-in away.';
 
   @override
@@ -60,16 +63,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentMethods => 'Payment Methods';
 
   @override
-  String get digitalRoastCard => 'Digital Roast Card';
-
-  @override
   String get preferences => 'PREFERENCES';
 
   @override
   String get orderHistory => 'Order History';
-
-  @override
-  String get favoriteStores => 'Favorite Stores';
 
   @override
   String get notifications => 'Notifications';
@@ -241,4 +238,148 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orders => 'Orders';
+
+  @override
+  String get stars => 'Stars';
+
+  @override
+  String get checkout => 'Checkout';
+
+  @override
+  String get pickupLocation => 'Pickup Location';
+
+  @override
+  String get pickupTime => 'Pickup Time';
+
+  @override
+  String get yourOrder => 'Your Order';
+
+  @override
+  String get paymentMethod => 'Payment Method';
+
+  @override
+  String get orderSummary => 'Order Summary';
+
+  @override
+  String get subtotal => 'Subtotal';
+
+  @override
+  String get serviceFee => 'Service Fee';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get placeOrder => 'Place Order';
+
+  @override
+  String get orderPlaced => 'Order Placed!';
+
+  @override
+  String get orderSuccessDetail =>
+      'Your artisanal brew will be ready in 10-15 minutes.';
+
+  @override
+  String get backToHome => 'Back to Home';
+
+  @override
+  String get selectFutureTime => 'Please select a time in the future';
+
+  @override
+  String get errorLoadingOrders => 'Error loading orders';
+
+  @override
+  String get noOrdersFound => 'No orders found';
+
+  @override
+  String get thisMonth => 'THIS MONTH';
+
+  @override
+  String get yourCollection => 'YOUR COLLECTION';
+
+  @override
+  String get pastExperiences => 'Past\nexperiences';
+
+  @override
+  String get reorder => 'Reorder';
+
+  @override
+  String get statusOrdered => 'ORDERED';
+
+  @override
+  String get statusPreparing => 'PREPARING';
+
+  @override
+  String get statusReady => 'READY FOR PICKUP';
+
+  @override
+  String get statusCompleted => 'COMPLETED';
+
+  @override
+  String get statusCancelled => 'CANCELLED';
+
+  @override
+  String get viewFullMonth => 'View full month';
+
+  @override
+  String get yourRituals => 'Your Rituals';
+
+  @override
+  String get ritualsSubtitle =>
+      'Tracking your current cravings and past favorites from the roastery.';
+
+  @override
+  String get activeOrders => 'Active Orders';
+
+  @override
+  String activeCount(int count) {
+    return '$count active';
+  }
+
+  @override
+  String get noHistoryYet => 'No history yet';
+
+  @override
+  String get viewFullArchive => 'View full archive';
+
+  @override
+  String orderNumber(String number) {
+    return 'Order #$number';
+  }
+
+  @override
+  String get statusBrewing => 'BREWING';
+
+  @override
+  String get estimatedPickup => 'Estimated pickup';
+
+  @override
+  String get estimatedPickupDetail =>
+      'Approximately 6-8 minutes at the 5th Ave Roastery.';
+
+  @override
+  String get viewDirections => 'View Directions';
+
+  @override
+  String get reorderAll => 'Reorder All';
+
+  @override
+  String get currentBalance => 'CURRENT BALANCE';
+
+  @override
+  String get starsRewards => 'Stars Rewards';
+
+  @override
+  String get redeemYourStars => 'Redeem your Stars';
+
+  @override
+  String get earningPerks => 'Earning & Perks';
+
+  @override
+  String starsRemaining(int count, String reward) {
+    return '$count more Stars until your $reward';
+  }
+
+  @override
+  String get recentProducts => 'Recent Products';
 }

@@ -1,5 +1,6 @@
 {
   "welcomeBack": "Welcome back.",
+  "home": "Home",
   "welcomeSubtitle": "The perfect roast is just a sign-in away.",
   "email": "EMAIL",
   "emailHint": "name@editorialroast.com",
@@ -16,10 +17,8 @@
   "account": "ACCOUNT",
   "personalInfo": "Personal Information",
   "paymentMethods": "Payment Methods",
-  "digitalRoastCard": "Digital Roast Card",
   "preferences": "PREFERENCES",
   "orderHistory": "Order History",
-  "favoriteStores": "Favorite Stores",
   "notifications": "Notifications",
   "language": "Language",
   "security": "SECURITY",
@@ -88,5 +87,74 @@
   "almondMilk": "Almond Milk",
   "sensoryRoastSeries": "Sensory Roast Series",
   "searchHint": "Search for coffee, tea, or treats...",
-  "orders": "Orders"
+  "orders": "Orders",
+  "stars": "Stars",
+  "checkout": "Checkout",
+  "pickupLocation": "Pickup Location",
+  "pickupTime": "Pickup Time",
+  "yourOrder": "Your Order",
+  "paymentMethod": "Payment Method",
+  "orderSummary": "Order Summary",
+  "subtotal": "Subtotal",
+  "serviceFee": "Service Fee",
+  "total": "Total",
+  "placeOrder": "Place Order",
+  "orderPlaced": "Order Placed!",
+  "orderSuccessDetail": "Your artisanal brew will be ready in 10-15 minutes.",
+  "backToHome": "Back to Home",
+  "selectFutureTime": "Please select a time in the future",
+  "errorLoadingOrders": "Error loading orders",
+  "noOrdersFound": "No orders found",
+  "thisMonth": "THIS MONTH",
+  "yourCollection": "YOUR COLLECTION",
+  "pastExperiences": "Past\nexperiences",
+  "reorder": "Reorder",
+  "statusOrdered": "ORDERED",
+  "statusPreparing": "PREPARING",
+  "statusReady": "READY FOR PICKUP",
+  "statusCompleted": "COMPLETED",
+  "statusCancelled": "CANCELLED",
+  "viewFullMonth": "View full month",
+  "yourRituals": "Your Rituals",
+  "ritualsSubtitle": "Tracking your current cravings and past favorites from the roastery.",
+  "activeOrders": "Active Orders",
+  "activeCount": "{count} active",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noHistoryYet": "No history yet",
+  "viewFullArchive": "View full archive",
+  "orderNumber": "Order #{number}",
+  "@orderNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "statusBrewing": "BREWING",
+  "estimatedPickup": "Estimated pickup",
+  "estimatedPickupDetail": "Approximately 6-8 minutes at the 5th Ave Roastery.",
+  "viewDirections": "View Directions",
+  "reorderAll": "Reorder All",
+  "currentBalance": "CURRENT BALANCE",
+  "starsRewards": "Stars Rewards",
+  "redeemYourStars": "Redeem your Stars",
+  "earningPerks": "Earning & Perks",
+  "starsRemaining": "{count} more Stars until your {reward}",
+  "@starsRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "recentProducts": "Recent Products"
 }

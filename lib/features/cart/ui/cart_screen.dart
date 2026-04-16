@@ -243,7 +243,7 @@ class CartScreen extends StatelessWidget {
                     ],
                   ),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => context.push('/checkout'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF0C211B),
                       foregroundColor: Colors.white,

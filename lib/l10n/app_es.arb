@@ -1,5 +1,6 @@
 {
   "welcomeBack": "Bienvenido de nuevo.",
+  "home": "Inicio",
   "welcomeSubtitle": "El tostado perfecto está a solo un inicio de sesión.",
   "email": "CORREO ELECTRÓNICO",
   "emailHint": "nombre@editorialroast.com",
@@ -16,10 +17,8 @@
   "account": "CUENTA",
   "personalInfo": "Información Personal",
   "paymentMethods": "Métodos de Pago",
-  "digitalRoastCard": "Tarjeta Roast Digital",
   "preferences": "PREFERENCIAS",
   "orderHistory": "Historial de Pedidos",
-  "favoriteStores": "Tiendas Favoritas",
   "notifications": "Notificaciones",
   "language": "Idioma",
   "security": "SEGURIDAD",
@@ -88,5 +87,74 @@
   "almondMilk": "Leche de Almendras",
   "sensoryRoastSeries": "Serie Sensory Roast",
   "searchHint": "Busca café, té o delicias...",
-  "orders": "Pedidos"
+  "orders": "Pedidos",
+  "stars": "Estrellas",
+  "checkout": "Finalizar Pedido",
+  "pickupLocation": "Punto de Entrega",
+  "pickupTime": "Tiempo de Entrega",
+  "yourOrder": "Tu Pedido",
+  "paymentMethod": "Método de Pago",
+  "orderSummary": "Resumen del Pedido",
+  "subtotal": "Subtotal",
+  "serviceFee": "Tarifa de Servicio",
+  "total": "Total",
+  "placeOrder": "Realizar Pedido",
+  "orderPlaced": "¡Pedido Realizado!",
+  "orderSuccessDetail": "Tu café artesanal estará listo en 10-15 minutos.",
+  "backToHome": "Volver al Inicio",
+  "selectFutureTime": "Por favor selecciona una hora en el futuro",
+  "errorLoadingOrders": "Error al cargar pedidos",
+  "noOrdersFound": "No hay pedidos realizados",
+  "thisMonth": "ESTE MES",
+  "yourCollection": "TU COLECCIÓN",
+  "pastExperiences": "Experiencias\npasadas",
+  "reorder": "Volver a pedir",
+  "statusOrdered": "ORDENADO",
+  "statusPreparing": "PREPARANDO",
+  "statusReady": "LISTO PARA RECOGER",
+  "statusCompleted": "COMPLETADO",
+  "statusCancelled": "CANCELADO",
+  "viewFullMonth": "Ver todo el mes",
+  "yourRituals": "Tus Rituales",
+  "ritualsSubtitle": "Siguiendo tus antojos actuales y favoritos pasados del tostadero.",
+  "activeOrders": "Pedidos Activos",
+  "activeCount": "{count} activos",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noHistoryYet": "Aún no hay historial",
+  "viewFullArchive": "Ver archivo completo",
+  "orderNumber": "Pedido #{number}",
+  "@orderNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "statusBrewing": "INFUSIONANDO",
+  "estimatedPickup": "Recogida estimada",
+  "estimatedPickupDetail": "Aproximadamente 6-8 minutos en el tostadero de la 5ta Ave.",
+  "viewDirections": "Ver Direcciones",
+  "reorderAll": "Volver a pedir todo",
+  "currentBalance": "SALDO ACTUAL",
+  "starsRewards": "Recompensas de Estrellas",
+  "redeemYourStars": "Canjea tus Estrellas",
+  "earningPerks": "Ganancias y Beneficios",
+  "starsRemaining": "{count} estrellas más para tu {reward}",
+  "@starsRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "recentProducts": "Productos Recientes"
 }

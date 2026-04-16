@@ -8,6 +8,7 @@ class CartItem {
   final int quantity;
   final double unitPrice;
   final double totalPrice;
+  final int starsReward;
 
   CartItem({
     required this.id,
@@ -19,6 +20,7 @@ class CartItem {
     required this.quantity,
     required this.unitPrice,
     required this.totalPrice,
+    required this.starsReward,
   });
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class CartItem {
       quantity: (json['quantity'] as num? ?? 1).toInt(),
       unitPrice: (json['unitPrice'] as num? ?? 0.0).toDouble(),
       totalPrice: (json['totalPrice'] as num? ?? 0.0).toDouble(),
+      starsReward: (json['starsReward'] as num? ?? 0).toInt(),
     );
   }
 }

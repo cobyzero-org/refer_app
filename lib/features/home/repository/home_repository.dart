@@ -6,9 +6,11 @@ import '../model/dashboard_summary.dart';
 
 abstract class HomeRepository {
   Future<User?> getProfile();
+  Future<User?> updateProfile(Map<String, dynamic> updateData);
   Future<DashboardSummary?> getSummary();
   Future<List<Product>> getSeasonalBrews();
   Future<List<ProductCategory>> getCategories();
+  Future<List<Product>> getLatestProducts();
 }
 
 class HomeRepositoryImpl implements HomeRepository {
@@ -20,6 +22,19 @@ class HomeRepositoryImpl implements HomeRepository {
   Future<User?> getProfile() async {
     try {
       final response = await apiClient.dio.get('/user/profile');
+      if (response.statusCode == 200) {
+        return User.fromJson(response.data);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<User?> updateProfile(Map<String, dynamic> updateData) async {
+    try {
+      final response = await apiClient.dio.patch('/user/profile', data: updateData);
       if (response.statusCode == 200) {
         return User.fromJson(response.data);
       }
@@ -54,6 +69,7 @@ class HomeRepositoryImpl implements HomeRepository {
       return [];
     }
   }
+
   @override
   Future<List<ProductCategory>> getCategories() async {
     try {
@@ -62,6 +78,19 @@ class HomeRepositoryImpl implements HomeRepository {
         return (response.data as List)
             .map((i) => ProductCategory.fromJson(i))
             .toList();
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  @override
+  Future<List<Product>> getLatestProducts() async {
+    try {
+      final response = await apiClient.dio.get('/products');
+      if (response.statusCode == 200) {
+        return (response.data as List).map((i) => Product.fromJson(i)).toList();
       }
       return [];
     } catch (e) {

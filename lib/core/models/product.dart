@@ -3,11 +3,7 @@ class ProductSize {
   final String name;
   final double price;
 
-  ProductSize({
-    required this.id,
-    required this.name,
-    required this.price,
-  });
+  ProductSize({required this.id, required this.name, required this.price});
 
   factory ProductSize.fromJson(Map<String, dynamic> json) {
     return ProductSize(
@@ -23,11 +19,7 @@ class ProductOption {
   final String name;
   final double price;
 
-  ProductOption({
-    required this.id,
-    required this.name,
-    required this.price,
-  });
+  ProductOption({required this.id, required this.name, required this.price});
 
   factory ProductOption.fromJson(Map<String, dynamic> json) {
     return ProductOption(
@@ -49,6 +41,7 @@ class Product {
   final List<ProductSize> availableSizes;
   final List<ProductOption> types;
   final List<ProductOption> enhancements;
+  final double rating;
 
   Product({
     required this.id,
@@ -61,6 +54,7 @@ class Product {
     required this.availableSizes,
     required this.types,
     required this.enhancements,
+    required this.rating,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -81,6 +75,7 @@ class Product {
       enhancements: (json['enhancements'] as List? ?? [])
           .map((e) => ProductOption.fromJson(e as Map<String, dynamic>))
           .toList(),
+      rating: (json['rating'] as num? ?? 0.0).toDouble(),
     );
   }
 }

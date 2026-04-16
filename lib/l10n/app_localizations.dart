@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'Welcome back.'**
   String get welcomeBack;
 
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
   /// No description provided for @welcomeSubtitle.
   ///
   /// In en, this message translates to:
@@ -200,12 +206,6 @@ abstract class AppLocalizations {
   /// **'Payment Methods'**
   String get paymentMethods;
 
-  /// No description provided for @digitalRoastCard.
-  ///
-  /// In en, this message translates to:
-  /// **'Digital Roast Card'**
-  String get digitalRoastCard;
-
   /// No description provided for @preferences.
   ///
   /// In en, this message translates to:
@@ -217,12 +217,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Order History'**
   String get orderHistory;
-
-  /// No description provided for @favoriteStores.
-  ///
-  /// In en, this message translates to:
-  /// **'Favorite Stores'**
-  String get favoriteStores;
 
   /// No description provided for @notifications.
   ///
@@ -553,6 +547,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Orders'**
   String get orders;
+
+  /// No description provided for @stars.
+  ///
+  /// In en, this message translates to:
+  /// **'Stars'**
+  String get stars;
+
+  /// No description provided for @checkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get checkout;
+
+  /// No description provided for @pickupLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup Location'**
+  String get pickupLocation;
+
+  /// No description provided for @pickupTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup Time'**
+  String get pickupTime;
+
+  /// No description provided for @yourOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Order'**
+  String get yourOrder;
+
+  /// No description provided for @paymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethod;
+
+  /// No description provided for @orderSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Summary'**
+  String get orderSummary;
+
+  /// No description provided for @subtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get subtotal;
+
+  /// No description provided for @serviceFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Fee'**
+  String get serviceFee;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @placeOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Place Order'**
+  String get placeOrder;
+
+  /// No description provided for @orderPlaced.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Placed!'**
+  String get orderPlaced;
+
+  /// No description provided for @orderSuccessDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Your artisanal brew will be ready in 10-15 minutes.'**
+  String get orderSuccessDetail;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backToHome;
+
+  /// No description provided for @selectFutureTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a time in the future'**
+  String get selectFutureTime;
+
+  /// No description provided for @errorLoadingOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading orders'**
+  String get errorLoadingOrders;
+
+  /// No description provided for @noOrdersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders found'**
+  String get noOrdersFound;
+
+  /// No description provided for @thisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'THIS MONTH'**
+  String get thisMonth;
+
+  /// No description provided for @yourCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR COLLECTION'**
+  String get yourCollection;
+
+  /// No description provided for @pastExperiences.
+  ///
+  /// In en, this message translates to:
+  /// **'Past\nexperiences'**
+  String get pastExperiences;
+
+  /// No description provided for @reorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder'**
+  String get reorder;
+
+  /// No description provided for @statusOrdered.
+  ///
+  /// In en, this message translates to:
+  /// **'ORDERED'**
+  String get statusOrdered;
+
+  /// No description provided for @statusPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'PREPARING'**
+  String get statusPreparing;
+
+  /// No description provided for @statusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'READY FOR PICKUP'**
+  String get statusReady;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'COMPLETED'**
+  String get statusCompleted;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'CANCELLED'**
+  String get statusCancelled;
+
+  /// No description provided for @viewFullMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'View full month'**
+  String get viewFullMonth;
+
+  /// No description provided for @yourRituals.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Rituals'**
+  String get yourRituals;
+
+  /// No description provided for @ritualsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking your current cravings and past favorites from the roastery.'**
+  String get ritualsSubtitle;
+
+  /// No description provided for @activeOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Orders'**
+  String get activeOrders;
+
+  /// No description provided for @activeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active'**
+  String activeCount(int count);
+
+  /// No description provided for @noHistoryYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No history yet'**
+  String get noHistoryYet;
+
+  /// No description provided for @viewFullArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'View full archive'**
+  String get viewFullArchive;
+
+  /// No description provided for @orderNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{number}'**
+  String orderNumber(String number);
+
+  /// No description provided for @statusBrewing.
+  ///
+  /// In en, this message translates to:
+  /// **'BREWING'**
+  String get statusBrewing;
+
+  /// No description provided for @estimatedPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated pickup'**
+  String get estimatedPickup;
+
+  /// No description provided for @estimatedPickupDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Approximately 6-8 minutes at the 5th Ave Roastery.'**
+  String get estimatedPickupDetail;
+
+  /// No description provided for @viewDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'View Directions'**
+  String get viewDirections;
+
+  /// No description provided for @reorderAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder All'**
+  String get reorderAll;
+
+  /// No description provided for @currentBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'CURRENT BALANCE'**
+  String get currentBalance;
+
+  /// No description provided for @starsRewards.
+  ///
+  /// In en, this message translates to:
+  /// **'Stars Rewards'**
+  String get starsRewards;
+
+  /// No description provided for @redeemYourStars.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem your Stars'**
+  String get redeemYourStars;
+
+  /// No description provided for @earningPerks.
+  ///
+  /// In en, this message translates to:
+  /// **'Earning & Perks'**
+  String get earningPerks;
+
+  /// No description provided for @starsRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} more Stars until your {reward}'**
+  String starsRemaining(int count, String reward);
+
+  /// No description provided for @recentProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Products'**
+  String get recentProducts;
 }
 
 class _AppLocalizationsDelegate
