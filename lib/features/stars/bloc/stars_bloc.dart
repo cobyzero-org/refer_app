@@ -16,7 +16,16 @@ class StarsBloc extends Bloc<StarsEvent, StarsState> {
     try {
       final balance = await _repository.getBalance();
       final rewards = await _repository.getRewards();
-      emit(StarsLoaded(balance: balance, rewards: rewards));
+      final history = await _repository.getHistory();
+      final perks = await _repository.getPerks();
+      final redeemedRewards = await _repository.getRedeemedRewards();
+      emit(StarsLoaded(
+        balance: balance,
+        rewards: rewards,
+        history: history,
+        perks: perks,
+        redeemedRewards: redeemedRewards,
+      ));
     } catch (e) {
       emit(StarsError(e.toString()));
     }
@@ -28,14 +37,18 @@ class StarsBloc extends Bloc<StarsEvent, StarsState> {
       try {
         await _repository.redeemReward(event.rewardId);
         final newBalance = await _repository.getBalance();
+        final newHistory = await _repository.getHistory();
+        final newRedeemedRewards = await _repository.getRedeemedRewards();
         
-        // We could also just subtract locally if we trust the API, but fetching is safer
-        emit(StarsLoaded(balance: newBalance, rewards: currentState.rewards));
-        // We don't want to lose the rewards list, so we stick to StarsLoaded
-        // but maybe we should show a success message via a listener.
+        emit(StarsLoaded(
+          balance: newBalance, 
+          rewards: currentState.rewards,
+          history: newHistory,
+          perks: currentState.perks,
+          redeemedRewards: newRedeemedRewards,
+        ));
       } catch (e) {
         emit(StarsError(e.toString()));
-        // Re-emit loaded state after error to recover UI
         emit(currentState);
       }
     }

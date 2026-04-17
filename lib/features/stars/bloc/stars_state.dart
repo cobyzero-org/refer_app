@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 import '../models/reward.dart';
+import '../models/star_transaction.dart';
+import '../models/perk.dart';
+import '../models/redeemed_reward.dart';
 
 abstract class StarsState extends Equatable {
   const StarsState();
@@ -15,11 +18,20 @@ class StarsLoading extends StarsState {}
 class StarsLoaded extends StarsState {
   final int balance;
   final List<Reward> rewards;
+  final List<StarTransaction> history;
+  final List<Perk> perks;
+  final List<RedeemedReward> redeemedRewards;
 
-  const StarsLoaded({required this.balance, required this.rewards});
+  const StarsLoaded({
+    required this.balance, 
+    required this.rewards,
+    this.history = const [],
+    this.perks = const [],
+    this.redeemedRewards = const [],
+  });
 
   @override
-  List<Object?> get props => [balance, rewards];
+  List<Object?> get props => [balance, rewards, history, perks, redeemedRewards];
 }
 
 class StarsError extends StarsState {

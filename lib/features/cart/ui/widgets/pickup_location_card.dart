@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/locations_bloc.dart';
 import '../../bloc/locations_event.dart';
 import '../../bloc/locations_state.dart';
-import '../../../../core/models/location.dart';
 
 class PickupLocationCard extends StatelessWidget {
   const PickupLocationCard({super.key});
@@ -140,8 +139,8 @@ class PickupLocationCard extends StatelessWidget {
                                 : null,
                             onTap: () {
                               context.read<LocationsBloc>().add(
-                                    LocationSelected(loc),
-                                  );
+                                LocationSelected(loc),
+                              );
                               Navigator.pop(context);
                             },
                           );

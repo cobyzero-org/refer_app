@@ -8,6 +8,12 @@ import '../../home/bloc/home_bloc.dart';
 import '../../home/bloc/home_state.dart';
 import '../../../core/di.dart';
 import '../../splash/repository/app_config_repository.dart';
+import '../../auth/repository/auth_repository.dart';
+import '../../cart/bloc/cart_bloc.dart';
+import '../../cart/bloc/cart_event.dart';
+import '../../cart/bloc/locations_bloc.dart';
+import '../../cart/bloc/locations_event.dart';
+import '../../home/bloc/home_event.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -41,11 +47,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: l10n.personalInfo,
               onTap: () => context.push('/edit-profile'),
             ),
-            _buildSettingsItem(
-              icon: Icons.payments_outlined,
-              title: l10n.paymentMethods,
-              onTap: () {},
-            ),
             const SizedBox(height: 32),
             _buildSectionHeader(l10n.preferences),
             _buildSettingsItem(
@@ -72,7 +73,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSettingsItem(
               icon: Icons.lock_outline_rounded,
               title: l10n.changePassword,
-              onTap: () {},
+              onTap: () => context.push('/change-password'),
             ),
             const SizedBox(height: 32),
             _buildSectionHeader(l10n.supportLegal),
@@ -158,7 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         if (state is HomeLoaded) {
           name = state.user.name;
           photoUrl = state.user.photoUrl;
-          stars = state.user.stars;
+          stars = state.summary.stars;
         }
 
         return Container(
@@ -272,7 +273,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: () => context.go('/auth'),
+        onPressed: () {
+          sl<AuthRepository>().logout();
+
+          // Clear cached state for singletons
+          context.read<HomeBloc>().add(HomeResetRequested());
+          context.read<CartBloc>().add(CartCleared());
+          context.read<LocationsBloc>().add(LocationsResetRequested());
+
+          context.go('/auth');
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.grey.shade200,
           foregroundColor: Colors.red.shade700,

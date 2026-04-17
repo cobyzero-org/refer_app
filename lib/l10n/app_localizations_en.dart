@@ -382,4 +382,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recentProducts => 'Recent Products';
+
+  @override
+  String get insufficientStars =>
+      'You don\'t have enough stars for this reward.';
+
+  @override
+  String get redeemReward => 'Redeem Reward';
+
+  @override
+  String confirmRedemption(int stars) {
+    return 'Are you sure you want to spend $stars stars on this reward?';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get currentPasswordHint => 'Enter your current password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get newPasswordHint => 'Enter your new password (min. 6 chars)';
+
+  @override
+  String get passwordChangedSuccessfully => 'Password changed successfully!';
+
+  @override
+  String get errorChangingPassword =>
+      'Error changing password. Please check your credentials.';
 }

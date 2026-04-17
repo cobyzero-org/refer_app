@@ -8,9 +8,7 @@ import 'core/di.dart';
 import 'core/router.dart';
 import 'core/bloc/locale_cubit.dart';
 import 'features/cart/bloc/cart_bloc.dart';
-import 'features/cart/bloc/cart_event.dart';
 import 'features/home/bloc/home_bloc.dart';
-import 'features/home/bloc/home_event.dart';
 import 'features/cart/bloc/locations_bloc.dart';
 import 'core/services/stripe_service.dart';
 
@@ -29,8 +27,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: sl<LocaleCubit>()),
-        BlocProvider.value(value: sl<CartBloc>()..add(CartStarted())),
-        BlocProvider.value(value: sl<HomeBloc>()..add(HomeDataRequested())),
+        BlocProvider.value(value: sl<CartBloc>()),
+        BlocProvider.value(value: sl<HomeBloc>()),
         BlocProvider.value(value: sl<LocationsBloc>()),
         BlocProvider(create: (context) => sl<PickupTimeBloc>()),
       ],

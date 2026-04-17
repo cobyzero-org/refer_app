@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refer_app/features/home/bloc/home_event.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../home/bloc/home_bloc.dart';
 import '../../home/bloc/home_state.dart';
 
@@ -164,55 +165,99 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildProfileImagePicker(String? photoUrl) {
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.bottomRight,
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        bool isUploading = false;
+        if (state is HomeLoaded) {
+          isUploading = state.status == HomeStatus.loading;
+        }
+
+        return Column(
           children: [
-            Container(
-              height: 120,
-              width: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 4),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
+            InkWell(
+              onTap: isUploading
+                  ? null
+                  : () async {
+                      final ImagePicker picker = ImagePicker();
+                      final XFile? image = await picker.pickImage(
+                        source: ImageSource.gallery,
+                        imageQuality: 70,
+                      );
+                      if (image != null && context.mounted) {
+                        context.read<HomeBloc>().add(
+                          ProfileImageUpdated(image.path),
+                        );
+                      }
+                    },
+              borderRadius: BorderRadius.circular(60),
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  Container(
+                    height: 120,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 56,
+                          backgroundImage: NetworkImage(
+                            photoUrl ?? 'https://i.pravatar.cc/150?u=fallback',
+                          ),
+                        ),
+                        if (isUploading)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.4),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF1E3932),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                   ),
                 ],
               ),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  photoUrl ?? 'https://i.pravatar.cc/150?u=fallback',
-                ),
-              ),
             ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                color: Color(0xFF1E3932),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.camera_alt,
-                color: Colors.white,
-                size: 16,
+            const SizedBox(height: 16),
+            const Text(
+              'Toca para actualizar imagen',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          'Toca para actualizar imagen',
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 

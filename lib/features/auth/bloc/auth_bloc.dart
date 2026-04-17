@@ -35,5 +35,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError("Error creating account"));
       }
     });
+
+    on<LogoutRequested>((event, emit) async {
+      emit(AuthLoading());
+      await _repository.logout();
+      emit(AuthInitial());
+    });
   }
 }

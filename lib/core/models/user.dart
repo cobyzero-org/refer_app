@@ -26,7 +26,7 @@ class User {
       email: json['email'] ?? '',
       photoUrl: json['photoUrl'],
       stars: json['stars'] ?? 0,
-      keepUpdated: json['keepUpdated'] ?? false,
+      keepUpdated: json['keepUpdated'] == true || json['keepUpdated'] == 1 || json['keepUpdated'] == '1',
       phoneNumber: json['phoneNumber'],
       birthDate: json['birthDate'],
     );

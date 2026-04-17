@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +22,16 @@ import 'widgets/order_summary_card.dart';
 import 'widgets/place_order_button.dart';
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key});
+  final String? redeemedRewardId;
+  final String? redeemedRewardTitle;
+  final String? redeemedRewardImage;
+
+  const CheckoutScreen({
+    super.key,
+    this.redeemedRewardId,
+    this.redeemedRewardTitle,
+    this.redeemedRewardImage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +61,9 @@ class CheckoutScreen extends StatelessWidget {
         builder: (context, state) {
           double total = 0;
           int itemCount = 0;
-          if (state is CartLoaded) {
+          final isClaimingReward = redeemedRewardId != null;
+
+          if (!isClaimingReward && state is CartLoaded) {
             total = state.total;
             itemCount = state.items.length;
           }
@@ -75,30 +87,61 @@ class CheckoutScreen extends StatelessWidget {
 
                     CheckoutSectionHeader(title: l10n.yourOrder),
                     const SizedBox(height: 12),
-                    if (state is CartLoaded)
+                    if (isClaimingReward)
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.star_rounded,
+                              color: Color(0xFF1E3932),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                "Reward Claim: $redeemedRewardTitle",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else if (state is CartLoaded)
                       CheckoutCartItemsList(items: state.items),
                     const SizedBox(height: 32),
 
-                    CheckoutSectionHeader(title: l10n.paymentMethod),
-                    const SizedBox(height: 12),
-                    const PaymentMethodCard(),
-                    const SizedBox(height: 48),
+                    if (!isClaimingReward) ...[
+                      CheckoutSectionHeader(title: l10n.paymentMethod),
+                      const SizedBox(height: 12),
+                      const PaymentMethodCard(),
+                      const SizedBox(height: 48),
 
-                    OrderSummaryCard(
-                      total: total,
-                      itemCount: itemCount,
-                      serviceFee: serviceFee,
-                      items: state is CartLoaded ? state.items : [],
-                    ),
+                      OrderSummaryCard(
+                        total: total,
+                        itemCount: itemCount,
+                        serviceFee: serviceFee,
+                        items: state is CartLoaded ? state.items : [],
+                      ),
+                    ],
                   ],
                 ),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: PlaceOrderButton(
-                  total: total + serviceFee,
-                  label: l10n.placeOrder,
-                  onTap: () => _handlePlaceOrder(context, total, serviceFee),
+                  total: isClaimingReward ? 0 : total + serviceFee,
+                  label: isClaimingReward ? "Claim Reward" : l10n.placeOrder,
+                  onTap: () => _handlePlaceOrder(
+                    context,
+                    isClaimingReward ? 0 : total,
+                    isClaimingReward ? 0 : serviceFee,
+                  ),
                 ),
               ),
             ],
@@ -114,8 +157,11 @@ class CheckoutScreen extends StatelessWidget {
     double serviceFee,
   ) async {
     final amount = double.parse((total + serviceFee).toStringAsFixed(2));
-    await _sendOrder(context, total, serviceFee, amount);
-    return;
+
+    if (kDebugMode) {
+      await _sendOrder(context, total, serviceFee, amount);
+      return;
+    }
     await sl<StripeService>().makePayment(
       amount: amount,
       currency: 'usd',
@@ -144,7 +190,9 @@ class CheckoutScreen extends StatelessWidget {
     final timeState = context.read<PickupTimeBloc>().state;
     final cartState = context.read<CartBloc>().state;
 
-    if (cartState is! CartLoaded) return;
+    final isClaimingReward = redeemedRewardId != null;
+
+    if (!isClaimingReward && cartState is! CartLoaded) return;
 
     String locationId = '';
     String locationName = 'Downtown Studio';
@@ -153,26 +201,46 @@ class CheckoutScreen extends StatelessWidget {
       locationName = locState.selectedLocation!.name;
     }
 
-    final orderData = {
-      'locationId': locationId,
-      'total': amount,
-      'serviceFee': serviceFee,
-      'paymentMethod': 'STRIPE',
-      'pickupTime': timeState.type == PickupTimeType.asap
-          ? DateTime.now().toIso8601String()
-          : timeState.scheduledTime?.toIso8601String(),
-      'items': cartState.items.map((item) {
-        return {
-          'productId': item.id,
-          'name': item.name,
-          'quantity': item.quantity,
-          'price': item.totalPrice,
-          'size': item.size,
-          'type': item.type,
-          'imageUrl': item.imageUrl,
-        };
-      }).toList(),
-    };
+    final orderData = isClaimingReward
+        ? {
+            'locationId': locationId,
+            'total': 0,
+            'serviceFee': 0,
+            'paymentMethod': 'REWARD',
+            'pickupTime': timeState.type == PickupTimeType.asap
+                ? DateTime.now().toIso8601String()
+                : timeState.scheduledTime?.toIso8601String(),
+            'items': [
+              {
+                'productId': 'reward-item',
+                'name': redeemedRewardTitle,
+                'quantity': 1,
+                'price': 0,
+                'imageUrl': redeemedRewardImage ?? '',
+              },
+            ],
+            'redeemedRewardId': redeemedRewardId,
+          }
+        : {
+            'locationId': locationId,
+            'total': amount,
+            'serviceFee': serviceFee,
+            'paymentMethod': 'STRIPE',
+            'pickupTime': timeState.type == PickupTimeType.asap
+                ? DateTime.now().toIso8601String()
+                : timeState.scheduledTime?.toIso8601String(),
+            'items': (cartState as CartLoaded).items.map((item) {
+              return {
+                'productId': item.productId,
+                'name': item.name,
+                'quantity': item.quantity,
+                'price': item.totalPrice,
+                'size': item.size,
+                'type': item.type,
+                'imageUrl': item.imageUrl,
+              };
+            }).toList(),
+          };
 
     final orderResponse = await sl<OrdersRepository>().createOrder(orderData);
 

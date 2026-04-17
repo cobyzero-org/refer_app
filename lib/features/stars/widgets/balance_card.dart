@@ -4,11 +4,26 @@ import '../../../core/theme.dart';
 
 class BalanceCard extends StatelessWidget {
   final int stars;
+  final int nextRewardStars;
+  final String nextRewardName;
 
-  const BalanceCard({super.key, required this.stars});
+  const BalanceCard({
+    super.key,
+    required this.stars,
+    required this.nextRewardStars,
+    required this.nextRewardName,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final double progress = nextRewardStars > 0
+        ? (stars / nextRewardStars).clamp(0.0, 1.0)
+        : 0.0;
+    final int percentage = (progress * 100).toInt();
+    final int remaining = nextRewardStars - stars > 0
+        ? nextRewardStars - stars
+        : 0;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -56,13 +71,12 @@ class BalanceCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 32),
-          _buildCenterGauge(),
+          _buildCenterGauge(progress, percentage),
           const SizedBox(height: 48),
           Text(
-            AppLocalizations.of(context)!.starsRemaining(
-              100 - stars > 0 ? 100 - stars : 0,
-              "Artisanal Brew",
-            ),
+            AppLocalizations.of(
+              context,
+            )!.starsRemaining(remaining, nextRewardName),
             style: TextStyle(
               color: Colors.white.withOpacity(0.9),
               fontSize: 13,
@@ -70,13 +84,13 @@ class BalanceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildLinearProgress(),
+          _buildLinearProgress(progress),
         ],
       ),
     );
   }
 
-  Widget _buildCenterGauge() {
+  Widget _buildCenterGauge(double progress, int percentage) {
     return Center(
       child: Stack(
         alignment: Alignment.center,
@@ -85,7 +99,7 @@ class BalanceCard extends StatelessWidget {
             height: 140,
             width: 140,
             child: CircularProgressIndicator(
-              value: 0.85,
+              value: progress,
               strokeWidth: 10,
               backgroundColor: Colors.white.withOpacity(0.1),
               valueColor: const AlwaysStoppedAnimation<Color>(
@@ -100,7 +114,7 @@ class BalanceCard extends StatelessWidget {
               const Icon(Icons.stars, color: Color(0xFFD4E9E2), size: 28),
               const SizedBox(height: 4),
               Text(
-                "85%",
+                "$percentage%",
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.9),
                   fontSize: 18,
@@ -114,7 +128,7 @@ class BalanceCard extends StatelessWidget {
     );
   }
 
-  Widget _buildLinearProgress() {
+  Widget _buildLinearProgress(double progress) {
     return Container(
       height: 6,
       width: double.infinity,
@@ -124,7 +138,7 @@ class BalanceCard extends StatelessWidget {
       ),
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
-        widthFactor: 0.85,
+        widthFactor: progress,
         child: Container(
           decoration: BoxDecoration(
             color: const Color(0xFFD4E9E2),

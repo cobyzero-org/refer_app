@@ -9,6 +9,7 @@ import '../features/product_details/ui/product_details_screen.dart';
 import '../features/cart/ui/cart_screen.dart';
 import '../features/cart/ui/checkout_screen.dart';
 import '../features/settings/ui/edit_profile_screen.dart';
+import '../features/settings/ui/change_password_screen.dart';
 import '../features/orders/ui/order_history_screen.dart';
 import '../features/cart/ui/order_status_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,11 +49,22 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/checkout',
-      builder: (context, state) => const CheckoutScreen(),
+      builder: (context, state) {
+        final Map<String, dynamic>? extra = state.extra as Map<String, dynamic>?;
+        return CheckoutScreen(
+          redeemedRewardId: extra?['redeemedRewardId'],
+          redeemedRewardTitle: extra?['redeemedRewardTitle'],
+          redeemedRewardImage: extra?['redeemedRewardImage'],
+        );
+      },
     ),
     GoRoute(
       path: '/edit-profile',
       builder: (context, state) => const EditProfileScreen(),
+    ),
+    GoRoute(
+      path: '/change-password',
+      builder: (context, state) => const ChangePasswordScreen(),
     ),
     GoRoute(
       path: '/order-history',

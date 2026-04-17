@@ -156,5 +156,23 @@
       }
     }
   },
-  "recentProducts": "Recent Products"
+  "recentProducts": "Recent Products",
+  "insufficientStars": "You don't have enough stars for this reward.",
+  "redeemReward": "Redeem Reward",
+  "confirmRedemption": "Are you sure you want to spend {stars} stars on this reward?",
+  "@confirmRedemption": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "currentPassword": "Current Password",
+  "currentPasswordHint": "Enter your current password",
+  "newPassword": "New Password",
+  "newPasswordHint": "Enter your new password (min. 6 chars)",
+  "passwordChangedSuccessfully": "Password changed successfully!",
+  "errorChangingPassword": "Error changing password. Please check your credentials."
 }

@@ -156,5 +156,23 @@
       }
     }
   },
-  "recentProducts": "Productos Recientes"
+  "recentProducts": "Productos Recientes",
+  "insufficientStars": "No tienes suficientes estrellas para esta recompensa.",
+  "redeemReward": "Canjear Recompensa",
+  "confirmRedemption": "¿Estás seguro de que quieres gastar {stars} estrellas en esta recompensa?",
+  "@confirmRedemption": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "confirm": "Confirmar",
+  "cancel": "Cancelar",
+  "currentPassword": "Contraseña Actual",
+  "currentPasswordHint": "Ingresa tu contraseña actual",
+  "newPassword": "Nueva Contraseña",
+  "newPasswordHint": "Ingresa tu nueva contraseña (min. 6 car.)",
+  "passwordChangedSuccessfully": "¡Contraseña cambiada exitosamente!",
+  "errorChangingPassword": "Error al cambiar la contraseña. Por favor verifica tus datos."
 }

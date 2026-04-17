@@ -817,6 +817,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recent Products'**
   String get recentProducts;
+
+  /// No description provided for @insufficientStars.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have enough stars for this reward.'**
+  String get insufficientStars;
+
+  /// No description provided for @redeemReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem Reward'**
+  String get redeemReward;
+
+  /// No description provided for @confirmRedemption.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to spend {stars} stars on this reward?'**
+  String confirmRedemption(int stars);
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @currentPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current password'**
+  String get currentPasswordHint;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @newPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your new password (min. 6 chars)'**
+  String get newPasswordHint;
+
+  /// No description provided for @passwordChangedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully!'**
+  String get passwordChangedSuccessfully;
+
+  /// No description provided for @errorChangingPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Error changing password. Please check your credentials.'**
+  String get errorChangingPassword;
 }
 
 class _AppLocalizationsDelegate

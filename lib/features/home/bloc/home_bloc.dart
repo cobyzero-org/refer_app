@@ -7,6 +7,40 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepository _repository;
 
   HomeBloc(this._repository) : super(HomeInitial()) {
+    on<HomeResetRequested>((event, emit) {
+      emit(HomeInitial());
+    });
+
+    on<ProfileImageUpdated>((event, emit) async {
+      final currentState = state;
+      if (currentState is HomeLoaded) {
+        emit(currentState.copyWith(status: HomeStatus.loading));
+        try {
+          final photoUrl = await _repository.uploadProfileImage(event.imagePath);
+          if (photoUrl != null) {
+            final updatedUser = await _repository.getProfile();
+            if (updatedUser != null) {
+              emit(currentState.copyWith(
+                user: updatedUser,
+                status: HomeStatus.success,
+                message: "Image updated successfully!",
+              ));
+            }
+          } else {
+            emit(currentState.copyWith(
+              status: HomeStatus.error,
+              message: "Failed to upload image",
+            ));
+          }
+        } catch (e) {
+          emit(currentState.copyWith(
+            status: HomeStatus.error,
+            message: e.toString(),
+          ));
+        }
+      }
+    });
+
     on<UserProfileUpdated>((event, emit) async {
       final currentState = state;
       if (currentState is HomeLoaded) {

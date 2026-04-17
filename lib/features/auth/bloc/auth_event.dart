@@ -13,3 +13,5 @@ class RegisterRequested extends AuthEvent {
   final bool keepUpdated;
   RegisterRequested(this.name, this.email, this.password, {this.keepUpdated = false});
 }
+
+class LogoutRequested extends AuthEvent {}

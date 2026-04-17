@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 import '../../../core/api_client.dart';
 import '../../../core/models/user.dart';
 import '../../../core/models/product.dart';
@@ -11,6 +13,7 @@ abstract class HomeRepository {
   Future<List<Product>> getSeasonalBrews();
   Future<List<ProductCategory>> getCategories();
   Future<List<Product>> getLatestProducts();
+  Future<String?> uploadProfileImage(String filePath);
 }
 
 class HomeRepositoryImpl implements HomeRepository {
@@ -25,8 +28,10 @@ class HomeRepositoryImpl implements HomeRepository {
       if (response.statusCode == 200) {
         return User.fromJson(response.data);
       }
+      print('getProfile returned status: ${response.statusCode}');
       return null;
-    } catch (e) {
+    } catch (e, stacktrace) {
+      print('Error in getProfile: $e\n$stacktrace');
       return null;
     }
   }
@@ -34,7 +39,10 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<User?> updateProfile(Map<String, dynamic> updateData) async {
     try {
-      final response = await apiClient.dio.patch('/user/profile', data: updateData);
+      final response = await apiClient.dio.patch(
+        '/user/profile',
+        data: updateData,
+      );
       if (response.statusCode == 200) {
         return User.fromJson(response.data);
       }
@@ -52,7 +60,8 @@ class HomeRepositoryImpl implements HomeRepository {
         return DashboardSummary.fromJson(response.data);
       }
       return null;
-    } catch (e) {
+    } catch (e, stacktrace) {
+      print('Error in getSummary: $e\n$stacktrace');
       return null;
     }
   }
@@ -95,6 +104,22 @@ class HomeRepositoryImpl implements HomeRepository {
       return [];
     } catch (e) {
       return [];
+    }
+  }
+
+  @override
+  Future<String?> uploadProfileImage(String filePath) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(filePath),
+      });
+      final response = await apiClient.dio.post('/user/upload', data: formData);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.data['photoUrl'];
+      }
+      return null;
+    } catch (e) {
+      return null;
     }
   }
 }

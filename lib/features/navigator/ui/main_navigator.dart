@@ -5,6 +5,13 @@ import '../../stars/ui/stars_screen.dart';
 import '../../orders/ui/orders_screen.dart';
 import '../../settings/ui/settings_screen.dart';
 import '../../../core/theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../home/bloc/home_bloc.dart';
+import '../../home/bloc/home_event.dart';
+import '../../cart/bloc/cart_bloc.dart';
+import '../../cart/bloc/cart_event.dart';
+import '../../cart/bloc/locations_bloc.dart';
+import '../../cart/bloc/locations_event.dart';
 
 class MainNavigator extends StatefulWidget {
   const MainNavigator({super.key});
@@ -22,6 +29,15 @@ class _MainNavigatorState extends State<MainNavigator> {
     const OrdersScreen(),
     const SettingsScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Lazy load: solo inicializar los blocs cuando entramos aquí (después de auth).
+    context.read<HomeBloc>().add(HomeDataRequested());
+    context.read<CartBloc>().add(CartStarted());
+    context.read<LocationsBloc>().add(LocationsStarted());
+  }
 
   @override
   Widget build(BuildContext context) {

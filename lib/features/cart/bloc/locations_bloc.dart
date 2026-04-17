@@ -9,6 +9,10 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
   LocationsBloc({required this.repository}) : super(LocationsInitial()) {
     on<LocationsStarted>(_onLocationsStarted);
     on<LocationSelected>(_onLocationSelected);
+
+    on<LocationsResetRequested>((event, emit) {
+      emit(LocationsInitial());
+    });
   }
 
   Future<void> _onLocationsStarted(

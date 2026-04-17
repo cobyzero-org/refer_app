@@ -5,6 +5,8 @@ abstract class AuthRepository {
   Future<bool> login(String email, String password);
   Future<bool> signup(String name, String email, String password, {bool keepUpdated = false});
   Future<bool> validateToken();
+  Future<void> logout();
+  Future<bool> changePassword(String currentPassword, String newPassword);
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -29,6 +31,11 @@ class AuthRepositoryImpl implements AuthRepository {
       await tokenManager.deleteTokens();
       return false;
     }
+  }
+
+  @override
+  Future<void> logout() async {
+    await tokenManager.deleteTokens();
   }
 
   @override
@@ -68,6 +75,23 @@ class AuthRepositoryImpl implements AuthRepository {
           await tokenManager.saveTokens(accessToken: token);
           return true;
         }
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> changePassword(String currentPassword, String newPassword) async {
+    try {
+      final response = await apiClient.dio.post('/auth/change-password', data: {
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      });
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
       }
       return false;
     } catch (e) {

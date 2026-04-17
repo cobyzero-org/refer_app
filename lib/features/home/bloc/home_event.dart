@@ -1,6 +1,8 @@
 abstract class HomeEvent {}
 
 class HomeDataRequested extends HomeEvent {}
+class HomeResetRequested extends HomeEvent {}
+
 
 class UserProfileUpdated extends HomeEvent {
   final String name;
@@ -14,4 +16,8 @@ class UserProfileUpdated extends HomeEvent {
     this.phoneNumber,
     this.birthDate,
   });
+}
+class ProfileImageUpdated extends HomeEvent {
+  final String imagePath;
+  ProfileImageUpdated(this.imagePath);
 }
