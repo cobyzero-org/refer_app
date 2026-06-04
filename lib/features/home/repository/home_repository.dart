@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import '../../../core/api_client.dart';
@@ -21,12 +22,24 @@ class HomeRepositoryImpl implements HomeRepository {
 
   HomeRepositoryImpl({required this.apiClient});
 
+  dynamic _parseData(dynamic data) {
+    if (data is String) {
+      try {
+        return jsonDecode(data);
+      } catch (e) {
+        print('Error decoding JSON: $e');
+      }
+    }
+    return data;
+  }
+
   @override
   Future<User?> getProfile() async {
     try {
-      final response = await apiClient.dio.get('/user/profile');
+      final response = await apiClient.dio.get('/users/profile');
       if (response.statusCode == 200) {
-        return User.fromJson(response.data);
+        final parsedData = _parseData(response.data);
+        return User.fromJson(parsedData);
       }
       print('getProfile returned status: ${response.statusCode}');
       return null;
@@ -44,7 +57,8 @@ class HomeRepositoryImpl implements HomeRepository {
         data: updateData,
       );
       if (response.statusCode == 200) {
-        return User.fromJson(response.data);
+        final parsedData = _parseData(response.data);
+        return User.fromJson(parsedData);
       }
       return null;
     } catch (e) {
@@ -57,7 +71,8 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final response = await apiClient.dio.get('/dashboard/summary');
       if (response.statusCode == 200) {
-        return DashboardSummary.fromJson(response.data);
+        final parsedData = _parseData(response.data);
+        return DashboardSummary.fromJson(parsedData);
       }
       return null;
     } catch (e, stacktrace) {
@@ -71,7 +86,8 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final response = await apiClient.dio.get('/products/seasonal');
       if (response.statusCode == 200) {
-        return (response.data as List).map((i) => Product.fromJson(i)).toList();
+        final parsedData = _parseData(response.data);
+        return (parsedData as List).map((i) => Product.fromJson(i)).toList();
       }
       return [];
     } catch (e) {
@@ -84,7 +100,8 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final response = await apiClient.dio.get('/products/categories');
       if (response.statusCode == 200) {
-        return (response.data as List)
+        final parsedData = _parseData(response.data);
+        return (parsedData as List)
             .map((i) => ProductCategory.fromJson(i))
             .toList();
       }
@@ -99,7 +116,8 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final response = await apiClient.dio.get('/products');
       if (response.statusCode == 200) {
-        return (response.data as List).map((i) => Product.fromJson(i)).toList();
+        final parsedData = _parseData(response.data);
+        return (parsedData as List).map((i) => Product.fromJson(i)).toList();
       }
       return [];
     } catch (e) {
@@ -115,7 +133,8 @@ class HomeRepositoryImpl implements HomeRepository {
       });
       final response = await apiClient.dio.post('/user/upload', data: formData);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data['photoUrl'];
+        final parsedData = _parseData(response.data);
+        return parsedData['photoUrl'];
       }
       return null;
     } catch (e) {

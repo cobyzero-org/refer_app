@@ -238,6 +238,7 @@ class CheckoutScreen extends StatelessWidget {
                 'size': item.size,
                 'type': item.type,
                 'imageUrl': item.imageUrl,
+                'enhancements': item.enhancements,
               };
             }).toList(),
           };
