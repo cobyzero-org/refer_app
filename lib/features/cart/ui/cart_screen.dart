@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:refer_app/core/widgets/button_liquid_glass.dart';
+import 'package:refer_app/l10n/app_localizations.dart';
 import 'package:refer_app/core/theme.dart';
 import '../bloc/cart_bloc.dart';
 import '../bloc/cart_event.dart';
@@ -16,6 +18,7 @@ class CartScreen extends StatelessWidget {
     return BlocBuilder<CartBloc, CartState>(
       bloc: sl<CartBloc>(),
       builder: (context, state) {
+        final l10n = AppLocalizations.of(context)!;
         List<CartItem> items = [];
         double total = 0;
 
@@ -34,9 +37,9 @@ class CartScreen extends StatelessWidget {
               icon: const Icon(Icons.arrow_back, color: Colors.black87),
               onPressed: () => context.pop(),
             ),
-            title: const Text(
-              "Your Order",
-              style: TextStyle(
+            title: Text(
+              l10n.yourOrder,
+              style: const TextStyle(
                 color: Color(0xFF1E3932),
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
@@ -51,239 +54,206 @@ class CartScreen extends StatelessWidget {
             ],
           ),
           body: items.isEmpty && state is! CartLoading
-              ? const Center(child: Text("Your cart is empty"))
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 20,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ? Center(child: Text(l10n.cartEmpty))
+              : Stack(
+                  children: [
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 20,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Review Selection",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w900,
-                              color: Color(0xFF0C211B),
-                            ),
-                          ),
-                          Text(
-                            "${items.length} items",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Cart Items
-                      ...items.map(
-                        (item) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: _buildCartItem(context, item: item),
-                        ),
-                      ),
-
-                      if (items.isNotEmpty) ...[
-                        const SizedBox(height: 40),
-
-                        // Promo Code
-                        const Text(
-                          "PROMO CODE",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.grey,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                height: 52,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade200,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Enter code",
-                                  style: TextStyle(color: Colors.grey.shade500),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade300,
-                                foregroundColor: Colors.black87,
-                                elevation: 0,
-                                minimumSize: const Size(100, 52),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: const Text(
-                                "Apply",
-                                style: TextStyle(fontWeight: FontWeight.w800),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 32),
-
-                        // Summary Card
-                        Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF2F2F2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildSummaryRow(
-                                "Subtotal",
-                                "\$${total.toStringAsFixed(2)}",
+                              Text(
+                                l10n.reviewSelection,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xFF0C211B),
+                                ),
                               ),
-                              const SizedBox(height: 12),
-                              _buildSummaryRow(
-                                "Estimated Tax",
-                                "\$${(total * 0.08).toStringAsFixed(2)}",
-                              ),
-                              const SizedBox(height: 24),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Total",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color(0xFF0C211B),
-                                    ),
-                                  ),
-                                  Text(
-                                    "\$${(total * 1.08).toStringAsFixed(2)}",
-                                    style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                l10n.itemsCount(items.length),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 24),
 
-                      const SizedBox(height: 24),
-
-                      // Info Box
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE8F3EF),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.info,
-                              color: Color(0xFF1E3932),
-                              size: 20,
+                          // Cart Items
+                          ...items.map(
+                            (item) => Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: _buildCartItem(context, item: item),
                             ),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                "Items are prepared fresh upon your arrival. Enjoy our sensory experience at its peak by arriving within 10 minutes of your pick-up time.",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  height: 1.5,
-                                  color: Color(0xFF1E3932),
-                                  fontWeight: FontWeight.w500,
+                          ),
+
+                          if (items.isNotEmpty) ...[
+                            const SizedBox(height: 40),
+
+                            // Promo Code
+                            Text(
+                              l10n.promoCode,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.grey,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      l10n.enterCode,
+                                      style: TextStyle(
+                                        color: Colors.grey.shade500,
+                                      ),
+                                    ),
+                                  ),
                                 ),
+                                const SizedBox(width: 12),
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.grey.shade300,
+                                    foregroundColor: Colors.black87,
+                                    elevation: 0,
+                                    minimumSize: const Size(100, 52),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    l10n.apply,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 32),
+
+                            // Summary Card
+                            Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF2F2F2),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildSummaryRow(
+                                    l10n.subtotal,
+                                    "\$${total.toStringAsFixed(2)}",
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildSummaryRow(
+                                    l10n.estimatedTax,
+                                    "\$${(total * 0.08).toStringAsFixed(2)}",
+                                  ),
+                                  const SizedBox(height: 24),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        l10n.total,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w900,
+                                          color: Color(0xFF0C211B),
+                                        ),
+                                      ),
+                                      Text(
+                                        "\$${(total * 1.08).toStringAsFixed(2)}",
+                                        style: TextStyle(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w900,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      const SizedBox(height: 48),
-                    ],
-                  ),
-                ),
-          bottomNavigationBar: items.isEmpty
-              ? null
-              : Container(
-                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, -4),
-                      ),
-                    ],
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () => context.push('/checkout'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0C211B),
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 60),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Go to checkout",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            "\$${(total * 1.08).toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w900,
+
+                          const SizedBox(height: 24),
+
+                          // Info Box
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE8F3EF),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.info,
+                                  color: Color(0xFF1E3932),
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    l10n.cartInfoMessage,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      height: 1.5,
+                                      color: Color(0xFF1E3932),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 148),
+                        ],
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ButtonLiquidGlass(
+                            onTap: () => context.push('/checkout'),
+                            title: l10n.go_to_checkout,
+                            subTitle: '\$${(total * 1.08).toStringAsFixed(2)}',
+                            icon: Icons.shopping_bag_outlined,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
         );
       },

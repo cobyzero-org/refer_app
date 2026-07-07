@@ -174,5 +174,38 @@
   "newPassword": "New Password",
   "newPasswordHint": "Enter your new password (min. 6 chars)",
   "passwordChangedSuccessfully": "Password changed successfully!",
-  "errorChangingPassword": "Error changing password. Please check your credentials."
+  "errorChangingPassword": "Error changing password. Please check your credentials.",
+  "go_to_checkout": "Go to checkout",
+  "reviewSelection": "Review Selection",
+  "itemsCount": "{count} items",
+  "@itemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "promoCode": "PROMO CODE",
+  "enterCode": "Enter code",
+  "apply": "Apply",
+  "estimatedTax": "Estimated Tax",
+  "cartEmpty": "Your cart is empty",
+  "cartInfoMessage": "Items are prepared fresh upon your arrival. Enjoy our sensory experience at its peak by arriving within 10 minutes of your pick-up time.",
+  "rewardClaim": "Reward Claim: {title}",
+  "@rewardClaim": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "claimReward": "Claim Reward",
+  "earningStars": "You are earning {stars} stars with this order!",
+  "@earningStars": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -419,4 +419,47 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorChangingPassword =>
       'Error changing password. Please check your credentials.';
+
+  @override
+  String get go_to_checkout => 'Go to checkout';
+
+  @override
+  String get reviewSelection => 'Review Selection';
+
+  @override
+  String itemsCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get promoCode => 'PROMO CODE';
+
+  @override
+  String get enterCode => 'Enter code';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get estimatedTax => 'Estimated Tax';
+
+  @override
+  String get cartEmpty => 'Your cart is empty';
+
+  @override
+  String get cartInfoMessage =>
+      'Items are prepared fresh upon your arrival. Enjoy our sensory experience at its peak by arriving within 10 minutes of your pick-up time.';
+
+  @override
+  String rewardClaim(String title) {
+    return 'Reward Claim: $title';
+  }
+
+  @override
+  String get claimReward => 'Claim Reward';
+
+  @override
+  String earningStars(int stars) {
+    return 'You are earning $stars stars with this order!';
+  }
 }

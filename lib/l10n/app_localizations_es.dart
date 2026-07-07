@@ -205,7 +205,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sweetener => 'Endulzante';
 
   @override
-  String get addToOrder => 'Agregar al Pedido';
+  String get addToOrder => 'Agregar al pedido';
 
   @override
   String get calories => 'CALORÍAS';
@@ -421,4 +421,47 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get errorChangingPassword =>
       'Error al cambiar la contraseña. Por favor verifica tus datos.';
+
+  @override
+  String get go_to_checkout => 'Ir al pago';
+
+  @override
+  String get reviewSelection => 'Revisar selección';
+
+  @override
+  String itemsCount(int count) {
+    return '$count productos';
+  }
+
+  @override
+  String get promoCode => 'CÓDIGO PROMOCIONAL';
+
+  @override
+  String get enterCode => 'Ingresar código';
+
+  @override
+  String get apply => 'Aplicar';
+
+  @override
+  String get estimatedTax => 'Impuesto estimado';
+
+  @override
+  String get cartEmpty => 'Tu carrito está vacío';
+
+  @override
+  String get cartInfoMessage =>
+      'Los productos se preparan frescos a tu llegada. Disfruta de nuestra experiencia sensorial en su punto máximo llegando dentro de los 10 minutos de tu hora de recogida.';
+
+  @override
+  String rewardClaim(String title) {
+    return 'Reclamar recompensa: $title';
+  }
+
+  @override
+  String get claimReward => 'Reclamar recompensa';
+
+  @override
+  String earningStars(int stars) {
+    return '¡Estás ganando $stars estrellas con este pedido!';
+  }
 }

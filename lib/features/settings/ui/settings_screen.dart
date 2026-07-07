@@ -112,38 +112,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context) {
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                l10n.language,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.language,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              ListTile(
-                title: Text(l10n.english),
-                trailing: Localizations.localeOf(context).languageCode == 'en'
-                    ? const Icon(Icons.check_circle, color: AppColors.primary)
-                    : null,
-                onTap: () {
-                  context.read<LocaleCubit>().changeLocale(const Locale('en'));
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text(l10n.spanish),
-                trailing: Localizations.localeOf(context).languageCode == 'es'
-                    ? const Icon(Icons.check_circle, color: AppColors.primary)
-                    : null,
-                onTap: () {
-                  context.read<LocaleCubit>().changeLocale(const Locale('es'));
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+                const SizedBox(height: 16),
+                ListTile(
+                  title: Text(l10n.english),
+                  trailing: Localizations.localeOf(context).languageCode == 'en'
+                      ? const Icon(Icons.check_circle, color: AppColors.primary)
+                      : null,
+                  onTap: () {
+                    context.read<LocaleCubit>().changeLocale(
+                      const Locale('en'),
+                    );
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text(l10n.spanish),
+                  trailing: Localizations.localeOf(context).languageCode == 'es'
+                      ? const Icon(Icons.check_circle, color: AppColors.primary)
+                      : null,
+                  onTap: () {
+                    context.read<LocaleCubit>().changeLocale(
+                      const Locale('es'),
+                    );
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

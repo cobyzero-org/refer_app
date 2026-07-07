@@ -883,6 +883,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error changing password. Please check your credentials.'**
   String get errorChangingPassword;
+
+  /// No description provided for @go_to_checkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to checkout'**
+  String get go_to_checkout;
+
+  /// No description provided for @reviewSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Selection'**
+  String get reviewSelection;
+
+  /// No description provided for @itemsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String itemsCount(int count);
+
+  /// No description provided for @promoCode.
+  ///
+  /// In en, this message translates to:
+  /// **'PROMO CODE'**
+  String get promoCode;
+
+  /// No description provided for @enterCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter code'**
+  String get enterCode;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @estimatedTax.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Tax'**
+  String get estimatedTax;
+
+  /// No description provided for @cartEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty'**
+  String get cartEmpty;
+
+  /// No description provided for @cartInfoMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Items are prepared fresh upon your arrival. Enjoy our sensory experience at its peak by arriving within 10 minutes of your pick-up time.'**
+  String get cartInfoMessage;
+
+  /// No description provided for @rewardClaim.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward Claim: {title}'**
+  String rewardClaim(String title);
+
+  /// No description provided for @claimReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim Reward'**
+  String get claimReward;
+
+  /// No description provided for @earningStars.
+  ///
+  /// In en, this message translates to:
+  /// **'You are earning {stars} stars with this order!'**
+  String earningStars(int stars);
 }
 
 class _AppLocalizationsDelegate

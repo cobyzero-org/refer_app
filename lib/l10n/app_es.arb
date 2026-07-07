@@ -76,7 +76,7 @@
   "enhancements": "MEJORAS",
   "extraEspresso": "Shot de Espresso Extra",
   "sweetener": "Endulzante",
-  "addToOrder": "Agregar al Pedido",
+  "addToOrder": "Agregar al pedido",
   "calories": "CALORÍAS",
   "caffeine": "CAFEÍNA",
   "tall": "Tall",
@@ -174,5 +174,38 @@
   "newPassword": "Nueva Contraseña",
   "newPasswordHint": "Ingresa tu nueva contraseña (min. 6 car.)",
   "passwordChangedSuccessfully": "¡Contraseña cambiada exitosamente!",
-  "errorChangingPassword": "Error al cambiar la contraseña. Por favor verifica tus datos."
+  "errorChangingPassword": "Error al cambiar la contraseña. Por favor verifica tus datos.",
+  "go_to_checkout": "Ir al pago",
+  "reviewSelection": "Revisar selección",
+  "itemsCount": "{count} productos",
+  "@itemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "promoCode": "CÓDIGO PROMOCIONAL",
+  "enterCode": "Ingresar código",
+  "apply": "Aplicar",
+  "estimatedTax": "Impuesto estimado",
+  "cartEmpty": "Tu carrito está vacío",
+  "cartInfoMessage": "Los productos se preparan frescos a tu llegada. Disfruta de nuestra experiencia sensorial en su punto máximo llegando dentro de los 10 minutos de tu hora de recogida.",
+  "rewardClaim": "Reclamar recompensa: {title}",
+  "@rewardClaim": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "claimReward": "Reclamar recompensa",
+  "earningStars": "¡Estás ganando {stars} estrellas con este pedido!",
+  "@earningStars": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  }
 }

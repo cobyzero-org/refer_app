@@ -40,7 +40,7 @@ class OrderSummaryCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '$itemCount items',
+                l10n.itemsCount(itemCount),
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 13,
@@ -109,6 +109,7 @@ class OrderSummaryCard extends StatelessWidget {
   }
 
   Widget _buildDecorativeCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final totalStars = items.fold<int>(
       0,
       (sum, item) => sum + item.starsReward,
@@ -131,7 +132,7 @@ class OrderSummaryCard extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              '¡Estás ganando $totalStars estrellas con este pedido!',
+              l10n.earningStars(totalStars),
               style: const TextStyle(
                 color: Color(0xFF1E3932),
                 fontSize: 12,

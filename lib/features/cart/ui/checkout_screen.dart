@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:refer_app/core/widgets/button_liquid_glass.dart';
 import 'package:refer_app/features/cart/bloc/locations_state.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import 'package:refer_app/core/services/stripe_service.dart';
@@ -19,7 +20,6 @@ import 'widgets/pickup_time_selector.dart';
 import 'widgets/checkout_cart_items_list.dart';
 import 'widgets/payment_method_card.dart';
 import 'widgets/order_summary_card.dart';
-import 'widgets/place_order_button.dart';
 
 class CheckoutScreen extends StatelessWidget {
   final String? redeemedRewardId;
@@ -103,7 +103,7 @@ class CheckoutScreen extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                "Reward Claim: $redeemedRewardTitle",
+                                l10n.rewardClaim(redeemedRewardTitle ?? ''),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -134,13 +134,23 @@ class CheckoutScreen extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: PlaceOrderButton(
-                  total: isClaimingReward ? 0 : total + serviceFee,
-                  label: isClaimingReward ? "Claim Reward" : l10n.placeOrder,
-                  onTap: () => _handlePlaceOrder(
-                    context,
-                    isClaimingReward ? 0 : total,
-                    isClaimingReward ? 0 : serviceFee,
+                child: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: ButtonLiquidGlass(
+                      onTap: () => _handlePlaceOrder(
+                        context,
+                        isClaimingReward ? 0 : total,
+                        isClaimingReward ? 0 : serviceFee,
+                      ),
+                      title: isClaimingReward
+                          ? l10n.claimReward
+                          : l10n.placeOrder,
+                      subTitle: isClaimingReward
+                          ? ''
+                          : '\$${total.toStringAsFixed(2)}',
+                      icon: Icons.check_circle,
+                    ),
                   ),
                 ),
               ),

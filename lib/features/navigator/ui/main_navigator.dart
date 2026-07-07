@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import '../../home/ui/home_screen.dart';
 import '../../stars/ui/stars_screen.dart';
 import '../../orders/ui/orders_screen.dart';
 import '../../settings/ui/settings_screen.dart';
-import '../../../core/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../home/bloc/home_bloc.dart';
 import '../../home/bloc/home_event.dart';
@@ -44,133 +44,58 @@ class _MainNavigatorState extends State<MainNavigator> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Top indicator line
-              Row(
-                children: List.generate(
-                  4,
-                  (index) => Expanded(
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      height: 3,
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                      decoration: BoxDecoration(
-                        color: _selectedIndex == index
-                            ? AppColors.primary
-                            : Colors.transparent,
-                        borderRadius: const BorderRadius.vertical(
-                          bottom: Radius.circular(3),
-                        ),
-                      ),
+      extendBody: true,
+      body: Stack(
+        children: [
+          _screens[_selectedIndex],
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: SafeArea(
+              child: GlassTabBar.bottom(
+                selectedIndex: _selectedIndex,
+                onTabSelected: (index) =>
+                    setState(() => _selectedIndex = index),
+                quality: GlassQuality.premium,
+                tabs: [
+                  GlassTab(
+                    icon: Icon(
+                      _selectedIndex == 0
+                          ? Icons.home_filled
+                          : Icons.home_outlined,
                     ),
+                    label: l10n.home,
                   ),
-                ),
+                  GlassTab(
+                    icon: Icon(
+                      _selectedIndex == 1
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
+                    ),
+                    label: l10n.stars,
+                  ),
+                  GlassTab(
+                    icon: Icon(
+                      _selectedIndex == 2
+                          ? Icons.receipt_long_rounded
+                          : Icons.receipt_long_outlined,
+                    ),
+                    label: l10n.orders,
+                  ),
+                  GlassTab(
+                    icon: Icon(
+                      _selectedIndex == 3
+                          ? Icons.settings_rounded
+                          : Icons.settings_outlined,
+                    ),
+                    label: l10n.settings,
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _NavBarItem(
-                      icon: Icons.home_filled,
-                      unselectedIcon: Icons.home_outlined,
-                      label: l10n.home,
-                      isSelected: _selectedIndex == 0,
-                      onTap: () => setState(() => _selectedIndex = 0),
-                    ),
-                    _NavBarItem(
-                      icon: Icons.star_rounded,
-                      unselectedIcon: Icons.star_outline_rounded,
-                      label: l10n.stars,
-                      isSelected: _selectedIndex == 1,
-                      onTap: () => setState(() => _selectedIndex = 1),
-                    ),
-                    _NavBarItem(
-                      icon: Icons.receipt_long_rounded,
-                      unselectedIcon: Icons.receipt_long_outlined,
-                      label: l10n.orders,
-                      isSelected: _selectedIndex == 2,
-                      onTap: () => setState(() => _selectedIndex = 2),
-                    ),
-                    _NavBarItem(
-                      icon: Icons.settings_rounded,
-                      unselectedIcon: Icons.settings_outlined,
-                      label: l10n.settings,
-                      isSelected: _selectedIndex == 3,
-                      onTap: () => setState(() => _selectedIndex = 3),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavBarItem extends StatelessWidget {
-  final IconData icon;
-  final IconData unselectedIcon;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _NavBarItem({
-    required this.icon,
-    required this.unselectedIcon,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 80,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedScale(
-              duration: const Duration(milliseconds: 200),
-              scale: isSelected ? 1.0 : 0.9,
-              child: Icon(
-                isSelected ? icon : unselectedIcon,
-                color: isSelected ? AppColors.primary : Colors.grey.shade400,
-                size: 26,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
-                color: isSelected ? AppColors.primary : Colors.grey.shade500,
-                letterSpacing: 0.2,
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:refer_app/core/widgets/button_liquid_glass.dart';
 import 'package:refer_app/features/cart/bloc/cart_bloc.dart';
 import 'package:refer_app/features/cart/bloc/cart_event.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
@@ -74,16 +75,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           if (state is ProductDetailsLoaded) {
             final product = state.product;
             return Scaffold(
-              body: CustomScrollView(
-                paintOrder: SliverPaintOrder.lastIsTop,
-                slivers: [
-                  _buildSliverAppBar(context, l10n, product),
-                  SliverToBoxAdapter(
-                    child: _buildProductContent(l10n, product),
+              extendBody: true,
+              body: Stack(
+                children: [
+                  CustomScrollView(
+                    paintOrder: SliverPaintOrder.lastIsTop,
+                    slivers: [
+                      _buildSliverAppBar(context, l10n, product),
+                      SliverToBoxAdapter(
+                        child: _buildProductContent(l10n, product),
+                      ),
+                      const SliverToBoxAdapter(child: SizedBox(height: 130)),
+                    ],
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: _buildBottomBar(l10n, product),
+                    ),
                   ),
                 ],
               ),
-              bottomNavigationBar: _buildBottomBar(l10n, product),
             );
           }
 
@@ -365,78 +380,33 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildBottomBar(AppLocalizations l10n, Product product) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(32, 24, 32, 40),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: () {
-          sl<CartBloc>().add(
-            CartAdded(
-              productId: product.id,
-              sizeId: _selectedSizeId,
-              typeId: _selectedTypeId,
-              enhancementIds: _selectedEnhancementIds.toList(),
-              quantity: 1,
-            ),
-          );
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        child: ButtonLiquidGlass(
+          onTap: () {
+            sl<CartBloc>().add(
+              CartAdded(
+                productId: product.id,
+                sizeId: _selectedSizeId,
+                typeId: _selectedTypeId,
+                enhancementIds: _selectedEnhancementIds.toList(),
+                quantity: 1,
+              ),
+            );
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("${product.name} added to cart!"),
-              backgroundColor: const Color(0xFF1E3932),
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0C211B),
-          foregroundColor: Colors.white,
-          minimumSize: const Size(double.infinity, 56),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Text(
-                  l10n.addToOrder,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                const Icon(Icons.shopping_bag_outlined, size: 20),
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${product.name} added to cart!'),
+                backgroundColor: const Color(0xFF1E3932),
+                duration: const Duration(seconds: 2),
               ),
-              child: Text(
-                "\$${_calculateCurrentPrice(product).toStringAsFixed(2)}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+            );
+          },
+          title: l10n.addToOrder,
+          subTitle: '\$${_calculateCurrentPrice(product).toStringAsFixed(2)}',
+          icon: Icons.shopping_bag_outlined,
         ),
       ),
     );

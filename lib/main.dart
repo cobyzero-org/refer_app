@@ -11,12 +11,14 @@ import 'features/cart/bloc/cart_bloc.dart';
 import 'features/home/bloc/home_bloc.dart';
 import 'features/cart/bloc/locations_bloc.dart';
 import 'core/services/stripe_service.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await StripeService.init();
   initDI();
-  runApp(const MyApp());
+  await LiquidGlassWidgets.initialize();
+  runApp(LiquidGlassWidgets.wrap(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
