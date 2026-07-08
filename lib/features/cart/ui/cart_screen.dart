@@ -97,63 +97,7 @@ class CartScreen extends StatelessWidget {
                           ),
 
                           if (items.isNotEmpty) ...[
-                            const SizedBox(height: 40),
-
-                            // Promo Code
-                            Text(
-                              l10n.promoCode,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.grey,
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    height: 52,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade200,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      l10n.enterCode,
-                                      style: TextStyle(
-                                        color: Colors.grey.shade500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey.shade300,
-                                    foregroundColor: Colors.black87,
-                                    elevation: 0,
-                                    minimumSize: const Size(100, 52),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    l10n.apply,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 20),
 
                             // Summary Card
                             Container(
