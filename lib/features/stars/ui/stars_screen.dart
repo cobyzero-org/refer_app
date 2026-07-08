@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:refer_app/features/stars/widgets/balance_card.dart';
 import 'package:refer_app/features/stars/widgets/reward_redeem_card.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
@@ -28,8 +29,9 @@ class StarsScreen extends StatelessWidget {
         ),
         body: BlocBuilder<StarsBloc, StarsState>(
           builder: (context, state) {
+            final l10n = AppLocalizations.of(context)!;
             if (state is StarsLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return _buildStarsShimmer(context);
             }
 
             if (state is StarsError) {
@@ -54,246 +56,253 @@ class StarsScreen extends StatelessWidget {
                       ),
               );
 
-              return SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BalanceCard(
-                      stars: state.balance,
-                      nextRewardStars: nextReward.starsRequired,
-                      nextRewardName: nextReward.title,
-                    ),
-                    const SizedBox(height: 48),
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<StarsBloc>().add(StarsStarted());
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BalanceCard(
+                        stars: state.balance,
+                        nextRewardStars: nextReward.starsRequired,
+                        nextRewardName: nextReward.title,
+                      ),
+                      const SizedBox(height: 48),
 
-                    // UNCLAIMED REWARDS SECTION
-                    if (state.redeemedRewards.any((r) => !r.isClaimed)) ...[
-                      const Text(
-                        "Your Unclaimed Rewards",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      ...state.redeemedRewards.where((r) => !r.isClaimed).map((
-                        r,
-                      ) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: InkWell(
-                            onTap: () {
-                              final reward = state.rewards.firstWhere(
-                                (rw) => rw.id == r.rewardId,
-                                orElse: () => state.rewards.first,
-                              );
-                              context.push(
-                                '/checkout',
-                                extra: {
-                                  'redeemedRewardId': r.id,
-                                  'redeemedRewardTitle': r.rewardTitle,
-                                  'redeemedRewardImage': reward.imageUrl,
-                                },
-                                );
-                            },
-                            borderRadius: BorderRadius.circular(16),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: const Color(0xFFD4E9E2),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.02),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: const Color(
-                                        0xFFD4E9E2,
-                                      ).withOpacity(0.5),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.star_rounded,
-                                      color: Color(0xFF1E3932),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          r.rewardTitle,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          "Tap to claim",
-                                          style: TextStyle(
-                                            color: Colors.grey.shade600,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.chevron_right,
-                                    color: Colors.grey,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                      const SizedBox(height: 32),
-                    ],
-
-                    Text(
-                      AppLocalizations.of(context)!.redeemYourStars,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            childAspectRatio: 1.1,
-                          ),
-                      itemCount: state.rewards.length,
-                      itemBuilder: (context, index) {
-                        final reward = state.rewards[index];
-                        final hasEnoughStars =
-                            state.balance >= reward.starsRequired;
-                        return RewardRedeemCard(
-                          reward: reward,
-                          isDark:
-                              index ==
-                              2, // Just for visual variety matching original
-                          onTap: () {
-                            if (!hasEnoughStars) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.insufficientStars,
-                                  ),
-                                  backgroundColor: Colors.red.shade800,
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                              return;
-                            }
-                            _showRedeemConfirmation(context, reward);
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 48),
-                    Text(
-                      AppLocalizations.of(context)!.earningPerks,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    if (state.perks.isEmpty)
-                      const Center(
-                        child: Text("Stay tuned for upcoming perks!"),
-                      )
-                    else ...[
-                      // First perk as featured if exists
-                      if (state.perks.isNotEmpty)
-                        _buildFeaturedPerk(state.perks.first),
-                      const SizedBox(height: 16),
-                      // Others as simple perks
-                      ...state.perks
-                          .skip(1)
-                          .map(
-                            (perk) => Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: _buildSimplePerk(
-                                icon: _getIconForPerk(perk.id),
-                                title: perk.title,
-                                description: perk.description,
-                              ),
-                            ),
-                          ),
-                    ],
-                    const SizedBox(height: 48),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Recent Activity",
-                          style: TextStyle(
+                      // UNCLAIMED REWARDS SECTION
+                      if (state.redeemedRewards.any((r) => !r.isClaimed)) ...[
+                        Text(
+                          l10n.unclaimedRewards,
+                          style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("View History"),
+                        const SizedBox(height: 16),
+                        ...state.redeemedRewards.where((r) => !r.isClaimed).map(
+                          (r) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: InkWell(
+                                onTap: () {
+                                  final reward = state.rewards.firstWhere(
+                                    (rw) => rw.id == r.rewardId,
+                                    orElse: () => state.rewards.first,
+                                  );
+                                  context.push(
+                                    '/checkout',
+                                    extra: {
+                                      'redeemedRewardId': r.id,
+                                      'redeemedRewardTitle': r.rewardTitle,
+                                      'redeemedRewardImage': reward.imageUrl,
+                                    },
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(16),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: const Color(0xFFD4E9E2),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.02),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: const Color(
+                                            0xFFD4E9E2,
+                                          ).withOpacity(0.5),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.star_rounded,
+                                          color: Color(0xFF1E3932),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              r.rewardTitle,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              l10n.tapToClaim,
+                                              style: TextStyle(
+                                                color: Colors.grey.shade600,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        color: Colors.grey,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
+                        const SizedBox(height: 32),
                       ],
-                    ),
-                    const SizedBox(height: 16),
-                    if (state.history.isEmpty)
-                      const Center(
-                        child: Text(
-                          "No recent activity",
-                          style: TextStyle(color: Colors.grey),
+
+                      Text(
+                        AppLocalizations.of(context)!.redeemYourStars,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
                         ),
-                      )
-                    else
-                      ListView.separated(
+                      ),
+                      const SizedBox(height: 24),
+                      GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: state.history.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(height: 32),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 1.1,
+                            ),
+                        itemCount: state.rewards.length,
                         itemBuilder: (context, index) {
-                          final activity = state.history[index];
-                          final isEarn = activity.type == 'earn';
-                          return _buildActivityItem(
-                            title: activity.title,
-                            subtitle:
-                                "${activity.date.day}/${activity.date.month}/${activity.date.year}",
-                            stars:
-                                "${isEarn ? '+' : ''}${activity.stars} Stars",
+                          final reward = state.rewards[index];
+                          final hasEnoughStars =
+                              state.balance >= reward.starsRequired;
+                          return RewardRedeemCard(
+                            reward: reward,
+                            isDark:
+                                index ==
+                                2, // Just for visual variety matching original
+                            onTap: () {
+                              if (!hasEnoughStars) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.insufficientStars,
+                                    ),
+                                    backgroundColor: Colors.red.shade800,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                                return;
+                              }
+                              _showRedeemConfirmation(context, reward);
+                            },
                           );
                         },
                       ),
-                    const SizedBox(height: 120),
-                  ],
+                      const SizedBox(height: 48),
+                      Text(
+                        AppLocalizations.of(context)!.earningPerks,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      if (state.perks.isEmpty)
+                        Center(child: Text(l10n.stayTunedPerks))
+                      else ...[
+                        // First perk as featured if exists
+                        if (state.perks.isNotEmpty)
+                          _buildFeaturedPerk(state.perks.first),
+                        const SizedBox(height: 16),
+                        // Others as simple perks
+                        ...state.perks
+                            .skip(1)
+                            .map(
+                              (perk) => Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: _buildSimplePerk(
+                                  icon: _getIconForPerk(perk.id),
+                                  title: perk.title,
+                                  description: perk.description,
+                                ),
+                              ),
+                            ),
+                      ],
+                      const SizedBox(height: 48),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10n.recentActivity,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => context.push(
+                              '/stars-history',
+                              extra: context.read<StarsBloc>(),
+                            ),
+                            child: Text(l10n.viewHistory),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      if (state.history.isEmpty)
+                        Center(
+                          child: Text(
+                            l10n.noRecentActivity,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        )
+                      else
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.history.length,
+                          separatorBuilder: (context, index) =>
+                              const Divider(height: 32),
+                          itemBuilder: (context, index) {
+                            final activity = state.history[index];
+                            final isEarn = activity.type == 'earn';
+                            return _buildActivityItem(
+                              title: activity.title,
+                              subtitle:
+                                  '${activity.date.day}/${activity.date.month}/${activity.date.year}',
+                              stars:
+                                  "${isEarn ? '+' : ''}${activity.stars} Stars",
+                            );
+                          },
+                        ),
+                      const SizedBox(height: 148),
+                    ],
+                  ),
                 ),
               );
             }
@@ -373,7 +382,9 @@ class StarsScreen extends StatelessWidget {
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Redeeming ${reward.title}..."),
+                  content: Text(
+                    AppLocalizations.of(context)!.redeemingReward(reward.title),
+                  ),
                   behavior: SnackBarBehavior.floating,
                   duration: const Duration(seconds: 2),
                 ),
@@ -544,5 +555,65 @@ class StarsScreen extends StatelessWidget {
       default:
         return Icons.star_outline_rounded;
     }
+  }
+
+  Widget _buildStarsShimmer(BuildContext context) {
+    final baseColor = Colors.grey.shade200;
+    final highlightColor = Colors.grey.shade50;
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      child: Shimmer.fromColors(
+        baseColor: baseColor,
+        highlightColor: highlightColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Balance Card Skeleton
+            Container(
+              width: double.infinity,
+              height: 180,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+            const SizedBox(height: 48),
+
+            // Title
+            Container(
+              width: 180,
+              height: 24,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Grid of Reward Redeem Cards (4 cards)
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 4,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 0.75,
+              ),
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

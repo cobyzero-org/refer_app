@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/models/product_category.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class CategoryCard extends StatelessWidget {
   final ProductCategory category;
@@ -16,6 +18,7 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -35,17 +38,24 @@ class CategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           child: Stack(
             children: [
-              // Image
               Positioned.fill(
-                child: Image.network(
-                  category.imageUrl,
+                child: CachedNetworkImage(
+                  imageUrl: category.imageUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey.shade200,
-                      child: const Icon(Icons.image_not_supported),
-                    );
-                  },
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey.shade100,
+                    child: const Center(
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey.shade200,
+                    child: const Icon(Icons.image_not_supported),
+                  ),
                 ),
               ),
               // Gradient Overlay
@@ -72,14 +82,17 @@ class CategoryCard extends StatelessWidget {
                   children: [
                     if (isLarge) ...[
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Text(
-                          "EXPLORE",
-                          style: TextStyle(
+                        child: Text(
+                          l10n.explore,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
@@ -100,7 +113,7 @@ class CategoryCard extends StatelessWidget {
                     if (isLarge) ...[
                       const SizedBox(height: 4),
                       Text(
-                        "Discover our premium selection",
+                        l10n.discoverPremiumSelection,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
                           fontSize: 14,

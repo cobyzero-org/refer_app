@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
@@ -82,21 +83,25 @@ class DetailedOrderCard extends StatelessWidget {
     ).format(createdAt);
     final priceStr = '\$${order['total'].toStringAsFixed(2)}';
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
+    return InkWell(
+      onTap: () => context.push('/order-detail', extra: order),
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -128,36 +133,12 @@ class DetailedOrderCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(child: _buildProductStack()),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1E3932),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.reorder,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          _buildProductStack(),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildStatusBadge(String status, BuildContext context) {
     Color color;
@@ -251,23 +232,11 @@ class DetailedOrderCard extends StatelessWidget {
         color: const Color(0xFFD4E9E2),
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 2),
+        image: url.isNotEmpty
+            ? DecorationImage(image: NetworkImage(url), fit: BoxFit.cover)
+            : null,
       ),
       clipBehavior: Clip.antiAlias,
-      child: url.isNotEmpty
-          ? Image.network(
-              url,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const Icon(
-                Icons.coffee_rounded,
-                color: Color(0xFF1E3932),
-                size: 20,
-              ),
-            )
-          : const Icon(
-              Icons.coffee_rounded,
-              color: Color(0xFF1E3932),
-              size: 20,
-            ),
     );
   }
 

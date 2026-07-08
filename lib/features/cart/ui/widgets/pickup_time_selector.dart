@@ -10,13 +10,14 @@ class PickupTimeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<PickupTimeBloc, PickupTimeState>(
       builder: (context, state) {
         return Column(
           children: [
             _buildOption(
               context,
-              title: 'As soon as possible',
+              title: l10n.asap,
               subtitle: state.waitTimeMessage,
               isSelected: state.type == PickupTimeType.asap,
               onTap: () {
@@ -28,10 +29,10 @@ class PickupTimeSelector extends StatelessWidget {
             const SizedBox(height: 12),
             _buildOption(
               context,
-              title: 'Schedule for later',
+              title: l10n.scheduleLater,
               subtitle: state.scheduledTime != null
                   ? '${state.scheduledTime!.hour.toString().padLeft(2, '0')}:${state.scheduledTime!.minute.toString().padLeft(2, '0')}'
-                  : 'Select a specific time',
+                  : l10n.selectSpecificTime,
               isSelected: state.type == PickupTimeType.scheduled,
               icon: Icons.access_time_filled_rounded,
               onTap: () => _selectTime(context),

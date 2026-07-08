@@ -53,7 +53,7 @@ class HomeRepositoryImpl implements HomeRepository {
   Future<User?> updateProfile(Map<String, dynamic> updateData) async {
     try {
       final response = await apiClient.dio.patch(
-        '/user/profile',
+        '/users/profile',
         data: updateData,
       );
       if (response.statusCode == 200) {
@@ -131,7 +131,7 @@ class HomeRepositoryImpl implements HomeRepository {
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(filePath),
       });
-      final response = await apiClient.dio.post('/user/upload', data: formData);
+      final response = await apiClient.dio.post('/users/upload', data: formData);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final parsedData = _parseData(response.data);
         return parsedData['photoUrl'];

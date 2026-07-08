@@ -462,4 +462,169 @@ class AppLocalizationsEn extends AppLocalizations {
   String earningStars(int stars) {
     return 'You are earning $stars stars with this order!';
   }
+
+  @override
+  String get orderStatusTitle => 'Order Status';
+
+  @override
+  String get orderIsReady => 'Your order is ready!';
+
+  @override
+  String get pickupInstructions =>
+      'Go directly to the pickup counter to collect your order. Enjoy!';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get emailAddress => 'Email Address';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get birthDate => 'Birth Date';
+
+  @override
+  String get tapToUpdateImage => 'Tap to update image';
+
+  @override
+  String get profileUpdated => 'Profile updated successfully';
+
+  @override
+  String get errorUpdatingProfile => 'Error updating profile';
+
+  @override
+  String get orderDetails => 'Order Details';
+
+  @override
+  String get orderDate => 'Date';
+
+  @override
+  String get searchFAQ => 'Search FAQs...';
+
+  @override
+  String get faqCategoryGeneral => 'General';
+
+  @override
+  String get faqCategoryPayments => 'Payments';
+
+  @override
+  String get faqCategoryOrders => 'Orders';
+
+  @override
+  String get faqCategoryAccount => 'Account';
+
+  @override
+  String get contactSupport => 'Contact Support';
+
+  @override
+  String get contactUsEmail => 'Email us';
+
+  @override
+  String get contactUsPhone => 'Call us';
+
+  @override
+  String get faqQ1 => 'How do I earn stars?';
+
+  @override
+  String get faqA1 =>
+      'You earn stars with every purchase you make. For every dollar spent, you get 1 star. Redeem stars for free drinks and rewards!';
+
+  @override
+  String get faqQ2 => 'How do I collect my order?';
+
+  @override
+  String get faqA2 =>
+      'Once you place an order, you can check its status on the Orders tab. When its status is READY, simply head to the counter and show your order number.';
+
+  @override
+  String get faqQ3 => 'What payment methods are supported?';
+
+  @override
+  String get faqA3 =>
+      'We accept major credit and debit cards, Apple Pay, and digital wallet payments directly in the checkout view.';
+
+  @override
+  String get faqQ4 => 'How do I change my password?';
+
+  @override
+  String get faqA4 =>
+      'Go to settings, and under Security, tap Change Password. Enter your current password and your new password to update it.';
+
+  @override
+  String get noResults => 'No results found';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get searchSubtitle => 'Curated selections for every palate.';
+
+  @override
+  String noProductsFound(String query) {
+    return 'No products found for \"$query\"';
+  }
+
+  @override
+  String get failedToLoadCategories => 'Failed to load categories';
+
+  @override
+  String get noCategoriesFound => 'No categories found';
+
+  @override
+  String get explore => 'EXPLORE';
+
+  @override
+  String get discoverPremiumSelection => 'Discover our premium selection';
+
+  @override
+  String get unclaimedRewards => 'Your Unclaimed Rewards';
+
+  @override
+  String get tapToClaim => 'Tap to claim';
+
+  @override
+  String get stayTunedPerks => 'Stay tuned for upcoming perks!';
+
+  @override
+  String get viewHistory => 'View History';
+
+  @override
+  String redeemingReward(String title) {
+    return 'Redeeming $title...';
+  }
+
+  @override
+  String get recentActivity => 'Recent Activity';
+
+  @override
+  String get noRecentActivity => 'No recent activity';
+
+  @override
+  String get starsHistory => 'Stars History';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get selectPickupPoint => 'Select Pickup Point';
+
+  @override
+  String get asap => 'As soon as possible';
+
+  @override
+  String get scheduleLater => 'Schedule for later';
+
+  @override
+  String get selectSpecificTime => 'Select a specific time';
+
+  @override
+  String get stripePayment => 'Stripe Payment';
+
+  @override
+  String get safeSecure => 'Safe & Secure';
 }

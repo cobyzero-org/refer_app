@@ -68,6 +68,10 @@ class CartSocketManager {
     socket?.emit('clearCart');
   }
 
+  void getCart() {
+    socket?.emit('getCart');
+  }
+
   void disconnect() {
     socket?.disconnect();
     socket = null;

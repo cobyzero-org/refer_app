@@ -286,13 +286,13 @@ class _SmallProductCircle extends StatelessWidget {
               ),
             )
           : (imageUrl != null && imageUrl!.isNotEmpty)
-          ? Image.network(
-              imageUrl!,
-              fit: BoxFit.fill,
-              errorBuilder: (_, __, ___) => const Icon(
-                Icons.coffee_rounded,
-                size: 20,
-                color: Color(0xFF1E3932),
+          ? Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: NetworkImage(imageUrl!),
+                  fit: BoxFit.cover,
+                ),
               ),
             )
           : const Icon(

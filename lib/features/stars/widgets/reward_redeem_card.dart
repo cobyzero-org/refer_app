@@ -31,7 +31,7 @@ class RewardRedeemCard extends StatelessWidget {
                     color: AppColors.primary.withOpacity(0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
-                  )
+                  ),
                 ]
               : null,
         ),
@@ -39,7 +39,7 @@ class RewardRedeemCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                 color: isDark
                     ? Colors.white.withOpacity(0.2)
@@ -50,19 +50,23 @@ class RewardRedeemCard extends StatelessWidget {
                   ? ClipOval(
                       child: Image.network(
                         reward.imageUrl!,
-                        width: 24,
-                        height: 24,
+                        width: 55,
+                        height: 55,
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Icon(
                           IconMapper.getIcon(reward.icon),
-                          color: isDark ? const Color(0xFFD4E9E2) : AppColors.primary,
+                          color: isDark
+                              ? const Color(0xFFD4E9E2)
+                              : AppColors.primary,
                           size: 24,
                         ),
                       ),
                     )
                   : Icon(
                       IconMapper.getIcon(reward.icon),
-                      color: isDark ? const Color(0xFFD4E9E2) : AppColors.primary,
+                      color: isDark
+                          ? const Color(0xFFD4E9E2)
+                          : AppColors.primary,
                       size: 24,
                     ),
             ),

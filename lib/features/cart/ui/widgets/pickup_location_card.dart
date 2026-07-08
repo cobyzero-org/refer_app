@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/locations_bloc.dart';
 import '../../bloc/locations_event.dart';
 import '../../bloc/locations_state.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class PickupLocationCard extends StatelessWidget {
   const PickupLocationCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<LocationsBloc, LocationsState>(
       builder: (context, state) {
         if (state is LocationsLoaded && state.selectedLocation != null) {
@@ -66,9 +68,9 @@ class PickupLocationCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () => _showLocationSelectionSheet(context),
-                  child: const Text(
-                    'Change',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.change,
+                    style: const TextStyle(
                       color: Color(0xFF1E3932),
                       fontWeight: FontWeight.bold,
                       decoration: TextDecoration.underline,
@@ -85,6 +87,7 @@ class PickupLocationCard extends StatelessWidget {
   }
 
   void _showLocationSelectionSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -100,9 +103,9 @@ class PickupLocationCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Select Pickup Point',
-                      style: TextStyle(
+                    Text(
+                      l10n.selectPickupPoint,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),

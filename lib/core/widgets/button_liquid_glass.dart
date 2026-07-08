@@ -18,42 +18,50 @@ class ButtonLiquidGlass extends StatelessWidget {
     return GlassButton.custom(
       quality: GlassQuality.premium,
       settings: LiquidGlassSettings(
-        glassColor: const Color(0xFF0C211B).withValues(alpha: 0.1),
+        glassColor: const Color.fromARGB(
+          255,
+          17,
+          45,
+          37,
+        ).withValues(alpha: 0.1),
       ),
       useOwnLayer: true,
       style: GlassButtonStyle.prominent,
       shape: const LiquidRoundedRectangle(borderRadius: 20),
       onTap: onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 24, color: Colors.black),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 16,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              subTitle,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 24, color: Colors.black),
+            const SizedBox(width: 8),
+            Text(
+              title,
               style: const TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 16,
                 color: Colors.black,
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                subTitle,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

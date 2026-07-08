@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class BrewCard extends StatelessWidget {
   final String title;
@@ -71,12 +72,23 @@ class BrewCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(24),
       child: Stack(
         children: [
-          Image.network(
-            imageUrl,
+          CachedNetworkImage(
+            imageUrl: imageUrl,
             height: 300,
             width: double.infinity,
             fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
+            placeholder: (context, url) => Container(
+              height: 300,
+              color: Colors.grey.shade100,
+              child: const Center(
+                child: SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
+            errorWidget: (context, url, error) => Container(
               height: 300,
               color: Colors.grey.shade200,
               child: const Icon(Icons.coffee, size: 50),

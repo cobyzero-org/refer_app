@@ -955,6 +955,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You are earning {stars} stars with this order!'**
   String earningStars(int stars);
+
+  /// No description provided for @orderStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Status'**
+  String get orderStatusTitle;
+
+  /// No description provided for @orderIsReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order is ready!'**
+  String get orderIsReady;
+
+  /// No description provided for @pickupInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Go directly to the pickup counter to collect your order. Enjoy!'**
+  String get pickupInstructions;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @emailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Address'**
+  String get emailAddress;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @birthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth Date'**
+  String get birthDate;
+
+  /// No description provided for @tapToUpdateImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to update image'**
+  String get tapToUpdateImage;
+
+  /// No description provided for @profileUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdated;
+
+  /// No description provided for @errorUpdatingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating profile'**
+  String get errorUpdatingProfile;
+
+  /// No description provided for @orderDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Details'**
+  String get orderDetails;
+
+  /// No description provided for @orderDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get orderDate;
+
+  /// No description provided for @searchFAQ.
+  ///
+  /// In en, this message translates to:
+  /// **'Search FAQs...'**
+  String get searchFAQ;
+
+  /// No description provided for @faqCategoryGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get faqCategoryGeneral;
+
+  /// No description provided for @faqCategoryPayments.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get faqCategoryPayments;
+
+  /// No description provided for @faqCategoryOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get faqCategoryOrders;
+
+  /// No description provided for @faqCategoryAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get faqCategoryAccount;
+
+  /// No description provided for @contactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get contactSupport;
+
+  /// No description provided for @contactUsEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email us'**
+  String get contactUsEmail;
+
+  /// No description provided for @contactUsPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Call us'**
+  String get contactUsPhone;
+
+  /// No description provided for @faqQ1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I earn stars?'**
+  String get faqQ1;
+
+  /// No description provided for @faqA1.
+  ///
+  /// In en, this message translates to:
+  /// **'You earn stars with every purchase you make. For every dollar spent, you get 1 star. Redeem stars for free drinks and rewards!'**
+  String get faqA1;
+
+  /// No description provided for @faqQ2.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I collect my order?'**
+  String get faqQ2;
+
+  /// No description provided for @faqA2.
+  ///
+  /// In en, this message translates to:
+  /// **'Once you place an order, you can check its status on the Orders tab. When its status is READY, simply head to the counter and show your order number.'**
+  String get faqA2;
+
+  /// No description provided for @faqQ3.
+  ///
+  /// In en, this message translates to:
+  /// **'What payment methods are supported?'**
+  String get faqQ3;
+
+  /// No description provided for @faqA3.
+  ///
+  /// In en, this message translates to:
+  /// **'We accept major credit and debit cards, Apple Pay, and digital wallet payments directly in the checkout view.'**
+  String get faqA3;
+
+  /// No description provided for @faqQ4.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I change my password?'**
+  String get faqQ4;
+
+  /// No description provided for @faqA4.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to settings, and under Security, tap Change Password. Enter your current password and your new password to update it.'**
+  String get faqA4;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResults;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @searchSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Curated selections for every palate.'**
+  String get searchSubtitle;
+
+  /// No description provided for @noProductsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No products found for \"{query}\"'**
+  String noProductsFound(String query);
+
+  /// No description provided for @failedToLoadCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load categories'**
+  String get failedToLoadCategories;
+
+  /// No description provided for @noCategoriesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found'**
+  String get noCategoriesFound;
+
+  /// No description provided for @explore.
+  ///
+  /// In en, this message translates to:
+  /// **'EXPLORE'**
+  String get explore;
+
+  /// No description provided for @discoverPremiumSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover our premium selection'**
+  String get discoverPremiumSelection;
+
+  /// No description provided for @unclaimedRewards.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Unclaimed Rewards'**
+  String get unclaimedRewards;
+
+  /// No description provided for @tapToClaim.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to claim'**
+  String get tapToClaim;
+
+  /// No description provided for @stayTunedPerks.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay tuned for upcoming perks!'**
+  String get stayTunedPerks;
+
+  /// No description provided for @viewHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'View History'**
+  String get viewHistory;
+
+  /// No description provided for @redeemingReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeeming {title}...'**
+  String redeemingReward(String title);
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
+
+  /// No description provided for @noRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent activity'**
+  String get noRecentActivity;
+
+  /// No description provided for @starsHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Stars History'**
+  String get starsHistory;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @selectPickupPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Pickup Point'**
+  String get selectPickupPoint;
+
+  /// No description provided for @asap.
+  ///
+  /// In en, this message translates to:
+  /// **'As soon as possible'**
+  String get asap;
+
+  /// No description provided for @scheduleLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule for later'**
+  String get scheduleLater;
+
+  /// No description provided for @selectSpecificTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a specific time'**
+  String get selectSpecificTime;
+
+  /// No description provided for @stripePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Stripe Payment'**
+  String get stripePayment;
+
+  /// No description provided for @safeSecure.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe & Secure'**
+  String get safeSecure;
 }
 
 class _AppLocalizationsDelegate

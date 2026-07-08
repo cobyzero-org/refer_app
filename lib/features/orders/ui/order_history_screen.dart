@@ -41,7 +41,11 @@ class OrderHistoryScreen extends StatelessWidget {
             );
           }
 
-          final orders = snapshot.data!;
+          final rawOrders = snapshot.data!;
+          final orders = rawOrders
+              .where((o) => ['COMPLETED', 'CANCELLED'].contains(o['status']))
+              .toList();
+
           if (orders.isEmpty) {
             return Center(
               child: Text(AppLocalizations.of(context)!.noOrdersFound),
@@ -60,7 +64,7 @@ class OrderHistoryScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: DetailedOrderCard(order: order),
                   );
-                }).toList(),
+                }),
                 const SizedBox(height: 100),
               ],
             ),

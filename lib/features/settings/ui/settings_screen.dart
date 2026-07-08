@@ -80,7 +80,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSettingsItem(
               icon: Icons.help_outline_rounded,
               title: l10n.helpCenter,
-              onTap: () {},
+              onTap: () => context.push('/help-center'),
             ),
             _buildSettingsItem(
               icon: Icons.gavel_outlined,
@@ -316,7 +316,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final version = sl<AppConfigRepository>().cachedConfig?.version ?? '0.0.0';
     return Center(
       child: Text(
-        '${l10n.version} $version — Abal Organization',
+        '${l10n.version} $version — Cobyzero Organization',
         style: TextStyle(color: Colors.grey.shade400, fontSize: 11),
       ),
     );

@@ -207,5 +207,71 @@
         "type": "int"
       }
     }
-  }
+  },
+  "orderStatusTitle": "Order Status",
+  "orderIsReady": "Your order is ready!",
+  "pickupInstructions": "Go directly to the pickup counter to collect your order. Enjoy!",
+  "editProfile": "Edit Profile",
+  "saveChanges": "Save Changes",
+  "emailAddress": "Email Address",
+  "phoneNumber": "Phone Number",
+  "birthDate": "Birth Date",
+  "tapToUpdateImage": "Tap to update image",
+  "profileUpdated": "Profile updated successfully",
+  "errorUpdatingProfile": "Error updating profile",
+  "orderDetails": "Order Details",
+  "orderDate": "Date",
+  "searchFAQ": "Search FAQs...",
+  "faqCategoryGeneral": "General",
+  "faqCategoryPayments": "Payments",
+  "faqCategoryOrders": "Orders",
+  "faqCategoryAccount": "Account",
+  "contactSupport": "Contact Support",
+  "contactUsEmail": "Email us",
+  "contactUsPhone": "Call us",
+  "faqQ1": "How do I earn stars?",
+  "faqA1": "You earn stars with every purchase you make. For every dollar spent, you get 1 star. Redeem stars for free drinks and rewards!",
+  "faqQ2": "How do I collect my order?",
+  "faqA2": "Once you place an order, you can check its status on the Orders tab. When its status is READY, simply head to the counter and show your order number.",
+  "faqQ3": "What payment methods are supported?",
+  "faqA3": "We accept major credit and debit cards, Apple Pay, and digital wallet payments directly in the checkout view.",
+  "faqQ4": "How do I change my password?",
+  "faqA4": "Go to settings, and under Security, tap Change Password. Enter your current password and your new password to update it.",
+  "noResults": "No results found",
+  "all": "All",
+  "searchSubtitle": "Curated selections for every palate.",
+  "noProductsFound": "No products found for \"{query}\"",
+  "@noProductsFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToLoadCategories": "Failed to load categories",
+  "noCategoriesFound": "No categories found",
+  "explore": "EXPLORE",
+  "discoverPremiumSelection": "Discover our premium selection",
+  "unclaimedRewards": "Your Unclaimed Rewards",
+  "tapToClaim": "Tap to claim",
+  "stayTunedPerks": "Stay tuned for upcoming perks!",
+  "viewHistory": "View History",
+  "redeemingReward": "Redeeming {title}...",
+  "@redeemingReward": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "recentActivity": "Recent Activity",
+  "noRecentActivity": "No recent activity",
+  "starsHistory": "Stars History",
+  "change": "Change",
+  "selectPickupPoint": "Select Pickup Point",
+  "asap": "As soon as possible",
+  "scheduleLater": "Schedule for later",
+  "selectSpecificTime": "Select a specific time",
+  "stripePayment": "Stripe Payment",
+  "safeSecure": "Safe & Secure"
 }

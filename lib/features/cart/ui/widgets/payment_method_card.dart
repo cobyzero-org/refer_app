@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class PaymentMethodCard extends StatelessWidget {
   const PaymentMethodCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -23,17 +25,17 @@ class PaymentMethodCard extends StatelessWidget {
             child: const Icon(Icons.credit_card, color: Color(0xFF1E3932)),
           ),
           const SizedBox(width: 16),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Stripe Payment',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  l10n.stripePayment,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 Text(
-                  'Safe & Secure',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                  l10n.safeSecure,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               ],
             ),

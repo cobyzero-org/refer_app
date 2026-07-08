@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:refer_app/core/widgets/button_liquid_glass.dart';
 import 'package:refer_app/features/home/bloc/home_event.dart';
+import '../../../l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../home/bloc/home_bloc.dart';
 import '../../home/bloc/home_state.dart';
@@ -48,17 +50,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          bool isLoading = false;
-          if (state is HomeLoaded) {
-            isLoading = state.status == HomeStatus.loading;
-          }
-          return _buildBottomAction(isLoading);
-        },
-      ),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -66,9 +60,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF1E3932)),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Editar Perfil',
-          style: TextStyle(
+        title: Text(
+          l10n.editProfile,
+          style: const TextStyle(
             color: Color(0xFF1E3932),
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -82,7 +76,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             if (state.status == HomeStatus.success) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.message ?? "Perfil actualizado"),
+                  content: Text(state.message ?? l10n.profileUpdated),
                   backgroundColor: const Color(0xFF1E3932),
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(
@@ -94,7 +88,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             } else if (state.status == HomeStatus.error) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.message ?? "Error al actualizar"),
+                  content: Text(state.message ?? l10n.errorUpdatingProfile),
                   backgroundColor: Colors.red.shade800,
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(
@@ -108,55 +102,69 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             String? photoUrl;
-            if (state is HomeLoaded) photoUrl = state.user.photoUrl;
+            bool isLoading = false;
+            if (state is HomeLoaded) {
+              photoUrl = state.user.photoUrl;
+              isLoading = state.status == HomeStatus.loading;
+            }
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 120),
-              child: Column(
-                children: [
-                  _buildProfileImagePicker(photoUrl),
-                  const SizedBox(height: 48),
-                  _buildInputField(
-                    label: 'Nombre Completo',
-                    controller: _nameController,
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 140),
+                  child: Column(
+                    children: [
+                      _buildProfileImagePicker(photoUrl),
+                      const SizedBox(height: 48),
+                      _buildInputField(
+                        label: l10n.fullName,
+                        controller: _nameController,
+                      ),
+                      const SizedBox(height: 24),
+                      _buildInputField(
+                        label: l10n.emailAddress,
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 24),
+                      _buildInputField(
+                        label: l10n.phoneNumber,
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                      ),
+                      const SizedBox(height: 24),
+                      _buildInputField(
+                        label: l10n.birthDate,
+                        controller: _birthDateController,
+                        readOnly: true,
+                        suffixIcon: Icons.calendar_today_outlined,
+                        onTap: () async {
+                          final DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now().subtract(
+                              const Duration(days: 365 * 20),
+                            ),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(),
+                          );
+                          if (picked != null) {
+                            setState(() {
+                              _birthDateController.text =
+                                  "${picked.month}/${picked.day}/${picked.year}";
+                            });
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                  _buildInputField(
-                    label: 'Correo Electrónico',
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildInputField(
-                    label: 'Número de Teléfono',
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildInputField(
-                    label: 'Fecha de Nacimiento',
-                    controller: _birthDateController,
-                    readOnly: true,
-                    suffixIcon: Icons.calendar_today_outlined,
-                    onTap: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now().subtract(
-                          const Duration(days: 365 * 20),
-                        ),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime.now(),
-                      );
-                      if (picked != null) {
-                        setState(() {
-                          _birthDateController.text =
-                              "${picked.month}/${picked.day}/${picked.year}";
-                        });
-                      }
-                    },
-                  ),
-                ],
-              ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: _buildBottomAction(isLoading),
+                ),
+              ],
             );
           },
         ),
@@ -167,6 +175,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildProfileImagePicker(String? photoUrl) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
+        final l10n = AppLocalizations.of(context)!;
         bool isUploading = false;
         if (state is HomeLoaded) {
           isUploading = state.status == HomeStatus.loading;
@@ -247,9 +256,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Toca para actualizar imagen',
-              style: TextStyle(
+            Text(
+              l10n.tapToUpdateImage,
+              style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -311,44 +320,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildBottomAction(bool isLoading) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
-      color: Colors.transparent,
-      child: ElevatedButton(
-        onPressed: isLoading
-            ? null
-            : () {
-                context.read<HomeBloc>().add(
-                  UserProfileUpdated(
-                    name: _nameController.text,
-                    email: _emailController.text,
-                    phoneNumber: _phoneController.text,
-                    birthDate: _birthDateController.text,
-                  ),
-                );
-              },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0C211B),
-          foregroundColor: Colors.white,
-          minimumSize: const Size(double.infinity, 60),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 0,
+    final l10n = AppLocalizations.of(context)!;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ButtonLiquidGlass(
+          onTap: isLoading
+              ? () {}
+              : () {
+                  context.read<HomeBloc>().add(
+                    UserProfileUpdated(
+                      name: _nameController.text,
+                      email: _emailController.text,
+                      phoneNumber: _phoneController.text,
+                      birthDate: _birthDateController.text,
+                    ),
+                  );
+                },
+          title: l10n.saveChanges,
+          subTitle: '',
+          icon: Icons.save,
         ),
-        child: isLoading
-            ? const SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              )
-            : const Text(
-                'Guardar Cambios',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
       ),
     );
   }

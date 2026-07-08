@@ -58,6 +58,7 @@ dependencies:
   socket_io_client: ^2.0.3
   flutter_stripe: ^12.1.0
   liquid_glass_widgets: ^0.21.1
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

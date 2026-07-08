@@ -23,6 +23,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   void _onCartStarted(CartStarted event, Emitter<CartState> emit) {
     emit(CartLoading());
+    print('Socket: Emitting getCart event...');
+    socketManager.getCart();
   }
 
   void _onCartAdded(CartAdded event, Emitter<CartState> emit) {

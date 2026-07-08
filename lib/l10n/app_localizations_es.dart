@@ -464,4 +464,169 @@ class AppLocalizationsEs extends AppLocalizations {
   String earningStars(int stars) {
     return '¡Estás ganando $stars estrellas con este pedido!';
   }
+
+  @override
+  String get orderStatusTitle => 'Estado del Pedido';
+
+  @override
+  String get orderIsReady => '¡Tu pedido está listo!';
+
+  @override
+  String get pickupInstructions =>
+      'Pasa directamente a la barra de entregas para recoger tu orden. ¡Que lo disfrutes!';
+
+  @override
+  String get editProfile => 'Editar Perfil';
+
+  @override
+  String get saveChanges => 'Guardar Cambios';
+
+  @override
+  String get emailAddress => 'Correo Electrónico';
+
+  @override
+  String get phoneNumber => 'Número de Teléfono';
+
+  @override
+  String get birthDate => 'Fecha de Nacimiento';
+
+  @override
+  String get tapToUpdateImage => 'Toca para actualizar imagen';
+
+  @override
+  String get profileUpdated => 'Perfil actualizado';
+
+  @override
+  String get errorUpdatingProfile => 'Error al actualizar';
+
+  @override
+  String get orderDetails => 'Detalles del Pedido';
+
+  @override
+  String get orderDate => 'Fecha';
+
+  @override
+  String get searchFAQ => 'Buscar preguntas frecuentes...';
+
+  @override
+  String get faqCategoryGeneral => 'General';
+
+  @override
+  String get faqCategoryPayments => 'Pagos';
+
+  @override
+  String get faqCategoryOrders => 'Pedidos';
+
+  @override
+  String get faqCategoryAccount => 'Cuenta';
+
+  @override
+  String get contactSupport => 'Contactar Soporte';
+
+  @override
+  String get contactUsEmail => 'Escríbenos';
+
+  @override
+  String get contactUsPhone => 'Llámanos';
+
+  @override
+  String get faqQ1 => '¿Cómo gano estrellas?';
+
+  @override
+  String get faqA1 =>
+      'Ganas estrellas con cada compra. Por cada dólar gastado, obtienes 1 estrella. ¡Canjea tus estrellas por bebidas gratis y recompensas!';
+
+  @override
+  String get faqQ2 => '¿Cómo recojo mi pedido?';
+
+  @override
+  String get faqA2 =>
+      'Una vez realizado tu pedido, puedes ver su estado en la pestaña de Pedidos. Cuando aparezca como LISTO, dirígete al mostrador y muestra tu número de orden.';
+
+  @override
+  String get faqQ3 => '¿Qué métodos de pago aceptan?';
+
+  @override
+  String get faqA3 =>
+      'Aceptamos tarjetas de crédito y débito principales, Apple Pay y pagos con billeteras digitales directamente en la vista de pago.';
+
+  @override
+  String get faqQ4 => '¿Cómo cambio mi contraseña?';
+
+  @override
+  String get faqA4 =>
+      'Ve a ajustes y, bajo la sección de Seguridad, toca en Cambiar Contraseña. Ingresa tu contraseña actual y la nueva para actualizarla.';
+
+  @override
+  String get noResults => 'No se encontraron resultados';
+
+  @override
+  String get all => 'Todo';
+
+  @override
+  String get searchSubtitle => 'Selecciones exclusivas para cada paladar.';
+
+  @override
+  String noProductsFound(String query) {
+    return 'No se encontraron productos para \"$query\"';
+  }
+
+  @override
+  String get failedToLoadCategories => 'Error al cargar las categorías';
+
+  @override
+  String get noCategoriesFound => 'No se encontraron categorías';
+
+  @override
+  String get explore => 'EXPLORAR';
+
+  @override
+  String get discoverPremiumSelection => 'Descubre nuestra selección premium';
+
+  @override
+  String get unclaimedRewards => 'Tus recompensas sin reclamar';
+
+  @override
+  String get tapToClaim => 'Toca para reclamar';
+
+  @override
+  String get stayTunedPerks => '¡Mantente atento para próximas ventajas!';
+
+  @override
+  String get viewHistory => 'Ver Historial';
+
+  @override
+  String redeemingReward(String title) {
+    return 'Canjeando $title...';
+  }
+
+  @override
+  String get recentActivity => 'Actividad Reciente';
+
+  @override
+  String get noRecentActivity => 'Sin actividad reciente';
+
+  @override
+  String get starsHistory => 'Historial de Estrellas';
+
+  @override
+  String get change => 'Cambiar';
+
+  @override
+  String get selectPickupPoint => 'Seleccionar Punto de Entrega';
+
+  @override
+  String get asap => 'Lo antes posible';
+
+  @override
+  String get scheduleLater => 'Programar para después';
+
+  @override
+  String get selectSpecificTime => 'Seleccionar hora específica';
+
+  @override
+  String get stripePayment => 'Pago con Stripe';
+
+  @override
+  String get safeSecure => 'Seguro y Confiable';
 }

@@ -10,11 +10,17 @@ import '../features/cart/ui/cart_screen.dart';
 import '../features/cart/ui/checkout_screen.dart';
 import '../features/settings/ui/edit_profile_screen.dart';
 import '../features/settings/ui/change_password_screen.dart';
+import '../features/settings/ui/help_center_screen.dart';
 import '../features/orders/ui/order_history_screen.dart';
+import '../features/orders/ui/order_detail_screen.dart';
 import '../features/cart/ui/order_status_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../features/search/bloc/search_bloc.dart';
 import '../features/search/bloc/search_event.dart';
+import '../features/home/ui/menu_screen.dart';
+import '../features/stars/ui/stars_history_screen.dart';
+import '../features/stars/bloc/stars_bloc.dart';
+import '../features/stars/bloc/stars_event.dart';
 import 'di.dart';
 
 final router = GoRouter(
@@ -40,6 +46,10 @@ final router = GoRouter(
       },
     ),
     GoRoute(path: '/cart', builder: (context, state) => const CartScreen()),
+    GoRoute(
+      path: '/menu',
+      builder: (context, state) => const MenuScreen(),
+    ),
     GoRoute(
       path: '/search',
       builder: (context, state) => BlocProvider(
@@ -71,6 +81,22 @@ final router = GoRouter(
       builder: (context, state) => const OrderHistoryScreen(),
     ),
     GoRoute(
+      path: '/stars-history',
+      builder: (context, state) {
+        final bloc = state.extra as StarsBloc?;
+        if (bloc != null) {
+          return BlocProvider.value(
+            value: bloc,
+            child: const StarsHistoryScreen(),
+          );
+        }
+        return BlocProvider(
+          create: (context) => sl<StarsBloc>()..add(StarsStarted()),
+          child: const StarsHistoryScreen(),
+        );
+      },
+    ),
+    GoRoute(
       path: '/order-status',
       builder: (context, state) {
         final orderId = state.uri.queryParameters['orderId'] ?? 'ER-9842';
@@ -78,6 +104,17 @@ final router = GoRouter(
             state.uri.queryParameters['locationName'] ?? 'Downtown Studio';
         return OrderStatusScreen(orderId: orderId, locationName: locationName);
       },
+    ),
+    GoRoute(
+      path: '/order-detail',
+      builder: (context, state) {
+        final order = state.extra as Map<String, dynamic>;
+        return OrderDetailScreen(order: order);
+      },
+    ),
+    GoRoute(
+      path: '/help-center',
+      builder: (context, state) => const HelpCenterScreen(),
     ),
   ],
 );

@@ -10,17 +10,77 @@ import '../widgets/category_card.dart';
 import '../widgets/search_result_card.dart';
 import '../../../../l10n/app_localizations.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  late TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController(
+      text: context.read<SearchBloc>().state.query,
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final canPop = Navigator.canPop(context);
+
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 80,
-        title: _buildSearchField(context, l10n),
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        toolbarHeight: 70,
+        titleSpacing: 0,
+        leadingWidth: canPop ? 60 : 0,
+        leading: canPop
+            ? Center(
+                child: Container(
+                  height: 38,
+                  width: 38,
+                  margin: const EdgeInsets.only(left: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.grey.shade200, width: 1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    iconSize: 16,
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: AppColors.primary,
+                    ),
+                    onPressed: () => context.pop(),
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
+        title: Padding(
+          padding: EdgeInsets.only(left: canPop ? 12 : 24, right: 24),
+          child: _buildSearchField(context, l10n),
+        ),
       ),
       body: BlocBuilder<SearchBloc, SearchState>(
         builder: (context, state) {
@@ -50,7 +110,7 @@ class SearchScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "Curated selections for every palate.", // Todo: Add to l10n if needed
+                  l10n.searchSubtitle,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 32),
@@ -81,7 +141,7 @@ class SearchScreen extends StatelessWidget {
           if (index == 0) {
             final isSelected = state.selectedCategoryId == null;
             return ChoiceChip(
-              label: const Text("All"),
+              label: Text(l10n.all),
               selected: isSelected,
               onSelected: (selected) {
                 if (selected) {
@@ -133,6 +193,7 @@ class SearchScreen extends StatelessWidget {
   }
 
   Widget _buildSearchResults(SearchState state) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.status == SearchStatus.loading) {
       return ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -154,7 +215,7 @@ class SearchScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              "No products found for \"${state.query}\"",
+              l10n.noProductsFound(state.query),
               style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
             ),
           ],
@@ -179,6 +240,7 @@ class SearchScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryList(SearchState state) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.status == SearchStatus.loading && state.query.isEmpty) {
       return Column(children: List.generate(3, (index) => _buildShimmerCard()));
     }
@@ -189,7 +251,7 @@ class SearchScreen extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 16),
-            Text(state.errorMessage ?? "Failed to load categories"),
+            Text(state.errorMessage ?? l10n.failedToLoadCategories),
           ],
         ),
       );
@@ -198,7 +260,7 @@ class SearchScreen extends StatelessWidget {
     if (state.categories.isEmpty &&
         state.status == SearchStatus.success &&
         state.query.isEmpty) {
-      return const Center(child: Text("No categories found"));
+      return Center(child: Text(l10n.noCategoriesFound));
     }
 
     return ListView.separated(
@@ -348,44 +410,59 @@ class SearchScreen extends StatelessWidget {
 
   Widget _buildSearchField(BuildContext context, AppLocalizations l10n) {
     return SizedBox(
-      height: 54,
+      height: 46,
       child: Hero(
         tag: 'search_bar',
         child: Material(
           color: Colors.transparent,
           child: TextField(
+            controller: _searchController,
             textAlignVertical: TextAlignVertical.center,
             onChanged: (value) {
               context.read<SearchBloc>().add(SearchQueryChanged(value));
+              setState(() {});
             },
             decoration: InputDecoration(
               hintText: l10n.searchHint,
               hintStyle: TextStyle(
                 color: Colors.grey.shade400,
                 fontSize: 15,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
               ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Icon(
-                  Icons.search_rounded,
-                  color: AppColors.primary,
-                  size: 24,
-                ),
+              prefixIcon: Icon(
+                Icons.search_rounded,
+                color: AppColors.primary,
+                size: 22,
               ),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(
+                        Icons.cancel_rounded,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        _searchController.clear();
+                        context.read<SearchBloc>().add(SearchQueryChanged(''));
+                        setState(() {});
+                      },
+                    )
+                  : null,
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
+                borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
+                borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide(color: AppColors.primary, width: 1.5),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             ),
           ),
         ),

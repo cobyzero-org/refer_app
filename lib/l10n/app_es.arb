@@ -207,5 +207,71 @@
         "type": "int"
       }
     }
-  }
+  },
+  "orderStatusTitle": "Estado del Pedido",
+  "orderIsReady": "¡Tu pedido está listo!",
+  "pickupInstructions": "Pasa directamente a la barra de entregas para recoger tu orden. ¡Que lo disfrutes!",
+  "editProfile": "Editar Perfil",
+  "saveChanges": "Guardar Cambios",
+  "emailAddress": "Correo Electrónico",
+  "phoneNumber": "Número de Teléfono",
+  "birthDate": "Fecha de Nacimiento",
+  "tapToUpdateImage": "Toca para actualizar imagen",
+  "profileUpdated": "Perfil actualizado",
+  "errorUpdatingProfile": "Error al actualizar",
+  "orderDetails": "Detalles del Pedido",
+  "orderDate": "Fecha",
+  "searchFAQ": "Buscar preguntas frecuentes...",
+  "faqCategoryGeneral": "General",
+  "faqCategoryPayments": "Pagos",
+  "faqCategoryOrders": "Pedidos",
+  "faqCategoryAccount": "Cuenta",
+  "contactSupport": "Contactar Soporte",
+  "contactUsEmail": "Escríbenos",
+  "contactUsPhone": "Llámanos",
+  "faqQ1": "¿Cómo gano estrellas?",
+  "faqA1": "Ganas estrellas con cada compra. Por cada dólar gastado, obtienes 1 estrella. ¡Canjea tus estrellas por bebidas gratis y recompensas!",
+  "faqQ2": "¿Cómo recojo mi pedido?",
+  "faqA2": "Una vez realizado tu pedido, puedes ver su estado en la pestaña de Pedidos. Cuando aparezca como LISTO, dirígete al mostrador y muestra tu número de orden.",
+  "faqQ3": "¿Qué métodos de pago aceptan?",
+  "faqA3": "Aceptamos tarjetas de crédito y débito principales, Apple Pay y pagos con billeteras digitales directamente en la vista de pago.",
+  "faqQ4": "¿Cómo cambio mi contraseña?",
+  "faqA4": "Ve a ajustes y, bajo la sección de Seguridad, toca en Cambiar Contraseña. Ingresa tu contraseña actual y la nueva para actualizarla.",
+  "noResults": "No se encontraron resultados",
+  "all": "Todo",
+  "searchSubtitle": "Selecciones exclusivas para cada paladar.",
+  "noProductsFound": "No se encontraron productos para \"{query}\"",
+  "@noProductsFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToLoadCategories": "Error al cargar las categorías",
+  "noCategoriesFound": "No se encontraron categorías",
+  "explore": "EXPLORAR",
+  "discoverPremiumSelection": "Descubre nuestra selección premium",
+  "unclaimedRewards": "Tus recompensas sin reclamar",
+  "tapToClaim": "Toca para reclamar",
+  "stayTunedPerks": "¡Mantente atento para próximas ventajas!",
+  "viewHistory": "Ver Historial",
+  "redeemingReward": "Canjeando {title}...",
+  "@redeemingReward": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "recentActivity": "Actividad Reciente",
+  "noRecentActivity": "Sin actividad reciente",
+  "starsHistory": "Historial de Estrellas",
+  "change": "Cambiar",
+  "selectPickupPoint": "Seleccionar Punto de Entrega",
+  "asap": "Lo antes posible",
+  "scheduleLater": "Programar para después",
+  "selectSpecificTime": "Seleccionar hora específica",
+  "stripePayment": "Pago con Stripe",
+  "safeSecure": "Seguro y Confiable"
 }
