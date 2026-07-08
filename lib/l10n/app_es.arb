@@ -273,5 +273,9 @@
   "scheduleLater": "Programar para después",
   "selectSpecificTime": "Seleccionar hora específica",
   "stripePayment": "Pago con Stripe",
-  "safeSecure": "Seguro y Confiable"
+  "safeSecure": "Seguro y Confiable",
+  "underMaintenance": "En Mantenimiento",
+  "maintenanceDescription": "Actualmente estamos actualizando nuestros sistemas de tostado para servirle mejor. Volveremos pronto.",
+  "tryAgain": "Intentar de nuevo",
+  "estimatedTime": "Tiempo estimado: ~30 mins"
 }

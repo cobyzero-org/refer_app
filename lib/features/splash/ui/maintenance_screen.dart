@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
+import '../../../l10n/app_localizations.dart';
 
 class MaintenanceScreen extends StatelessWidget {
   final String? message;
@@ -7,6 +9,7 @@ class MaintenanceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -28,10 +31,10 @@ class MaintenanceScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 48),
-              const Text(
-                "Under Maintenance",
+              Text(
+                l10n.underMaintenance,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w900,
                   color: AppColors.primary,
@@ -40,8 +43,7 @@ class MaintenanceScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                message ??
-                    "We're currently updating our roastery systems to serve you better. We'll be back shorty.",
+                message ?? l10n.maintenanceDescription,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -52,13 +54,13 @@ class MaintenanceScreen extends StatelessWidget {
               const SizedBox(height: 48),
               ElevatedButton(
                 onPressed: () {
-                  // Re-trigger the whole process might be done via re-launching or specific logic
+                  context.go('/');
                 },
-                child: const Text("Try Again"),
+                child: Text(l10n.tryAgain),
               ),
               const SizedBox(height: 24),
               Text(
-                "Estimated time: ~30 mins",
+                l10n.estimatedTime,
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey.shade400,

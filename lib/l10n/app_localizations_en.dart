@@ -627,4 +627,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get safeSecure => 'Safe & Secure';
+
+  @override
+  String get underMaintenance => 'Under Maintenance';
+
+  @override
+  String get maintenanceDescription =>
+      'We\'re currently updating our roastery systems to serve you better. We\'ll be back shortly.';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get estimatedTime => 'Estimated time: ~30 mins';
 }

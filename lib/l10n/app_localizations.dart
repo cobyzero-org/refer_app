@@ -1267,6 +1267,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Safe & Secure'**
   String get safeSecure;
+
+  /// No description provided for @underMaintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Under Maintenance'**
+  String get underMaintenance;
+
+  /// No description provided for @maintenanceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re currently updating our roastery systems to serve you better. We\'ll be back shortly.'**
+  String get maintenanceDescription;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @estimatedTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated time: ~30 mins'**
+  String get estimatedTime;
 }
 
 class _AppLocalizationsDelegate

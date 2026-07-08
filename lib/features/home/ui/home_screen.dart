@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import '../bloc/home_bloc.dart';
@@ -20,9 +21,23 @@ class HomeScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          l10n.appName,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        title: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/logo.png'),
+                  fit: BoxFit.contain,
+                ),
+              ),
+              height: 40,
+              width: 40,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text('Raymund Caffé', style: GoogleFonts.kaushanScript()),
+            ),
+          ],
         ),
         centerTitle: false,
         actions: [

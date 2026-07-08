@@ -273,5 +273,9 @@
   "scheduleLater": "Schedule for later",
   "selectSpecificTime": "Select a specific time",
   "stripePayment": "Stripe Payment",
-  "safeSecure": "Safe & Secure"
+  "safeSecure": "Safe & Secure",
+  "underMaintenance": "Under Maintenance",
+  "maintenanceDescription": "We're currently updating our roastery systems to serve you better. We'll be back shortly.",
+  "tryAgain": "Try Again",
+  "estimatedTime": "Estimated time: ~30 mins"
 }
