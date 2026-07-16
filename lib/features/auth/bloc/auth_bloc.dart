@@ -27,7 +27,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.name,
         event.email,
         event.password,
-        keepUpdated: event.keepUpdated,
       );
       if (success) {
         emit(AuthAuthenticated());
@@ -40,6 +39,38 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       await _repository.logout();
       emit(AuthInitial());
+    });
+
+    on<ForgotPasswordRequested>((event, emit) async {
+      emit(AuthLoading());
+      if (event.email.isEmpty) {
+        emit(AuthError("Please enter your email"));
+        return;
+      }
+      final success = await _repository.forgotPassword(event.email);
+      if (success) {
+        emit(ForgotPasswordSuccess());
+      } else {
+        emit(AuthError("User not found or connection error"));
+      }
+    });
+
+    on<ResetPasswordRequested>((event, emit) async {
+      emit(AuthLoading());
+      if (event.email.isEmpty || event.code.isEmpty || event.newPassword.isEmpty) {
+        emit(AuthError("Please fill in all fields"));
+        return;
+      }
+      final success = await _repository.resetPassword(
+        event.email,
+        event.code,
+        event.newPassword,
+      );
+      if (success) {
+        emit(ResetPasswordSuccess());
+      } else {
+        emit(AuthError("Invalid code or reset failed"));
+      }
     });
   }
 }

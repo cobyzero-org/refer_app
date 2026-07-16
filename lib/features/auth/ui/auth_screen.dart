@@ -89,7 +89,10 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _buildForgotPasswordBtn(AppLocalizations l10n) {
     return Align(
       alignment: Alignment.centerRight,
-      child: TextButton(onPressed: () {}, child: Text(l10n.forgotPassword)),
+      child: TextButton(
+        onPressed: () => context.push('/forgot-password'),
+        child: Text(l10n.forgotPassword),
+      ),
     );
   }
 

@@ -22,7 +22,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final _password = TextEditingController();
   final _confirmPassword = TextEditingController();
   bool _acceptTerms = false;
-  bool _keepUpdated = true;
 
   @override
   Widget build(BuildContext context) {
@@ -93,12 +92,6 @@ class _SignupScreenState extends State<SignupScreen> {
                           onChanged: (v) => setState(() => _acceptTerms = v!),
                           label: l10n.acceptTerms,
                         ),
-                        const SizedBox(height: 12),
-                        _buildCheckboxRow(
-                          value: _keepUpdated,
-                          onChanged: (v) => setState(() => _keepUpdated = v!),
-                          label: l10n.keepUpdated,
-                        ),
                         const SizedBox(height: 32),
                         ElevatedButton(
                           onPressed: state is AuthLoading || !_acceptTerms
@@ -106,18 +99,19 @@ class _SignupScreenState extends State<SignupScreen> {
                               : () {
                                   if (_password.text != _confirmPassword.text) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(l10n.passwordsDoNotMatch)),
+                                      SnackBar(
+                                        content: Text(l10n.passwordsDoNotMatch),
+                                      ),
                                     );
                                     return;
                                   }
                                   context.read<AuthBloc>().add(
-                                        RegisterRequested(
-                                          _name.text,
-                                          _email.text,
-                                          _password.text,
-                                          keepUpdated: _keepUpdated,
-                                        ),
-                                      );
+                                    RegisterRequested(
+                                      _name.text,
+                                      _email.text,
+                                      _password.text,
+                                    ),
+                                  );
                                 },
                           child: state is AuthLoading
                               ? const SizedBox(
@@ -161,7 +155,9 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Checkbox(
             value: value,
             onChanged: onChanged,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
           ),
         ),
         const SizedBox(width: 12),
@@ -169,9 +165,9 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Text(
             label,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 13,
-                  color: Colors.black87,
-                ),
+              fontSize: 13,
+              color: Colors.black87,
+            ),
           ),
         ),
       ],

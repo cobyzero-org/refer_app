@@ -7,6 +7,8 @@ abstract class AuthRepository {
   Future<bool> validateToken();
   Future<void> logout();
   Future<bool> changePassword(String currentPassword, String newPassword);
+  Future<bool> forgotPassword(String email);
+  Future<bool> resetPassword(String email, String code, String newPassword);
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -90,6 +92,38 @@ class AuthRepositoryImpl implements AuthRepository {
         'newPassword': newPassword,
       });
 
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> forgotPassword(String email) async {
+    try {
+      final response = await apiClient.dio.post('/auth/forgot-password', data: {
+        'email': email,
+      });
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> resetPassword(String email, String code, String newPassword) async {
+    try {
+      final response = await apiClient.dio.post('/auth/reset-password', data: {
+        'email': email,
+        'code': code,
+        'newPassword': newPassword,
+      });
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       }

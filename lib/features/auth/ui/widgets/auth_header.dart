@@ -14,7 +14,7 @@ class AuthHeader extends StatelessWidget {
     return Column(
       children: [
         _buildLogo(),
-        const SizedBox(height: 40),
+        const SizedBox(height: 20),
         Text(
           title ?? l10n.welcomeBack,
           style: Theme.of(context).textTheme.displayMedium,
@@ -32,14 +32,14 @@ class AuthHeader extends StatelessWidget {
 
   Widget _buildLogo() {
     return Container(
-      height: 130,
-      width: 130,
+      height: 160,
+      width: 160,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(36),
+        shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 30,
             offset: const Offset(0, 15),
           ),
@@ -48,7 +48,7 @@ class AuthHeader extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Image.asset(
-          'assets/images/refer_logo.png',
+          'assets/images/logo.png',
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) =>
               const Icon(Icons.coffee, size: 60, color: AppColors.primary),

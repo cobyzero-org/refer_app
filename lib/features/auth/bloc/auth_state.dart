@@ -7,3 +7,6 @@ class AuthError extends AuthState {
   final String message;
   AuthError(this.message);
 }
+
+class ForgotPasswordSuccess extends AuthState {}
+class ResetPasswordSuccess extends AuthState {}

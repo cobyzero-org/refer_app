@@ -18,6 +18,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../features/search/bloc/search_bloc.dart';
 import '../features/search/bloc/search_event.dart';
 import '../features/home/ui/menu_screen.dart';
+import '../features/auth/ui/forgot_password_screen.dart';
+import '../features/auth/ui/reset_password_screen.dart';
 import '../features/stars/ui/stars_history_screen.dart';
 import '../features/stars/bloc/stars_bloc.dart';
 import '../features/stars/bloc/stars_event.dart';
@@ -33,6 +35,17 @@ final router = GoRouter(
     ),
     GoRoute(path: '/auth', builder: (context, state) => const AuthScreen()),
     GoRoute(path: '/signup', builder: (context, state) => const SignupScreen()),
+    GoRoute(
+      path: '/forgot-password',
+      builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: '/reset-password',
+      builder: (context, state) {
+        final email = state.uri.queryParameters['email'] ?? '';
+        return ResetPasswordScreen(email: email);
+      },
+    ),
     GoRoute(path: '/main', builder: (context, state) => const MainNavigator()),
     GoRoute(
       path: '/home', // Alias commonly used
