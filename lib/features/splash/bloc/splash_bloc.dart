@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/constants.dart';
 import '../../auth/repository/auth_repository.dart';
 import '../repository/app_config_repository.dart';
 import 'splash_event.dart';
@@ -12,6 +13,10 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     on<SplashStarted>((event, emit) async {
       // 1. Fetch App Config
       final config = await _configRepository.getConfig();
+      if (config != null) {
+        // Moneda del operador (tabla app_settings) para toda la app.
+        Money.currencyCode = config.currency;
+      }
       
       // 2. Artificial delay for branding
       await Future.delayed(const Duration(seconds: 2));

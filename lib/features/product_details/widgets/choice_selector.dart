@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants.dart';
 import '../../../core/models/product.dart';
 
 class ChoiceSelector extends StatelessWidget {
@@ -52,7 +53,7 @@ class ChoiceSelector extends StatelessWidget {
                       if (choice.price > 0) ...[
                         const SizedBox(width: 8),
                         Text(
-                          "(+\$${choice.price.toStringAsFixed(2)})",
+                          "(${Money.formatPlus(choice.price)})",
                           style: TextStyle(
                             fontSize: 13,
                             color: isSelected

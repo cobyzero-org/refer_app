@@ -82,14 +82,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         final results = await Future.wait([
           _repository.getProfile(),
           _repository.getSummary(),
-          _repository.getSeasonalBrews(),
+          _repository.getCollections(),
           _repository.getCategories(),
           _repository.getLatestProducts(),
         ]);
 
         final user = results[0] as dynamic;
         final summary = results[1] as dynamic;
-        final seasonalBrews = results[2] as dynamic;
+        final collections = results[2] as dynamic;
         final categories = results[3] as dynamic;
         final latestProducts = results[4] as dynamic;
 
@@ -97,7 +97,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(HomeLoaded(
             user: user,
             summary: summary,
-            seasonalBrews: seasonalBrews,
+            collections: collections,
             categories: categories,
             latestProducts: latestProducts,
           ));

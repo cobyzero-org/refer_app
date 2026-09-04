@@ -19,13 +19,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'El tostado perfecto está a solo un inicio de sesión.';
 
   @override
-  String get email => 'CORREO ELECTRÓNICO';
+  String get email => 'Correo electrónico';
 
   @override
   String get emailHint => 'nombre@editorialroast.com';
 
   @override
-  String get password => 'CONTRASEÑA';
+  String get password => 'Contraseña';
 
   @override
   String get passwordHint => '........';

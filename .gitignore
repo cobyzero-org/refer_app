@@ -116,6 +116,11 @@ app.*.symbols
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
 
+# Env
+.env
+!.env.example
+
 # FVM Version Cache
 .fvm/
 /tests_e2e/node_modules
+/android/.idea

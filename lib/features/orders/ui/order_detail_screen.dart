@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/constants.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   final Map<String, dynamic> order;
@@ -234,7 +235,7 @@ class OrderDetailScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '${quantity}x  \$${price.toStringAsFixed(2)}',
+                                    '${quantity}x  ${Money.format(price)}',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade700,
@@ -242,7 +243,7 @@ class OrderDetailScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '\$${(price * quantity).toStringAsFixed(2)}',
+                                    Money.format(price * quantity),
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -280,7 +281,7 @@ class OrderDetailScreen extends StatelessWidget {
                             style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            '\$${subtotal.toStringAsFixed(2)}',
+                            Money.format(subtotal),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -294,7 +295,7 @@ class OrderDetailScreen extends StatelessWidget {
                             style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            '\$${serviceFee.toStringAsFixed(2)}',
+                            Money.format(serviceFee),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -315,7 +316,7 @@ class OrderDetailScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '\$${total.toStringAsFixed(2)}',
+                            Money.format(total),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w900,

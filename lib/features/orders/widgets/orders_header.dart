@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
+import '../../../core/theme.dart';
 
 class OrdersHeader extends StatelessWidget {
   const OrdersHeader({super.key});
@@ -9,37 +11,17 @@ class OrdersHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.yourRituals,
-                    style: const TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF1E3932),
-                      letterSpacing: -1.2,
-                      height: 1.1,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    AppLocalizations.of(context)!.ritualsSubtitle,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey.shade600,
-                      height: 1.5,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        Semantics(
+          header: true,
+          child: Text(
+            AppLocalizations.of(context)!.yourRituals,
+            style: GoogleFonts.outfit(fontSize: 28, fontWeight: FontWeight.w700, color: AppColors.text, letterSpacing: -0.5, height: 1.2),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          AppLocalizations.of(context)!.ritualsSubtitle,
+          style: GoogleFonts.outfit(fontSize: 15, color: AppColors.textSecondary, height: 1.5, fontWeight: FontWeight.w400),
         ),
       ],
     );

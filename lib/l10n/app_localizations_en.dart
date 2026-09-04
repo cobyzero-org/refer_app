@@ -18,13 +18,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeSubtitle => 'The perfect roast is just a sign-in away.';
 
   @override
-  String get email => 'EMAIL';
+  String get email => 'Email';
 
   @override
   String get emailHint => 'name@editorialroast.com';
 
   @override
-  String get password => 'PASSWORD';
+  String get password => 'Password';
 
   @override
   String get passwordHint => '........';

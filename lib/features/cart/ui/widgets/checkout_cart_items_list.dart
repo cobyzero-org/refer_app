@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants.dart';
 import '../../model/cart_item.dart';
 
 class CheckoutCartItemsList extends StatelessWidget {
@@ -54,7 +55,7 @@ class CheckoutCartItemsList extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$${item.totalPrice.toStringAsFixed(2)}',
+                Money.format(item.totalPrice),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],

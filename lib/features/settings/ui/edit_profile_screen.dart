@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:refer_app/core/widgets/button_liquid_glass.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:refer_app/core/theme.dart';
 import 'package:refer_app/features/home/bloc/home_event.dart';
 import '../../../l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,23 +53,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF1E3932)),
-          onPressed: () => context.pop(),
-        ),
-        title: Text(
-          l10n.editProfile,
-          style: const TextStyle(
-            color: Color(0xFF1E3932),
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: false,
+        backgroundColor: AppColors.background,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0, scrolledUnderElevation: 0,
+        leading: IconButton(icon: const Icon(Icons.arrow_back_rounded, color: AppColors.text), onPressed: () => context.pop(), style: IconButton.styleFrom(minimumSize: const Size(44,44))),
+        title: Text(l10n.editProfile, style: const TextStyle(color: AppColors.text, fontWeight: FontWeight.w600, fontSize: 17, letterSpacing: -0.2)),
+        centerTitle: true,
       ),
       body: BlocListener<HomeBloc, HomeState>(
         listener: (context, state) {
@@ -270,78 +262,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildInputField({
-    required String label,
-    required TextEditingController controller,
-    TextInputType? keyboardType,
-    bool readOnly = false,
-    IconData? suffixIcon,
-    VoidCallback? onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 13,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          readOnly: readOnly,
-          onTap: onTap,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3132),
-          ),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: const Color(0xFFEFEFEF),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            suffixIcon: suffixIcon != null
-                ? Icon(suffixIcon, color: Colors.grey.shade600, size: 20)
-                : null,
-          ),
-        ),
-      ],
-    );
+  Widget _buildInputField({required String label, required TextEditingController controller, TextInputType? keyboardType, bool readOnly = false, IconData? suffixIcon, VoidCallback? onTap}) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(label, style: GoogleFonts.outfit(color: AppColors.textSecondary, fontSize: 12.5, fontWeight: FontWeight.w600, letterSpacing: 0.3)),
+      const SizedBox(height: 8),
+      TextField(
+        controller: controller, keyboardType: keyboardType, readOnly: readOnly, onTap: onTap,
+        style: GoogleFonts.outfit(fontWeight: FontWeight.w500, color: AppColors.text, fontSize: 15),
+        decoration: InputDecoration(filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.separator)), enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.separator)), focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.primary, width: 1.6)), suffixIcon: suffixIcon != null ? Icon(suffixIcon, color: AppColors.textTertiary, size: 18) : null),
+      ),
+    ]);
   }
 
   Widget _buildBottomAction(bool isLoading) {
     final l10n = AppLocalizations.of(context)!;
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ButtonLiquidGlass(
-          onTap: isLoading
-              ? () {}
-              : () {
-                  context.read<HomeBloc>().add(
-                    UserProfileUpdated(
-                      name: _nameController.text,
-                      email: _emailController.text,
-                      phoneNumber: _phoneController.text,
-                      birthDate: _birthDateController.text,
-                    ),
-                  );
-                },
-          title: l10n.saveChanges,
-          subTitle: '',
-          icon: Icons.save,
-        ),
-      ),
-    );
+    return SafeArea(child: Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 16), child: SizedBox(width: double.infinity, height: 52, child: FilledButton(onPressed: isLoading ? null : () { context.read<HomeBloc>().add(UserProfileUpdated(name: _nameController.text, email: _emailController.text, phoneNumber: _phoneController.text, birthDate: _birthDateController.text)); }, style: FilledButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), child: isLoading ? const SizedBox(width:20,height:20,child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) : Text(l10n.saveChanges, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w700))))));
   }
 }

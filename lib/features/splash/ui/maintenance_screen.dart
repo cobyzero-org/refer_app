@@ -11,10 +11,10 @@ class MaintenanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -51,13 +51,8 @@ class MaintenanceScreen extends StatelessWidget {
                   height: 1.5,
                 ),
               ),
-              const SizedBox(height: 48),
-              ElevatedButton(
-                onPressed: () {
-                  context.go('/');
-                },
-                child: Text(l10n.tryAgain),
-              ),
+              const SizedBox(height: 32),
+              FilledButton(onPressed: () => context.go('/'), style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 52), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), child: Text(l10n.tryAgain)),
               const SizedBox(height: 24),
               Text(
                 l10n.estimatedTime,

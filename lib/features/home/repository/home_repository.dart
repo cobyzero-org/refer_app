@@ -6,12 +6,13 @@ import '../../../core/models/user.dart';
 import '../../../core/models/product.dart';
 import '../../../core/models/product_category.dart';
 import '../model/dashboard_summary.dart';
+import '../model/featured_collection.dart';
 
 abstract class HomeRepository {
   Future<User?> getProfile();
   Future<User?> updateProfile(Map<String, dynamic> updateData);
   Future<DashboardSummary?> getSummary();
-  Future<List<Product>> getSeasonalBrews();
+  Future<List<FeaturedCollection>> getCollections();
   Future<List<ProductCategory>> getCategories();
   Future<List<Product>> getLatestProducts();
   Future<String?> uploadProfileImage(String filePath);
@@ -82,12 +83,16 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<List<Product>> getSeasonalBrews() async {
+  Future<List<FeaturedCollection>> getCollections() async {
     try {
-      final response = await apiClient.dio.get('/products/seasonal');
+      final response = await apiClient.dio.get('/collections');
       if (response.statusCode == 200) {
         final parsedData = _parseData(response.data);
-        return (parsedData as List).map((i) => Product.fromJson(i)).toList();
+        final all = (parsedData as List)
+            .map((i) => FeaturedCollection.fromJson(i as Map<String, dynamic>))
+            .toList();
+        // Only visible collections reach the home.
+        return all.where((c) => c.isActive).toList();
       }
       return [];
     } catch (e) {

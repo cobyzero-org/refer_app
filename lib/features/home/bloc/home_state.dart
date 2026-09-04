@@ -2,6 +2,7 @@ import '../../../core/models/user.dart';
 import '../../../core/models/product.dart';
 import '../../../core/models/product_category.dart';
 import '../model/dashboard_summary.dart';
+import '../model/featured_collection.dart';
 
 abstract class HomeState {}
 
@@ -14,7 +15,7 @@ enum HomeStatus { initial, loading, success, error }
 class HomeLoaded extends HomeState {
   final User user;
   final DashboardSummary summary;
-  final List<Product> seasonalBrews;
+  final List<FeaturedCollection> collections;
   final List<ProductCategory> categories;
   final List<Product> latestProducts;
   final HomeStatus status;
@@ -23,7 +24,7 @@ class HomeLoaded extends HomeState {
   HomeLoaded({
     required this.user,
     required this.summary,
-    required this.seasonalBrews,
+    required this.collections,
     required this.categories,
     this.latestProducts = const [],
     this.status = HomeStatus.initial,
@@ -33,7 +34,7 @@ class HomeLoaded extends HomeState {
   HomeLoaded copyWith({
     User? user,
     DashboardSummary? summary,
-    List<Product>? seasonalBrews,
+    List<FeaturedCollection>? collections,
     List<ProductCategory>? categories,
     List<Product>? latestProducts,
     HomeStatus? status,
@@ -42,7 +43,7 @@ class HomeLoaded extends HomeState {
     return HomeLoaded(
       user: user ?? this.user,
       summary: summary ?? this.summary,
-      seasonalBrews: seasonalBrews ?? this.seasonalBrews,
+      collections: collections ?? this.collections,
       categories: categories ?? this.categories,
       latestProducts: latestProducts ?? this.latestProducts,
       status: status ?? this.status,

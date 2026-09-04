@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import '../../../../core/token_manager.dart';
-import '../../../../core/constants.dart';
+import '../../../core/token_manager.dart';
+import '../../../core/constants.dart';
 
 class OrdersSocketManager {
   final TokenManager tokenManager;
@@ -19,7 +19,7 @@ class OrdersSocketManager {
     if (token == null) return;
 
     _socket = io.io(
-      '${AppConstants.baseUrl}/orders',
+      AppConstants.ordersSocketUrl,
       io.OptionBuilder().setTransports(['websocket']).setAuth({
         'token': token,
       }).build(),

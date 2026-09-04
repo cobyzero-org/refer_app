@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../core/di.dart';
+import '../../../core/theme.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -21,117 +23,236 @@ class _SignupScreenState extends State<SignupScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirmPassword = TextEditingController();
+
+  final _nameFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+  final _confirmFocus = FocusNode();
+
   bool _acceptTerms = false;
+
+  String? _nameError;
+  String? _emailError;
+  String? _passwordError;
+  String? _confirmError;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _email.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
+    _nameFocus.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _confirmFocus.dispose();
+    super.dispose();
+  }
+
+  String _toSentenceCase(String input) {
+    if (input.isEmpty) return input;
+    if (input == input.toUpperCase() && input.length <= 30) {
+      return input[0].toUpperCase() + input.substring(1).toLowerCase();
+    }
+    return input;
+  }
+
+  void _submit(BuildContext blocContext, AppLocalizations l10n) {
+    final name = _name.text.trim();
+    final email = _email.text.trim();
+    final pwd = _password.text;
+    final confirm = _confirmPassword.text;
+
+    setState(() {
+      _nameError = name.isEmpty ? 'Enter your full name' : null;
+      _emailError = email.isEmpty || !email.contains('@') ? 'Enter a valid email' : null;
+      _passwordError = pwd.length < 6 ? 'Password must be at least 6 characters' : null;
+      _confirmError = confirm != pwd ? l10n.passwordsDoNotMatch : null;
+    });
+
+    if ([_nameError, _emailError, _passwordError, _confirmError].any((e) => e != null)) {
+      HapticFeedback.selectionClick();
+      return;
+    }
+
+    if (!_acceptTerms) {
+      HapticFeedback.selectionClick();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please accept the Terms and Privacy Policy'),
+          backgroundColor: AppColors.text,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
+    TextInput.finishAutofillContext();
+    blocContext.read<AuthBloc>().add(RegisterRequested(name, email, pwd));
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return BlocProvider(
-      create: (context) => sl<AuthBloc>(),
+      create: (_) => sl<AuthBloc>(),
       child: Scaffold(
+        backgroundColor: AppColors.background,
         body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 450),
-                child: BlocConsumer<AuthBloc, AuthState>(
-                  listener: (context, state) {
-                    if (state is AuthAuthenticated) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l10n.accountCreatedSuccess)),
-                      );
-                      context.go('/main');
-                    }
-                    if (state is AuthError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(state.message),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        AuthHeader(
-                          title: l10n.createAccount,
-                          subtitle: l10n.signupSubtitle,
-                        ),
-                        const SizedBox(height: 48),
-                        AuthInputField(
-                          label: l10n.fullName,
-                          hint: l10n.fullNameHint,
-                          controller: _name,
-                        ),
-                        const SizedBox(height: 24),
-                        AuthInputField(
-                          label: l10n.email,
-                          hint: l10n.emailHint,
-                          controller: _email,
-                        ),
-                        const SizedBox(height: 24),
-                        AuthInputField(
-                          label: l10n.password,
-                          hint: l10n.passwordHint,
-                          controller: _password,
-                          isPassword: true,
-                        ),
-                        const SizedBox(height: 24),
-                        AuthInputField(
-                          label: l10n.confirmPassword,
-                          hint: l10n.passwordHint,
-                          controller: _confirmPassword,
-                          isPassword: true,
-                        ),
-                        const SizedBox(height: 24),
-                        _buildCheckboxRow(
-                          value: _acceptTerms,
-                          onChanged: (v) => setState(() => _acceptTerms = v!),
-                          label: l10n.acceptTerms,
-                        ),
-                        const SizedBox(height: 32),
-                        ElevatedButton(
-                          onPressed: state is AuthLoading || !_acceptTerms
-                              ? null
-                              : () {
-                                  if (_password.text != _confirmPassword.text) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(l10n.passwordsDoNotMatch),
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Center(
+              child: SingleChildScrollView(
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthAuthenticated) {
+                        HapticFeedback.lightImpact();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.accountCreatedSuccess),
+                            backgroundColor: AppColors.text,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            margin: const EdgeInsets.all(16),
+                          ),
+                        );
+                        context.go('/main');
+                      }
+                      if (state is AuthError) {
+                        HapticFeedback.heavyImpact();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              children: [
+                                const Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
+                                const SizedBox(width: 10),
+                                Expanded(child: Text(state.message)),
+                              ],
+                            ),
+                            backgroundColor: AppColors.text,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            margin: const EdgeInsets.all(16),
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      final isLoading = state is AuthLoading;
+                      return AutofillGroup(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            AuthHeader(
+                              title: l10n.createAccount,
+                              subtitle: l10n.signupSubtitle,
+                            ),
+                            const SizedBox(height: 32),
+                            AuthInputField(
+                              label: _toSentenceCase(l10n.fullName),
+                              hint: l10n.fullNameHint,
+                              controller: _name,
+                              focusNode: _nameFocus,
+                              keyboardType: TextInputType.name,
+                              autofillHints: const [AutofillHints.name],
+                              textInputAction: TextInputAction.next,
+                              errorText: _nameError,
+                              prefixIcon: const Icon(Icons.person_outline_rounded, size: 20),
+                              onSubmitted: (_) => _emailFocus.requestFocus(),
+                            ),
+                            const SizedBox(height: 16),
+                            AuthInputField(
+                              label: _toSentenceCase(l10n.email),
+                              hint: l10n.emailHint,
+                              controller: _email,
+                              focusNode: _emailFocus,
+                              keyboardType: TextInputType.emailAddress,
+                              autofillHints: const [AutofillHints.email],
+                              textInputAction: TextInputAction.next,
+                              errorText: _emailError,
+                              prefixIcon: const Icon(Icons.mail_outline_rounded, size: 20),
+                              onSubmitted: (_) => _passwordFocus.requestFocus(),
+                            ),
+                            const SizedBox(height: 16),
+                            AuthInputField(
+                              label: _toSentenceCase(l10n.password),
+                              hint: 'Minimum 6 characters',
+                              controller: _password,
+                              focusNode: _passwordFocus,
+                              isPassword: true,
+                              autofillHints: const [AutofillHints.newPassword],
+                              textInputAction: TextInputAction.next,
+                              errorText: _passwordError,
+                              prefixIcon: const Icon(Icons.lock_outline_rounded, size: 20),
+                              onSubmitted: (_) => _confirmFocus.requestFocus(),
+                            ),
+                            const SizedBox(height: 16),
+                            AuthInputField(
+                              label: _toSentenceCase(l10n.confirmPassword),
+                              hint: 'Repeat password',
+                              controller: _confirmPassword,
+                              focusNode: _confirmFocus,
+                              isPassword: true,
+                              autofillHints: const [AutofillHints.newPassword],
+                              textInputAction: TextInputAction.done,
+                              errorText: _confirmError,
+                              prefixIcon: const Icon(Icons.lock_outline_rounded, size: 20),
+                              onSubmitted: (_) => _submit(context, l10n),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildCheckboxRow(
+                              value: _acceptTerms,
+                              onChanged: (v) => setState(() => _acceptTerms = v ?? false),
+                              label: l10n.acceptTerms,
+                            ),
+                            const SizedBox(height: 24),
+                            Semantics(
+                              button: true,
+                              enabled: !isLoading,
+                              label: l10n.createAccount,
+                              child: FilledButton(
+                                onPressed: isLoading ? null : () => _submit(context, l10n),
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: Colors.white,
+                                  disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
+                                  minimumSize: const Size(double.infinity, 52),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                                child: isLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.2),
+                                      )
+                                    : Text(
+                                        l10n.createAccount,
+                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                                       ),
-                                    );
-                                    return;
-                                  }
-                                  context.read<AuthBloc>().add(
-                                    RegisterRequested(
-                                      _name.text,
-                                      _email.text,
-                                      _password.text,
-                                    ),
-                                  );
-                                },
-                          child: state is AuthLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Text(l10n.createAccount),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            // Secondary link — 44pt
+                            TextButton(
+                              onPressed: () => context.go('/auth'),
+                              style: TextButton.styleFrom(
+                                minimumSize: const Size(44, 44),
+                                tapTargetSize: MaterialTapTargetSize.padded,
+                              ),
+                              child: Text(l10n.alreadyHaveAccount),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 24),
-                        TextButton(
-                          onPressed: () => context.go('/auth'),
-                          child: Text(l10n.alreadyHaveAccount),
-                        ),
-                      ],
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -146,31 +267,43 @@ class _SignupScreenState extends State<SignupScreen> {
     required ValueChanged<bool?> onChanged,
     required String label,
   }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 24,
-          width: 24,
-          child: Checkbox(
-            value: value,
-            onChanged: onChanged,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
+    return Semantics(
+      container: true,
+      child: InkWell(
+        onTap: () => onChanged(!value),
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 24,
+                width: 24,
+                child: Checkbox(
+                  value: value,
+                  onChanged: onChanged,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  side: const BorderSide(color: AppColors.separatorStrong, width: 1.4),
+                  activeColor: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: 13,
+                        color: AppColors.textSecondary,
+                        height: 1.4,
+                      ),
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontSize: 13,
-              color: Colors.black87,
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

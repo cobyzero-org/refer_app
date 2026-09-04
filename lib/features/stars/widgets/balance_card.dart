@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../core/theme.dart';
 
@@ -16,76 +17,52 @@ class BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double progress = nextRewardStars > 0
-        ? (stars / nextRewardStars).clamp(0.0, 1.0)
-        : 0.0;
+    final double progress = nextRewardStars > 0 ? (stars / nextRewardStars).clamp(0.0, 1.0) : 0.0;
     final int percentage = (progress * 100).toInt();
-    final int remaining = nextRewardStars - stars > 0
-        ? nextRewardStars - stars
-        : 0;
+    final int remaining = nextRewardStars - stars > 0 ? nextRewardStars - stars : 0;
+    final l10n = AppLocalizations.of(context)!;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppLocalizations.of(context)!.currentBalance,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Colors.white54,
-              letterSpacing: 1.2,
-              fontWeight: FontWeight.bold,
+    return Semantics(
+      container: true,
+      label: '$stars ${l10n.stars}, $percentage percent to $nextRewardName',
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(color: AppColors.primary.withValues(alpha: 0.18), blurRadius: 20, offset: const Offset(0, 8)),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.currentBalance.toUpperCase(),
+              style: GoogleFonts.outfit(color: Colors.white.withValues(alpha: 0.68), letterSpacing: 1.1, fontWeight: FontWeight.w600, fontSize: 11),
             ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                "$stars",
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Colors.white,
-                  fontSize: 56,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                AppLocalizations.of(context)!.stars,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(color: Colors.white70),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
-          _buildCenterGauge(progress, percentage),
-          const SizedBox(height: 48),
-          Text(
-            AppLocalizations.of(
-              context,
-            )!.starsRemaining(remaining, nextRewardName),
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.9),
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text('$stars', style: GoogleFonts.outfit(color: Colors.white, fontSize: 44, fontWeight: FontWeight.w700, letterSpacing: -1.2, height: 1)),
+                const SizedBox(width: 8),
+                Text(l10n.stars, style: GoogleFonts.outfit(color: Colors.white.withValues(alpha: 0.84), fontSize: 17, fontWeight: FontWeight.w500)),
+              ],
             ),
-          ),
-          const SizedBox(height: 16),
-          _buildLinearProgress(progress),
-        ],
+            const SizedBox(height: 20),
+            _buildCenterGauge(progress, percentage),
+            const SizedBox(height: 20),
+            Text(
+              AppLocalizations.of(context)!.starsRemaining(remaining, nextRewardName),
+              style: GoogleFonts.outfit(color: Colors.white.withValues(alpha: 0.84), fontSize: 13, fontWeight: FontWeight.w500, height: 1.4),
+            ),
+            const SizedBox(height: 12),
+            Semantics(label: 'Progress to next reward', value: '$percentage percent', child: _buildLinearProgress(progress)),
+          ],
+        ),
       ),
     );
   }
@@ -96,31 +73,22 @@ class BalanceCard extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           SizedBox(
-            height: 140,
-            width: 140,
+            height: 132,
+            width: 132,
             child: CircularProgressIndicator(
               value: progress,
-              strokeWidth: 10,
-              backgroundColor: Colors.white.withOpacity(0.1),
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                Color(0xFFD4E9E2),
-              ),
+              strokeWidth: 8,
+              backgroundColor: Colors.white.withValues(alpha: 0.12),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondary),
               strokeCap: StrokeCap.round,
             ),
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.stars, color: Color(0xFFD4E9E2), size: 28),
+              const Icon(Icons.stars_rounded, color: AppColors.secondary, size: 26),
               const SizedBox(height: 4),
-              Text(
-                "$percentage%",
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('$percentage%', style: GoogleFonts.outfit(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700)),
             ],
           ),
         ],
@@ -132,19 +100,11 @@ class BalanceCard extends StatelessWidget {
     return Container(
       height: 6,
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(3),
-      ),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(999)),
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
         widthFactor: progress,
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFD4E9E2),
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ),
+        child: Container(decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(999))),
       ),
     );
   }

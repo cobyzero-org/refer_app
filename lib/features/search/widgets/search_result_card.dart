@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../core/constants.dart';
 import '../../../core/models/product.dart';
 
 class SearchResultCard extends StatelessWidget {
@@ -88,7 +89,7 @@ class SearchResultCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '\$${product.price.toStringAsFixed(2)}',
+                          Money.format(product.price),
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,

@@ -8,7 +8,7 @@ import '../bloc/search_event.dart';
 import '../bloc/search_state.dart';
 import '../widgets/category_card.dart';
 import '../widgets/search_result_card.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -42,43 +42,40 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.background,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        toolbarHeight: 70,
+        toolbarHeight: 64,
         titleSpacing: 0,
-        leadingWidth: canPop ? 60 : 0,
+        leadingWidth: canPop ? 56 : 0,
         leading: canPop
             ? Center(
                 child: Container(
-                  height: 38,
-                  width: 38,
-                  margin: const EdgeInsets.only(left: 16),
+                  height: 36,
+                  width: 36,
+                  margin: const EdgeInsets.only(left: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.grey.shade200, width: 1),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                    border: Border.all(color: AppColors.separator, width: 1),
                   ),
                   child: IconButton(
                     iconSize: 16,
                     padding: EdgeInsets.zero,
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
-                      color: AppColors.primary,
+                      color: AppColors.text,
                     ),
                     onPressed: () => context.pop(),
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(44, 44),
+                    ),
                   ),
                 ),
               )
             : const SizedBox.shrink(),
         title: Padding(
-          padding: EdgeInsets.only(left: canPop ? 12 : 24, right: 24),
+          padding: EdgeInsets.only(left: canPop ? 8 : 20, right: 20),
           child: _buildSearchField(context, l10n),
         ),
       ),
@@ -97,23 +94,24 @@ class _SearchScreenState extends State<SearchScreen> {
           }
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   l10n.categories,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.displayMedium?.copyWith(fontSize: 22),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   l10n.searchSubtitle,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
                 _buildCategoryList(state),
                 const SizedBox(height: 120),
               ],
@@ -129,63 +127,60 @@ class _SearchScreenState extends State<SearchScreen> {
     SearchState state,
     AppLocalizations l10n,
   ) {
-    return Container(
-      height: 60,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+    return SizedBox(
+      height: 48,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         scrollDirection: Axis.horizontal,
         itemCount: state.categories.length + 1,
-        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           if (index == 0) {
-            final isSelected = state.selectedCategoryId == null;
+            final sel = state.selectedCategoryId == null;
             return ChoiceChip(
               label: Text(l10n.all),
-              selected: isSelected,
-              onSelected: (selected) {
-                if (selected) {
-                  context.read<SearchBloc>().add(CategorySelected(null));
-                }
+              selected: sel,
+              onSelected: (s) {
+                if (s) context.read<SearchBloc>().add(CategorySelected(null));
               },
-              selectedColor: AppColors.primary.withOpacity(0.1),
+              selectedColor: AppColors.primary.withValues(alpha: 0.12),
               labelStyle: TextStyle(
-                color: isSelected ? AppColors.primary : Colors.grey.shade600,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: sel ? AppColors.primary : AppColors.textSecondary,
+                fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
+                fontSize: 13,
               ),
-              backgroundColor: Colors.grey.shade50,
+              backgroundColor: Colors.white,
               side: BorderSide(
-                color: isSelected ? AppColors.primary : Colors.grey.shade200,
+                color: sel ? AppColors.primary : AppColors.separator,
               ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(999),
               ),
+              showCheckmark: false,
             );
           }
-
-          final category = state.categories[index - 1];
-          final isSelected = state.selectedCategoryId == category.id;
-
+          final cat = state.categories[index - 1];
+          final sel = state.selectedCategoryId == cat.id;
           return ChoiceChip(
-            label: Text(category.name),
-            selected: isSelected,
-            onSelected: (selected) {
-              if (selected) {
-                context.read<SearchBloc>().add(CategorySelected(category.id));
-              }
+            label: Text(cat.name),
+            selected: sel,
+            onSelected: (s) {
+              if (s) context.read<SearchBloc>().add(CategorySelected(cat.id));
             },
-            selectedColor: AppColors.primary.withOpacity(0.1),
+            selectedColor: AppColors.primary.withValues(alpha: 0.12),
             labelStyle: TextStyle(
-              color: isSelected ? AppColors.primary : Colors.grey.shade600,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: sel ? AppColors.primary : AppColors.textSecondary,
+              fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
+              fontSize: 13,
             ),
-            backgroundColor: Colors.grey.shade50,
+            backgroundColor: Colors.white,
             side: BorderSide(
-              color: isSelected ? AppColors.primary : Colors.grey.shade200,
+              color: sel ? AppColors.primary : AppColors.separator,
             ),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(999),
             ),
+            showCheckmark: false,
           );
         },
       ),
@@ -272,7 +267,6 @@ class _SearchScreenState extends State<SearchScreen> {
         final category = state.categories[index];
         return CategoryCard(
           category: category,
-          isLarge: index == 0,
           onTap: () {
             context.read<SearchBloc>().add(CategorySelected(category.id));
           },
@@ -410,7 +404,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildSearchField(BuildContext context, AppLocalizations l10n) {
     return SizedBox(
-      height: 46,
+      height: 44,
       child: Hero(
         tag: 'search_bar',
         child: Material(
@@ -418,28 +412,24 @@ class _SearchScreenState extends State<SearchScreen> {
           child: TextField(
             controller: _searchController,
             textAlignVertical: TextAlignVertical.center,
-            onChanged: (value) {
-              context.read<SearchBloc>().add(SearchQueryChanged(value));
+            onChanged: (v) {
+              context.read<SearchBloc>().add(SearchQueryChanged(v));
               setState(() {});
             },
             decoration: InputDecoration(
               hintText: l10n.searchHint,
-              hintStyle: TextStyle(
-                color: Colors.grey.shade400,
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-              ),
-              prefixIcon: Icon(
+              hintStyle: TextStyle(color: AppColors.textTertiary, fontSize: 15),
+              prefixIcon: const Icon(
                 Icons.search_rounded,
-                color: AppColors.primary,
-                size: 22,
+                color: AppColors.textSecondary,
+                size: 20,
               ),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
                       icon: const Icon(
                         Icons.cancel_rounded,
-                        color: Colors.grey,
-                        size: 20,
+                        color: AppColors.textTertiary,
+                        size: 18,
                       ),
                       onPressed: () {
                         _searchController.clear();
@@ -450,18 +440,21 @@ class _SearchScreenState extends State<SearchScreen> {
                   : null,
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 14),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.separator),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.separator),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: AppColors.primary,
+                  width: 1.6,
+                ),
               ),
             ),
           ),

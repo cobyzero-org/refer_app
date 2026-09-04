@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:refer_app/core/theme.dart';
 import 'package:refer_app/core/widgets/button_liquid_glass.dart';
 import 'package:refer_app/features/cart/bloc/cart_bloc.dart';
 import 'package:refer_app/features/cart/bloc/cart_event.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import 'package:refer_app/features/cart/bloc/cart_state.dart';
 import '../../../core/di.dart';
+import '../../../core/constants.dart';
 import '../../../core/models/product.dart';
 import '../bloc/product_details_bloc.dart';
 import '../bloc/product_details_event.dart';
@@ -14,7 +17,6 @@ import '../bloc/product_details_state.dart';
 import '../widgets/size_selector.dart';
 import '../widgets/choice_selector.dart';
 import '../widgets/enhancement_toggle.dart';
-
 import '../widgets/product_details_skeleton.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -123,16 +125,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black87),
+        icon: const Icon(Icons.arrow_back_rounded, color: AppColors.text),
         onPressed: () => context.pop(),
+        style: IconButton.styleFrom(minimumSize: const Size(44, 44)),
       ),
       title: Text(
         product.name,
-        style: const TextStyle(
-          color: Color(0xFF1E3932),
+        style: GoogleFonts.outfit(
+          color: AppColors.text,
           fontSize: 14,
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0.5,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.1,
         ),
       ),
       centerTitle: true,
@@ -149,30 +152,34 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 IconButton(
                   icon: const Icon(
                     Icons.shopping_bag_outlined,
-                    color: Color(0xFF1E3932),
+                    color: AppColors.text,
                   ),
                   onPressed: () => context.push('/cart'),
+                  style: IconButton.styleFrom(minimumSize: const Size(44, 44)),
                 ),
                 if (itemCount > 0)
                   Positioned(
-                    right: 8,
-                    top: 8,
+                    right: 6,
+                    top: 6,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 5,
+                        vertical: 2,
+                      ),
                       decoration: const BoxDecoration(
-                        color: Color(0xFF1E3932),
+                        color: AppColors.primary,
                         shape: BoxShape.circle,
                       ),
                       constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
+                        minWidth: 18,
+                        minHeight: 18,
                       ),
                       child: Text(
-                        itemCount.toString(),
-                        style: const TextStyle(
+                        itemCount > 9 ? '9+' : itemCount.toString(),
+                        style: GoogleFonts.outfit(
                           color: Colors.white,
                           fontSize: 10,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -226,17 +233,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.12),
-            blurRadius: 40,
-            offset: const Offset(0, 15),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.separator),
       ),
-      transform: Matrix4.translationValues(0, -180, 0),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      transform: Matrix4.translationValues(0, -32, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -250,22 +251,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   children: [
                     Text(
                       product.name,
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w900,
-                        height: 1.1,
-                        color: Color(0xFF0C211B),
+                      style: GoogleFonts.outfit(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        height: 1.15,
+                        color: AppColors.text,
+                        letterSpacing: -0.4,
                       ),
                     ),
                   ],
                 ),
               ),
               Text(
-                "\$${_calculateCurrentPrice(product).toStringAsFixed(2)}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  color: Color(0xFF0C211B),
+                Money.format(_calculateCurrentPrice(product)),
+                style: GoogleFonts.outfit(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.text,
+                  letterSpacing: -0.3,
                 ),
               ),
             ],
@@ -273,13 +276,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           const SizedBox(height: 12),
           Text(
             product.description,
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.grey.shade600,
+            style: GoogleFonts.outfit(
+              fontSize: 14,
+              color: AppColors.textSecondary,
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: 24),
           _buildHeading(l10n.selectSize),
           const SizedBox(height: 16),
           SizeSelector(
@@ -287,16 +290,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             selectedSizeId: _selectedSizeId ?? '',
             onSizeSelected: (size) => setState(() => _selectedSizeId = size.id),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 24),
           _buildHeading(l10n.milkChoice),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           ChoiceSelector(
             choices: product.types,
             selectedChoiceId: _selectedTypeId ?? '',
             onChoiceSelected: (type) =>
                 setState(() => _selectedTypeId = type.id),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 24),
           _buildHeading(l10n.enhancements),
           const SizedBox(height: 12),
           Column(
@@ -305,7 +308,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 icon: _getEnhancementIcon(enhancement.name),
                 label: enhancement.name,
                 price: enhancement.price > 0
-                    ? "+\$${enhancement.price.toStringAsFixed(2)}"
+                    ? Money.formatPlus(enhancement.price)
                     : null,
                 value: _selectedEnhancementIds.contains(enhancement.id),
                 onChanged: (v) {
@@ -320,7 +323,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               );
             }).toList(),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -367,23 +370,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return Icons.auto_awesome;
   }
 
-  Widget _buildHeading(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w900,
-        color: Colors.grey.shade400,
-        letterSpacing: 1.2,
-      ),
-    );
-  }
+  Widget _buildHeading(String text) => Text(
+    text.toUpperCase(),
+    style: GoogleFonts.outfit(
+      fontSize: 11,
+      fontWeight: FontWeight.w600,
+      color: AppColors.textSecondary,
+      letterSpacing: 0.8,
+    ),
+  );
 
   Widget _buildBottomBar(AppLocalizations l10n, Product product) {
     return SafeArea(
       top: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: ButtonLiquidGlass(
           onTap: () {
             sl<CartBloc>().add(
@@ -399,13 +400,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('${product.name} added to cart!'),
-                backgroundColor: const Color(0xFF1E3932),
+                backgroundColor: AppColors.text,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                margin: const EdgeInsets.all(16),
                 duration: const Duration(seconds: 2),
               ),
             );
           },
           title: l10n.addToOrder,
-          subTitle: '\$${_calculateCurrentPrice(product).toStringAsFixed(2)}',
+          subTitle: Money.format(_calculateCurrentPrice(product)),
           icon: Icons.shopping_bag_outlined,
         ),
       ),

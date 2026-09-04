@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocaleCubit extends Cubit<Locale> {
   static const String _localeKey = 'app_locale';
 
-  LocaleCubit() : super(const Locale('en')) {
+  LocaleCubit() : super(const Locale('es')) {
     _loadLocale();
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../model/cart_item.dart';
 
@@ -50,11 +51,11 @@ class OrderSummaryCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          _buildSummaryRow(l10n.subtotal, '\$${total.toStringAsFixed(2)}'),
+          _buildSummaryRow(l10n.subtotal, Money.format(total)),
           const SizedBox(height: 12),
           _buildSummaryRow(
             l10n.serviceFee,
-            '\$${serviceFee.toStringAsFixed(2)}',
+            Money.format(serviceFee),
           ),
           const SizedBox(height: 24),
           Row(
@@ -68,7 +69,7 @@ class OrderSummaryCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$${(total + serviceFee).toStringAsFixed(2)}',
+                Money.format(total + serviceFee),
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w900,

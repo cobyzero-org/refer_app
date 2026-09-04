@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme.dart';
 import '../bloc/stars_bloc.dart';
 import '../bloc/stars_event.dart';
@@ -30,7 +30,7 @@ class StarsHistoryScreen extends StatelessWidget {
               border: Border.all(color: Colors.grey.shade200, width: 1),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
+                  color: Colors.black.withValues(alpha: 0.03),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -117,7 +117,7 @@ class StarsHistoryScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: isEarn
-                              ? const Color(0xFFD4E9E2).withOpacity(0.5)
+                              ? const Color(0xFFD4E9E2).withValues(alpha: 0.5)
                               : Colors.amber.shade50,
                           shape: BoxShape.circle,
                         ),

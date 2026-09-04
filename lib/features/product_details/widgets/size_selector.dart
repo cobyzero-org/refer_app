@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants.dart';
 import '../../../core/models/product.dart';
 
 class SizeSelector extends StatelessWidget {
@@ -50,7 +51,7 @@ class SizeSelector extends StatelessWidget {
                   ),
                   if (size.price > 0)
                     Text(
-                      "(+\$${size.price.toStringAsFixed(2)})",
+                      "(${Money.formatPlus(size.price)})",
                       style: TextStyle(
                         color: isSelected
                             ? Colors.white.withOpacity(0.8)

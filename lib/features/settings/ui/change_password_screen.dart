@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:refer_app/core/theme.dart';
 import 'package:refer_app/core/di.dart';
 import 'package:refer_app/features/auth/repository/auth_repository.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
@@ -67,34 +69,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF1E3932)),
-          onPressed: () => context.pop(),
-        ),
-        title: Text(
-          l10n.changePassword,
-          style: const TextStyle(
-            color: Color(0xFF1E3932),
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: false,
+        backgroundColor: AppColors.background, surfaceTintColor: Colors.transparent, elevation: 0, scrolledUnderElevation: 0,
+        leading: IconButton(icon: const Icon(Icons.arrow_back_rounded, color: AppColors.text), onPressed: () => context.pop(), style: IconButton.styleFrom(minimumSize: const Size(44,44))),
+        title: Text(l10n.changePassword, style: const TextStyle(color: AppColors.text, fontWeight: FontWeight.w600, fontSize: 17, letterSpacing: -0.2)),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const SizedBox(height: 8),
               _buildInputField(
                 label: l10n.currentPassword,
                 hintText: l10n.currentPasswordHint,
@@ -223,37 +211,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  Widget _buildSubmitButton(AppLocalizations l10n) {
-    return SizedBox(
-      width: double.infinity,
-      height: 60,
-      child: ElevatedButton(
-        onPressed: _isLoading ? null : _handleChangePassword,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF1E3932),
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 0,
-        ),
-        child: _isLoading
-            ? const SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              )
-            : Text(
-                l10n.changePassword,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-      ),
-    );
-  }
+  Widget _buildSubmitButton(AppLocalizations l10n) => SizedBox(width: double.infinity, height: 52, child: FilledButton(onPressed: _isLoading ? null : _handleChangePassword, style: FilledButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), child: _isLoading ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) : Text(l10n.changePassword, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w700))));
+
 }

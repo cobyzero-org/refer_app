@@ -2,19 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/models/product_category.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 class CategoryCard extends StatelessWidget {
   final ProductCategory category;
   final VoidCallback? onTap;
-  final bool isLarge;
 
-  const CategoryCard({
-    super.key,
-    required this.category,
-    this.onTap,
-    this.isLarge = false,
-  });
+  const CategoryCard({super.key, required this.category, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +16,7 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: isLarge ? 240 : 180,
+        height: 180,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
@@ -80,46 +74,26 @@ class CategoryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (isLarge) ...[
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          l10n.explore,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
                     Text(
                       category.name,
                       style: GoogleFonts.outfit(
                         color: Colors.white,
-                        fontSize: isLarge ? 28 : 20,
+                        fontSize: 20,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    if (isLarge) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        l10n.discoverPremiumSelection,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 14,
-                        ),
+                    const SizedBox(height: 4),
+                    Text(
+                      category.description.isEmpty
+                          ? l10n.discoverPremiumSelection
+                          : category.description,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 14,
                       ),
-                    ],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),

@@ -180,12 +180,14 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                         final faq = _filteredFaqs[index];
                         return Container(
                           margin: const EdgeInsets.only(bottom: 12),
-                          decoration: BoxDecoration(
+                          child: Material(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey.shade100),
-                          ),
-                          child: Theme(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(color: Colors.grey.shade100),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: Theme(
                             data: Theme.of(context).copyWith(
                               dividerColor: Colors.transparent,
                             ),
@@ -214,6 +216,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                                   ),
                                 ),
                               ],
+                            ),
                             ),
                           ),
                         );
