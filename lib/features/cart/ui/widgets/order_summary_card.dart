@@ -52,11 +52,13 @@ class OrderSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           _buildSummaryRow(l10n.subtotal, Money.format(total)),
-          const SizedBox(height: 12),
-          _buildSummaryRow(
-            l10n.serviceFee,
-            Money.format(serviceFee),
-          ),
+          if (serviceFee > 0) ...[
+            const SizedBox(height: 12),
+            _buildSummaryRow(
+              l10n.serviceFee,
+              Money.format(serviceFee),
+            ),
+          ],
           const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

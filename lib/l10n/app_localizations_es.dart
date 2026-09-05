@@ -274,6 +274,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get placeOrder => 'Realizar Pedido';
 
   @override
+  String get devPaymentTitle => 'Modo desarrollo';
+
+  @override
+  String devPaymentMessage(Object amount) {
+    return 'Estás en DEV: se omitirá el pago con tarjeta y el pedido se completará directamente por $amount.';
+  }
+
+  @override
+  String get devPaymentConfirm => 'Continuar sin pagar';
+
+  @override
+  String get devPaymentCancel => 'Cancelar';
+
+  @override
   String get orderPlaced => '¡Pedido Realizado!';
 
   @override
@@ -625,7 +639,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get selectSpecificTime => 'Seleccionar hora específica';
 
   @override
-  String get stripePayment => 'Pago con Stripe';
+  String get stripePayment => 'Tarjeta';
 
   @override
   String get safeSecure => 'Seguro y Confiable';
@@ -642,4 +656,109 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get estimatedTime => 'Tiempo estimado: ~30 mins';
+
+  @override
+  String get pleaseAcceptTerms =>
+      'Por favor acepta los Términos y la Política de Privacidad';
+
+  @override
+  String get recoveryCodeSent => 'Código de recuperación enviado correctamente';
+
+  @override
+  String get passwordResetSuccess =>
+      'Contraseña restablecida. Por favor inicia sesión.';
+
+  @override
+  String productAddedToCart(String product) {
+    return '¡$product agregado al carrito!';
+  }
+
+  @override
+  String get enterValidEmail => 'Ingresa un correo válido';
+
+  @override
+  String get enterPassword => 'Ingresa tu contraseña';
+
+  @override
+  String get enterFullName => 'Ingresa tu nombre completo';
+
+  @override
+  String get passwordMinLength =>
+      'La contraseña debe tener al menos 6 caracteres';
+
+  @override
+  String get enter6DigitCode => 'Ingresa el código de 6 dígitos';
+
+  @override
+  String get requiredField => 'Campo requerido';
+
+  @override
+  String get min6Chars => 'Mín. 6 caracteres';
+
+  @override
+  String get minimum6Chars => 'Mínimo 6 caracteres';
+
+  @override
+  String get repeatPassword => 'Repetir contraseña';
+
+  @override
+  String get verificationCode => 'Código de verificación';
+
+  @override
+  String get enter6DigitCodeHint => 'Ingresa el código de 6 dígitos';
+
+  @override
+  String get recoverPassword => 'Recuperar contraseña';
+
+  @override
+  String get recoverPasswordSubtitle =>
+      'Ingresa tu correo electrónico para recibir un código de verificación de 6 dígitos y restablecer tu contraseña.';
+
+  @override
+  String resetPasswordSubtitle(String email) {
+    return 'Ingresa el código de recuperación de 6 dígitos enviado a $email y elige tu nueva contraseña.';
+  }
+
+  @override
+  String get sendCode => 'Enviar código';
+
+  @override
+  String get resetPassword => 'Restablecer contraseña';
+
+  @override
+  String get agreeTermsPrivacy =>
+      'Al iniciar sesión aceptas nuestros Términos y Política de Privacidad.';
+
+  @override
+  String get back => 'Atrás';
+
+  @override
+  String get updateRequiredTitle => 'Actualización requerida';
+
+  @override
+  String updateRequiredMessage(String version) {
+    return 'Esta versión ya no es compatible. Actualiza a la versión $version o superior para continuar.';
+  }
+
+  @override
+  String currentVersion(String version) {
+    return 'Versión actual: $version';
+  }
+
+  @override
+  String get updateAvailableTitle => 'Actualización disponible';
+
+  @override
+  String updateAvailableMessage(String version) {
+    return 'La versión $version ya está disponible con mejoras. ¿Quieres actualizar ahora?';
+  }
+
+  @override
+  String get updateNow => 'Actualizar ahora';
+
+  @override
+  String get remindLater => 'Más tarde';
+
+  @override
+  String get couldNotOpenStore => 'No se pudo abrir la tienda';
 }

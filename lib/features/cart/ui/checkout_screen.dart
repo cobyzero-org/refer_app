@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,10 +7,11 @@ import 'package:refer_app/core/constants.dart';
 import 'package:refer_app/features/cart/bloc/locations_state.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import 'package:refer_app/core/services/stripe_service.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import 'package:refer_app/core/di.dart';
 import 'package:refer_app/features/orders/repository/orders_repository.dart';
 import '../bloc/cart_bloc.dart'; import '../bloc/cart_state.dart'; import '../bloc/cart_event.dart';
-import '../bloc/locations_bloc.dart'; import '../bloc/pickup_time_bloc.dart'; import '../bloc/pickup_time_state.dart';
+import '../bloc/locations_bloc.dart'; import '../bloc/pickup_time_bloc.dart';
 import 'widgets/checkout_section_header.dart'; import 'widgets/pickup_location_card.dart'; import 'widgets/pickup_time_selector.dart'; import 'widgets/checkout_cart_items_list.dart'; import 'widgets/payment_method_card.dart'; import 'widgets/order_summary_card.dart';
 
 class CheckoutScreen extends StatelessWidget {
@@ -19,13 +19,14 @@ class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key, this.redeemedRewardId, this.redeemedRewardTitle, this.redeemedRewardImage});
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!; const double serviceFee = 1.70;
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(backgroundColor: AppColors.background, surfaceTintColor: Colors.transparent, elevation: 0, scrolledUnderElevation: 0, leading: IconButton(icon: const Icon(Icons.arrow_back_rounded, color: AppColors.text), onPressed: () => context.pop(), style: IconButton.styleFrom(minimumSize: const Size(44,44))), title: Text(l10n.checkout, style: GoogleFonts.outfit(color: AppColors.text, fontWeight: FontWeight.w600, fontSize: 17, letterSpacing: -0.2)), centerTitle: true),
       body: BlocBuilder<CartBloc, CartState>(builder: (context, state) {
         double total = 0; int itemCount = 0; final isClaimingReward = redeemedRewardId != null;
         if (!isClaimingReward && state is CartLoaded) { total = state.total; itemCount = state.items.length; }
+        final serviceFee = ServiceFee.amountFor(total);
         return Stack(children: [
           SingleChildScrollView(padding: const EdgeInsets.fromLTRB(20, 8, 20, 88), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             CheckoutSectionHeader(title: l10n.pickupLocation), const SizedBox(height: 8), const PickupLocationCard(), const SizedBox(height: 20),
@@ -45,7 +46,7 @@ class CheckoutScreen extends StatelessWidget {
             style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 52), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(isClaimingReward ? l10n.claimReward : l10n.placeOrder, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
-              if (!isClaimingReward) ...[const SizedBox(width: 8), Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(8)), child: Text(Money.format(total), style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white)))],
+              if (!isClaimingReward) ...[const SizedBox(width: 8), Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(8)), child: Text(Money.format(TaxConfig.applyTo(total) + serviceFee), style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white)))],
             ]),
           )))),
         ]);
@@ -54,17 +55,57 @@ class CheckoutScreen extends StatelessWidget {
   }
 
   Future<void> _handlePlaceOrder(BuildContext context, double total, double serviceFee) async {
-    final amount = double.parse((total + serviceFee).toStringAsFixed(2));
-    if (kDebugMode) { await _sendOrder(context, total, serviceFee, amount); return; }
-    await sl<StripeService>().makePayment(amount: amount, currency: Money.stripeCurrency, onSuccess: () async {}, onError: (e) { if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e), backgroundColor: AppColors.text, behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), margin: const EdgeInsets.all(16))); });
+    final amount = double.parse((TaxConfig.applyTo(total) + serviceFee).toStringAsFixed(2));
+    // En DEV (.env ENV=dev) se omite Stripe: se avisa y se completa directo.
+    if (AppConstants.isDev) {
+      final proceed = await _showDevBypassDialog(context, amount);
+      if (!context.mounted || proceed != true) return;
+      await _sendOrder(context, total, serviceFee, amount);
+      return;
+    }
+    await sl<StripeService>().makePayment(amount: amount, currency: Money.stripeCurrency, onSuccess: () async {}, onError: (e) { if (context.mounted) AppSnackBar.error(context, e); });
+  }
+
+  /// Aviso de que en DEV el pago se salta y el pedido se completa directo.
+  Future<bool?> _showDevBypassDialog(BuildContext context, double amount) {
+    final l10n = AppLocalizations.of(context)!;
+    return showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(children: [
+          const Icon(Icons.developer_mode_rounded, color: AppColors.primary),
+          const SizedBox(width: 10),
+          Expanded(child: Text(l10n.devPaymentTitle, style: GoogleFonts.outfit(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.text))),
+        ]),
+        content: Text(l10n.devPaymentMessage(Money.format(amount)), style: GoogleFonts.outfit(fontSize: 13.5, height: 1.5, color: AppColors.textSecondary)),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(l10n.devPaymentCancel)),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: FilledButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+            child: Text(l10n.devPaymentConfirm),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _sendOrder(BuildContext context, double total, double serviceFee, double amount) async {
+    final l10n = AppLocalizations.of(context)!;
     final locState = context.read<LocationsBloc>().state; final timeState = context.read<PickupTimeBloc>().state; final cartState = context.read<CartBloc>().state;
     final isClaimingReward = redeemedRewardId != null; if (!isClaimingReward && cartState is! CartLoaded) return;
+    // Programar para después exige una hora futura vigente al pagar
+    // (pudo pasar la hora entre elegirla y confirmar). Sin esto el pedido
+    // llegaría sin pickupTime y la barra lo trataría como "para ahora".
+    if (!timeState.hasValidPickupTime) {
+      if (context.mounted) AppSnackBar.error(context, l10n.selectFutureTime);
+      return;
+    }
     String locationId = ''; String locationName = 'Downtown Studio';
     if (locState is LocationsLoaded && locState.selectedLocation != null) { locationId = locState.selectedLocation!.id; locationName = locState.selectedLocation!.name; }
-    final orderData = isClaimingReward ? {'locationId': locationId, 'total': 0, 'serviceFee': 0, 'paymentMethod': 'REWARD', 'pickupTime': timeState.type == PickupTimeType.asap ? DateTime.now().toIso8601String() : timeState.scheduledTime?.toIso8601String(), 'items': [{'productId': 'reward-item', 'name': redeemedRewardTitle, 'quantity': 1, 'price': 0, 'imageUrl': redeemedRewardImage ?? ''}], 'redeemedRewardId': redeemedRewardId } : {'locationId': locationId, 'total': amount, 'serviceFee': serviceFee, 'paymentMethod': 'STRIPE', 'pickupTime': timeState.type == PickupTimeType.asap ? DateTime.now().toIso8601String() : timeState.scheduledTime?.toIso8601String(), 'items': (cartState as CartLoaded).items.map((i) => {'productId': i.productId, 'name': i.name, 'quantity': i.quantity, 'price': i.totalPrice, 'size': i.size, 'type': i.type, 'imageUrl': i.imageUrl, 'enhancements': i.enhancements}).toList()};
+    final pickupTime = timeState.toApiPickupTime();
+    final orderData = isClaimingReward ? {'locationId': locationId, 'total': 0, 'serviceFee': 0, 'paymentMethod': 'REWARD', 'pickupTime': pickupTime, 'items': [{'productId': 'reward-item', 'name': redeemedRewardTitle, 'quantity': 1, 'price': 0, 'imageUrl': redeemedRewardImage ?? ''}], 'redeemedRewardId': redeemedRewardId } : {'locationId': locationId, 'total': amount, 'serviceFee': serviceFee, 'paymentMethod': 'STRIPE', 'pickupTime': pickupTime, 'items': (cartState as CartLoaded).items.map((i) => {'productId': i.productId, 'name': i.name, 'quantity': i.quantity, 'price': i.totalPrice, 'size': i.size, 'type': i.type, 'imageUrl': i.imageUrl, 'enhancements': i.enhancements}).toList()};
     final orderResponse = await sl<OrdersRepository>().createOrder(orderData);
     if (context.mounted) { context.read<CartBloc>().add(CartCleared()); final orderId = orderResponse?['orderNumber'] ?? '00000'; context.go('/order-status?orderId=$orderId&locationName=$locationName&userId='); }
   }

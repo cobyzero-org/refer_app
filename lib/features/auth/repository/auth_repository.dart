@@ -1,4 +1,5 @@
 import '../../../core/api_client.dart';
+import '../../../core/network/server_health.dart';
 import '../../../core/token_manager.dart';
 
 abstract class AuthRepository {
@@ -29,7 +30,14 @@ class AuthRepositoryImpl implements AuthRepository {
         return true;
       }
       return false;
+    } on ServerDownException {
+      rethrow;
     } catch (e) {
+      // Servidor caído: no borrar la sesión, propagar para mostrar
+      // la vista de mantenimiento en lugar de cerrar sesión.
+      if (ServerHealth.isServerDownError(e)) {
+        throw ServerDownException(e.toString());
+      }
       await tokenManager.deleteTokens();
       return false;
     }

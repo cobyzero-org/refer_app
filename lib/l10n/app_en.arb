@@ -99,6 +99,15 @@
   "serviceFee": "Service Fee",
   "total": "Total",
   "placeOrder": "Place Order",
+  "devPaymentTitle": "Development mode",
+  "devPaymentMessage": "You're in DEV: card payment will be skipped and the order will be completed directly for {amount}.",
+  "@devPaymentMessage": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "devPaymentConfirm": "Continue without paying",
+  "devPaymentCancel": "Cancel",
   "orderPlaced": "Order Placed!",
   "orderSuccessDetail": "Your artisanal brew will be ready in 10-15 minutes.",
   "backToHome": "Back to Home",
@@ -272,10 +281,75 @@
   "asap": "As soon as possible",
   "scheduleLater": "Schedule for later",
   "selectSpecificTime": "Select a specific time",
-  "stripePayment": "Stripe Payment",
+  "stripePayment": "Card",
   "safeSecure": "Safe & Secure",
   "underMaintenance": "Under Maintenance",
   "maintenanceDescription": "We're currently updating our roastery systems to serve you better. We'll be back shortly.",
   "tryAgain": "Try Again",
-  "estimatedTime": "Estimated time: ~30 mins"
+  "estimatedTime": "Estimated time: ~30 mins",
+  "pleaseAcceptTerms": "Please accept the Terms and Privacy Policy",
+  "recoveryCodeSent": "Recovery code sent successfully",
+  "passwordResetSuccess": "Password reset successfully. Please log in.",
+  "productAddedToCart": "{product} added to cart!",
+  "@productAddedToCart": {
+    "placeholders": {
+      "product": {
+        "type": "String"
+      }
+    }
+  },
+  "enterValidEmail": "Enter a valid email",
+  "enterPassword": "Enter your password",
+  "enterFullName": "Enter your full name",
+  "passwordMinLength": "Password must be at least 6 characters",
+  "enter6DigitCode": "Enter the 6-digit code",
+  "requiredField": "Required field",
+  "min6Chars": "Min 6 characters",
+  "minimum6Chars": "Minimum 6 characters",
+  "repeatPassword": "Repeat password",
+  "verificationCode": "Verification code",
+  "enter6DigitCodeHint": "Enter 6-digit code",
+  "recoverPassword": "Recover password",
+  "recoverPasswordSubtitle": "Enter your email address to receive a 6-digit verification code to reset your password.",
+  "resetPasswordSubtitle": "Enter the 6-digit recovery code sent to {email} and choose your new password.",
+  "@resetPasswordSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "sendCode": "Send code",
+  "resetPassword": "Reset password",
+  "agreeTermsPrivacy": "By signing in you agree to our Terms and Privacy Policy.",
+  "back": "Back",
+  "updateRequiredTitle": "Update required",
+  "updateRequiredMessage": "This version is no longer supported. Update to version {version} or later to continue.",
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentVersion": "Current version: {version}",
+  "@currentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAvailableTitle": "Update available",
+  "updateAvailableMessage": "Version {version} is available with improvements. Do you want to update now?",
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNow": "Update now",
+  "remindLater": "Later",
+  "couldNotOpenStore": "Couldn't open the app store"
 }

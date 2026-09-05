@@ -6,6 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:refer_app/features/stars/widgets/balance_card.dart';
 import 'package:refer_app/features/stars/widgets/reward_redeem_card.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import '../../../core/di.dart';
 import '../../../core/theme.dart';
 import '../bloc/stars_bloc.dart';
@@ -43,7 +44,7 @@ class StarsScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(state.message, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
                     const SizedBox(height: 16),
-                    FilledButton(onPressed: () => context.read<StarsBloc>().add(StarsStarted()), child: const Text('Try again')),
+                    FilledButton(onPressed: () => context.read<StarsBloc>().add(StarsStarted()), child: Text(l10n.tryAgain)),
                   ]),
                 ),
               );
@@ -111,11 +112,7 @@ class StarsScreen extends StatelessWidget {
                           enabled: hasEnough,
                           onTap: () {
                             if (!hasEnough) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(l10n.insufficientStars),
-                                backgroundColor: AppColors.text, behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), margin: const EdgeInsets.all(16),
-                              ));
+                              AppSnackBar.error(context, l10n.insufficientStars);
                               return;
                             }
                             _showRedeemConfirmation(context, reward);
@@ -182,11 +179,7 @@ class StarsScreen extends StatelessWidget {
             onPressed: () {
               context.read<StarsBloc>().add(RedeemRewardRequested(reward.id));
               Navigator.pop(dialogContext);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(l10n.redeemingReward(reward.title)),
-                backgroundColor: AppColors.text, behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), margin: const EdgeInsets.all(16),
-              ));
+              AppSnackBar.info(context, l10n.redeemingReward(reward.title));
             },
             style: FilledButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)),
             child: Text(l10n.confirm),

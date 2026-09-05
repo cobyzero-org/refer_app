@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/user_avatar.dart';
 import '../../../core/bloc/locale_cubit.dart';
 import '../../home/bloc/home_bloc.dart';
 import '../../home/bloc/home_state.dart';
@@ -12,6 +13,7 @@ import '../../splash/repository/app_config_repository.dart';
 import '../../auth/repository/auth_repository.dart';
 import '../../cart/bloc/cart_bloc.dart';
 import '../../cart/bloc/cart_event.dart';
+import '../../cart/repository/cart_socket_manager.dart';
 import '../../cart/bloc/locations_bloc.dart';
 import '../../cart/bloc/locations_event.dart';
 import '../../home/bloc/home_event.dart';
@@ -100,7 +102,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.separator)),
         child: Row(children: [
-          CircleAvatar(radius: 32, backgroundColor: AppColors.neutralGrouped, backgroundImage: NetworkImage(photoUrl ?? 'https://i.pravatar.cc/150?u=fallback'), onBackgroundImageError: (_, __) {}),
+          UserAvatar(photoUrl: photoUrl, name: name, radius: 32),
           const SizedBox(width: 14),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(name, style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.text, letterSpacing: -0.2)),
@@ -153,6 +155,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     child: OutlinedButton(
       onPressed: () {
         sl<AuthRepository>().logout();
+        // Cerrar el socket del usuario saliente para no reutilizar
+        // su conexión si otro usuario inicia sesión después.
+        sl<CartSocketManager>().disconnect();
         context.read<HomeBloc>().add(HomeResetRequested());
         context.read<CartBloc>().add(CartCleared());
         context.read<LocationsBloc>().add(LocationsResetRequested());

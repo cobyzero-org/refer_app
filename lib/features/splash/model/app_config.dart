@@ -27,6 +27,27 @@ class AppConfig {
     return supportedCurrencies.contains(c) ? c : 'USD';
   }
 
+  /// Impuesto estimado cobrado en tu pedido (tabla app_settings).
+  /// Si está apagado o la tasa es inválida, no se cobra impuesto.
+  bool get taxEnabled {
+    final v = (settings['tax_enabled'] ?? 'true').trim().toLowerCase();
+    return v == 'true' || v == '1';
+  }
+
+  /// Tasa como fracción 0..1 (0.08 = 8%). Por defecto 8%.
+  double get taxRate {
+    final rate = double.tryParse(settings['tax_rate'] ?? '');
+    if (rate == null || rate < 0 || rate > 1) return 0.08;
+    return rate;
+  }
+
+  /// Tarifa de servicio como fracción 0..1 (0.05 = 5%). Por defecto 0.
+  double get serviceFeeRate {
+    final rate = double.tryParse(settings['service_fee_rate'] ?? '');
+    if (rate == null || rate < 0 || rate > 1) return 0.0;
+    return rate;
+  }
+
   factory AppConfig.fromJson(Map<String, dynamic> json) {
     return AppConfig(
       version: json['version'] ?? '',

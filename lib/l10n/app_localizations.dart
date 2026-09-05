@@ -614,6 +614,30 @@ abstract class AppLocalizations {
   /// **'Place Order'**
   String get placeOrder;
 
+  /// No description provided for @devPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Development mode'**
+  String get devPaymentTitle;
+
+  /// No description provided for @devPaymentMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re in DEV: card payment will be skipped and the order will be completed directly for {amount}.'**
+  String devPaymentMessage(Object amount);
+
+  /// No description provided for @devPaymentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without paying'**
+  String get devPaymentConfirm;
+
+  /// No description provided for @devPaymentCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get devPaymentCancel;
+
   /// No description provided for @orderPlaced.
   ///
   /// In en, this message translates to:
@@ -1259,7 +1283,7 @@ abstract class AppLocalizations {
   /// No description provided for @stripePayment.
   ///
   /// In en, this message translates to:
-  /// **'Stripe Payment'**
+  /// **'Card'**
   String get stripePayment;
 
   /// No description provided for @safeSecure.
@@ -1291,6 +1315,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Estimated time: ~30 mins'**
   String get estimatedTime;
+
+  /// No description provided for @pleaseAcceptTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Please accept the Terms and Privacy Policy'**
+  String get pleaseAcceptTerms;
+
+  /// No description provided for @recoveryCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery code sent successfully'**
+  String get recoveryCodeSent;
+
+  /// No description provided for @passwordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset successfully. Please log in.'**
+  String get passwordResetSuccess;
+
+  /// No description provided for @productAddedToCart.
+  ///
+  /// In en, this message translates to:
+  /// **'{product} added to cart!'**
+  String productAddedToCart(String product);
+
+  /// No description provided for @enterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email'**
+  String get enterValidEmail;
+
+  /// No description provided for @enterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get enterPassword;
+
+  /// No description provided for @enterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get enterFullName;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordMinLength;
+
+  /// No description provided for @enter6DigitCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code'**
+  String get enter6DigitCode;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required field'**
+  String get requiredField;
+
+  /// No description provided for @min6Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Min 6 characters'**
+  String get min6Chars;
+
+  /// No description provided for @minimum6Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum 6 characters'**
+  String get minimum6Chars;
+
+  /// No description provided for @repeatPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat password'**
+  String get repeatPassword;
+
+  /// No description provided for @verificationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get verificationCode;
+
+  /// No description provided for @enter6DigitCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-digit code'**
+  String get enter6DigitCodeHint;
+
+  /// No description provided for @recoverPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover password'**
+  String get recoverPassword;
+
+  /// No description provided for @recoverPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address to receive a 6-digit verification code to reset your password.'**
+  String get recoverPasswordSubtitle;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit recovery code sent to {email} and choose your new password.'**
+  String resetPasswordSubtitle(String email);
+
+  /// No description provided for @sendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get sendCode;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get resetPassword;
+
+  /// No description provided for @agreeTermsPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'By signing in you agree to our Terms and Privacy Policy.'**
+  String get agreeTermsPrivacy;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @updateRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update required'**
+  String get updateRequiredTitle;
+
+  /// No description provided for @updateRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This version is no longer supported. Update to version {version} or later to continue.'**
+  String updateRequiredMessage(String version);
+
+  /// No description provided for @currentVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Current version: {version}'**
+  String currentVersion(String version);
+
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get updateAvailableTitle;
+
+  /// No description provided for @updateAvailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} is available with improvements. Do you want to update now?'**
+  String updateAvailableMessage(String version);
+
+  /// No description provided for @updateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get updateNow;
+
+  /// No description provided for @remindLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get remindLater;
+
+  /// No description provided for @couldNotOpenStore.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the app store'**
+  String get couldNotOpenStore;
 }
 
 class _AppLocalizationsDelegate

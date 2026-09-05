@@ -7,34 +7,62 @@ class CartSocketManager {
   final TokenManager tokenManager;
   io.Socket? socket;
   Function(CartUpdateResponse)? onCartUpdated;
+  bool _connecting = false;
 
   CartSocketManager({required this.tokenManager});
 
-  void connect() async {
-    final token = await tokenManager.getAccessToken();
-    if (token == null) return;
+  bool get isConnected => socket?.connected ?? false;
 
-    socket = io.io(
-      AppConstants.socketUrl,
-      io.OptionBuilder()
-          .setTransports(['websocket'])
-          .setAuth({'token': token})
-          .enableAutoConnect()
-          .build(),
-    );
+  Future<void> connect() async {
+    // Idempotente: si ya hay conexión (o una en curso), no duplicar sockets.
+    if (isConnected || _connecting) return;
+    _connecting = true;
+    try {
+      final token = await tokenManager.getAccessToken();
+      // Sin token (p. ej. antes del primer login): no conectar todavía.
+      // El login posterior llamará a reconnect()/connect() de nuevo.
+      if (token == null) return;
+      if (isConnected) return;
 
-    socket?.onConnect((_) {
-      print('Connected to /cart namespace');
-    });
+      // Desechar socket viejo (desconectado o con token anterior).
+      socket?.dispose();
+      socket = null;
 
-    socket?.on('cartUpdated', (data) {
-      if (onCartUpdated != null) {
-        onCartUpdated!(CartUpdateResponse.fromJson(data));
-      }
-    });
+      socket = io.io(
+        AppConstants.socketUrl,
+        io.OptionBuilder()
+            .setTransports(['websocket'])
+            .setAuth({'token': token})
+            .enableAutoConnect()
+            .build(),
+      );
 
-    socket?.onDisconnect((_) => print('Disconnected from /cart namespace'));
-    socket?.onError((err) => print('Socket error: $err'));
+      socket?.onConnect((_) {
+        print('Connected to /cart namespace');
+        // Auto-recuperación: cada (re)conexión pide el carrito para que
+        // el badge y la lista se llenen aunque el socket se haya
+        // conectado después (p. ej. justo tras el login).
+        getCart();
+      });
+
+      socket?.on('cartUpdated', (data) {
+        if (onCartUpdated != null) {
+          onCartUpdated!(CartUpdateResponse.fromJson(data));
+        }
+      });
+
+      socket?.onDisconnect((_) => print('Disconnected from /cart namespace'));
+      socket?.onError((err) => print('Socket error: $err'));
+    } finally {
+      _connecting = false;
+    }
+  }
+
+  /// Reconecta con el token actual. Usar tras login/logout para
+  /// descartar el socket viejo (o el intento sin token del arranque).
+  Future<void> reconnect() async {
+    disconnect();
+    await connect();
   }
 
   void addToCart({

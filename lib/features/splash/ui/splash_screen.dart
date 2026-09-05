@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/di.dart';
 import '../../../core/theme.dart';
+import '../../../core/utils/store_launcher.dart';
+import '../../../l10n/app_localizations.dart';
 import '../bloc/splash_bloc.dart';
 import '../bloc/splash_event.dart';
 import '../bloc/splash_state.dart';
@@ -59,16 +62,112 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
+  /// Aviso no bloqueante: hay versión nueva en el API pero la instalada
+  /// sigue soportada. "Actualizar" abre la tienda y continúa;
+  /// "Más tarde" continúa directo.
+  Future<void> _showSoftUpdateDialog(
+    BuildContext context,
+    String latestVersion,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    await showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.secondary.withValues(alpha: 0.6),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.system_update_rounded,
+                color: AppColors.primary,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                l10n.updateAvailableTitle,
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 17,
+                  color: AppColors.text,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          l10n.updateAvailableMessage(latestVersion),
+          style: GoogleFonts.outfit(
+            color: AppColors.textSecondary,
+            fontSize: 13.5,
+            height: 1.5,
+          ),
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            style: TextButton.styleFrom(
+              minimumSize: const Size(44, 44),
+            ),
+            child: Text(l10n.remindLater),
+          ),
+          const SizedBox(width: 6),
+          FilledButton(
+            onPressed: () async {
+              await openAppStore(context);
+              if (dialogContext.mounted) {
+                Navigator.of(dialogContext).pop(true);
+              }
+            },
+            style: FilledButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 12,
+              ),
+            ),
+            child: Text(l10n.updateNow),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<SplashBloc>()..add(SplashStarted()),
       child: BlocListener<SplashBloc, SplashState>(
-        listener: (context, state) {
-          if (state is SplashAuthenticated) {
-            context.go('/home');
+        listener: (context, state) async {
+          if (state is SplashForceUpdate) {
+            context.go('/update-required', extra: {
+              'minVersion': state.minVersion,
+              'installedVersion': state.installedVersion,
+            });
+          } else if (state is SplashAuthenticated) {
+            if (state.updateAvailable && context.mounted) {
+              await _showSoftUpdateDialog(context, state.latestVersion);
+            }
+            if (context.mounted) context.go('/home');
           } else if (state is SplashUnauthenticated) {
-            context.go('/auth');
+            if (state.updateAvailable && context.mounted) {
+              await _showSoftUpdateDialog(context, state.latestVersion);
+            }
+            if (context.mounted) context.go('/auth');
           } else if (state is SplashError) {
             context.go('/maintenance');
           }

@@ -5,8 +5,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:refer_app/features/cart/bloc/pickup_time_bloc.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import 'core/theme.dart';
+import 'core/widgets/app_snackbar.dart';
 import 'core/di.dart';
 import 'core/router.dart';
+import 'core/network/server_health.dart';
 import 'core/bloc/locale_cubit.dart';
 import 'features/cart/bloc/cart_bloc.dart';
 import 'features/home/bloc/home_bloc.dart';
@@ -16,15 +18,42 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  await dotenv.load();
   await StripeService.init();
   initDI();
   await LiquidGlassWidgets.initialize();
   runApp(LiquidGlassWidgets.wrap(child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    ServerHealth.isDown.addListener(_goToMaintenance);
+  }
+
+  @override
+  void dispose() {
+    ServerHealth.isDown.removeListener(_goToMaintenance);
+    super.dispose();
+  }
+
+  /// Si el servidor se cae en cualquier momento (cualquier request),
+  /// mostrar la vista de mantenimiento.
+  void _goToMaintenance() {
+    if (!ServerHealth.isDown.value) return;
+    final location = router.state.matchedLocation;
+    // Splash (/) ya redirige solo vía SplashError; no duplicar.
+    if (location == '/maintenance' || location == '/') return;
+    router.go('/maintenance');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +71,7 @@ class MyApp extends StatelessWidget {
             title: 'Artisan Espresso',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
+            scaffoldMessengerKey: AppSnackBar.messengerKey,
             routerConfig: router,
             locale: locale,
             localizationsDelegates: const [

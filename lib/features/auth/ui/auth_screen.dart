@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import '../../../core/di.dart';
 import '../../../core/theme.dart';
+import '../../cart/bloc/cart_bloc.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -47,14 +49,15 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _submit(BuildContext blocContext) {
+    final l10n = AppLocalizations.of(context)!;
     final email = _email.text.trim();
     final password = _password.text;
 
     setState(() {
       _emailError = email.isEmpty || !email.contains('@')
-          ? 'Enter a valid email'
+          ? l10n.enterValidEmail
           : null;
-      _passwordError = password.isEmpty ? 'Enter your password' : null;
+      _passwordError = password.isEmpty ? l10n.enterPassword : null;
     });
 
     if (_emailError != null || _passwordError != null) {
@@ -96,31 +99,13 @@ class _AuthScreenState extends State<AuthScreen> {
                     listener: (context, state) {
                       if (state is AuthAuthenticated) {
                         HapticFeedback.lightImpact();
+                        // El socket del carrito se creó al abrir la app (sin
+                        // token); reconectar ahora con el token recién guardado.
+                        sl<CartBloc>().reconnect();
                         context.go('/main');
                       }
                       if (state is AuthError) {
-                        HapticFeedback.heavyImpact();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Row(
-                              children: [
-                                const Icon(
-                                  Icons.error_outline_rounded,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(child: Text(state.message)),
-                              ],
-                            ),
-                            backgroundColor: AppColors.text,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            margin: const EdgeInsets.all(16),
-                          ),
-                        );
+                        AppSnackBar.error(context, state.message);
                       }
                     },
                     builder: (context, state) {
@@ -159,7 +144,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               const SizedBox(height: 16),
                               AuthInputField(
                                 label: _toSentenceCase(l10n.password),
-                                hint: 'Enter your password',
+                                hint: l10n.enterPassword,
                                 controller: _password,
                                 focusNode: _passwordFocus,
                                 isPassword: true,
@@ -255,7 +240,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
                               const SizedBox(height: 16),
                               Text(
-                                'By signing in you agree to our Terms and Privacy Policy.',
+                                l10n.agreeTermsPrivacy,
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(

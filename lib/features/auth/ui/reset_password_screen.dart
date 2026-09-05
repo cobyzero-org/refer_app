@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import '../../../core/di.dart';
 import '../../../core/theme.dart';
 import '../bloc/auth_bloc.dart';
@@ -57,8 +58,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     final confirm = _confirmNewPassword.text;
 
     setState(() {
-      _codeError = code.length != 6 ? 'Enter the 6-digit code' : null;
-      _newPasswordError = pwd.length < 6 ? 'Password must be at least 6 characters' : null;
+      _codeError = code.length != 6 ? l10n.enter6DigitCode : null;
+      _newPasswordError = pwd.length < 6 ? l10n.passwordMinLength : null;
       _confirmError = confirm != pwd ? l10n.passwordsDoNotMatch : null;
     });
 
@@ -88,7 +89,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded, color: AppColors.text),
             onPressed: () => context.pop(),
-            tooltip: 'Back',
+            tooltip: l10n.back,
             style: IconButton.styleFrom(minimumSize: const Size(44, 44)),
           ),
         ),
@@ -104,41 +105,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   child: BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state is ResetPasswordSuccess) {
-                        HapticFeedback.lightImpact();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Row(
-                              children: [
-                                Icon(Icons.check_circle_outline_rounded, color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Expanded(child: Text('Password reset successfully. Please log in.')),
-                              ],
-                            ),
-                            backgroundColor: AppColors.text,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.all(16),
-                          ),
-                        );
+                        AppSnackBar.success(context, l10n.passwordResetSuccess);
                         context.go('/auth');
                       }
                       if (state is AuthError) {
-                        HapticFeedback.heavyImpact();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Row(
-                              children: [
-                                const Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
-                                const SizedBox(width: 10),
-                                Expanded(child: Text(state.message)),
-                              ],
-                            ),
-                            backgroundColor: AppColors.text,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.all(16),
-                          ),
-                        );
+                        AppSnackBar.error(context, state.message);
                       }
                     },
                     builder: (context, state) {
@@ -147,10 +118,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const AuthHeader(title: 'Reset password'),
+                            AuthHeader(title: l10n.resetPassword),
                             const SizedBox(height: 16),
                             Text(
-                              'Enter the 6-digit recovery code sent to ${widget.email} and choose your new password.',
+                              l10n.resetPasswordSubtitle(widget.email),
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: AppColors.textSecondary,
@@ -159,8 +130,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             ),
                             const SizedBox(height: 32),
                             AuthInputField(
-                              label: 'Verification code',
-                              hint: 'Enter 6-digit code',
+                              label: l10n.verificationCode,
+                              hint: l10n.enter6DigitCodeHint,
                               controller: _code,
                               focusNode: _codeFocus,
                               keyboardType: TextInputType.number,
@@ -173,7 +144,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             const SizedBox(height: 16),
                             AuthInputField(
                               label: _toSentenceCase(l10n.newPassword),
-                              hint: 'Minimum 6 characters',
+                              hint: l10n.minimum6Chars,
                               controller: _newPassword,
                               focusNode: _newPasswordFocus,
                               isPassword: true,
@@ -186,7 +157,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             const SizedBox(height: 16),
                             AuthInputField(
                               label: _toSentenceCase(l10n.confirmPassword),
-                              hint: 'Repeat password',
+                              hint: l10n.repeatPassword,
                               controller: _confirmNewPassword,
                               focusNode: _confirmFocus,
                               isPassword: true,
@@ -200,7 +171,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             Semantics(
                               button: true,
                               enabled: !isLoading,
-                              label: 'Reset password',
+                              label: l10n.resetPassword,
                               child: FilledButton(
                                 onPressed: isLoading ? null : () => _submit(context, l10n),
                                 style: FilledButton.styleFrom(
@@ -216,12 +187,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                         width: 20,
                                         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.2),
                                       )
-                                    : const Row(
+                                    : Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text('Reset password', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                          SizedBox(width: 8),
-                                          Icon(Icons.lock_reset_rounded, size: 18),
+                                          Text(l10n.resetPassword, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                          const SizedBox(width: 8),
+                                          const Icon(Icons.lock_reset_rounded, size: 18),
                                         ],
                                       ),
                               ),

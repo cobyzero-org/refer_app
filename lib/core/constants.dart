@@ -84,3 +84,35 @@ class Money {
 
   static String formatPlus(num amount) => '+$symbol${amount.toStringAsFixed(2)}';
 }
+
+/// Impuesto estimado del pedido, configurado por el operador en la web
+/// (tabla app_settings -> GET /config -> settings.tax_enabled/tax_rate).
+class TaxConfig {
+  /// Si se cobra impuesto. Lo actualiza SplashBloc al cargar.
+  static bool enabled = true;
+
+  /// Tasa como fracción 0..1 (0.08 = 8%). La actualiza SplashBloc.
+  static double rate = 0.08;
+
+  /// Tasa efectiva: 0 si el impuesto está apagado.
+  static double get effectiveRate => enabled ? rate : 0;
+
+  /// Total con impuesto incluido.
+  static double applyTo(double subtotal) => subtotal * (1 + effectiveRate);
+
+  /// Etiqueta "8%" para mostrar junto al nombre del impuesto.
+  static String get percentLabel {
+    final pct = effectiveRate * 100;
+    return pct % 1 == 0 ? '${pct.toInt()}%' : '${pct.toStringAsFixed(1)}%';
+  }
+}
+
+/// Tarifa de servicio del pedido, configurada por el operador en la web
+/// (tabla app_settings -> GET /config -> settings.service_fee_rate).
+class ServiceFee {
+  /// Tasa como fracción 0..1 (0.05 = 5%). La actualiza SplashBloc.
+  static double rate = 0.0;
+
+  /// Monto de la tarifa sobre el subtotal.
+  static double amountFor(double subtotal) => subtotal * rate;
+}

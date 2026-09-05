@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:refer_app/core/theme.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
+import 'package:refer_app/core/widgets/user_avatar.dart';
 import 'package:refer_app/features/home/bloc/home_event.dart';
 import '../../../l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
@@ -66,27 +68,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         listener: (context, state) {
           if (state is HomeLoaded) {
             if (state.status == HomeStatus.success) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message ?? l10n.profileUpdated),
-                  backgroundColor: const Color(0xFF1E3932),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+              AppSnackBar.success(
+                context,
+                state.message ?? l10n.profileUpdated,
               );
               context.pop();
             } else if (state.status == HomeStatus.error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message ?? l10n.errorUpdatingProfile),
-                  backgroundColor: Colors.red.shade800,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+              AppSnackBar.error(
+                context,
+                state.message ?? l10n.errorUpdatingProfile,
               );
             }
           }
@@ -94,9 +84,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             String? photoUrl;
+            String name = '';
             bool isLoading = false;
             if (state is HomeLoaded) {
               photoUrl = state.user.photoUrl;
+              name = state.user.name;
               isLoading = state.status == HomeStatus.loading;
             }
 
@@ -106,7 +98,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   padding: const EdgeInsets.fromLTRB(24, 20, 24, 140),
                   child: Column(
                     children: [
-                      _buildProfileImagePicker(photoUrl),
+                      _buildProfileImagePicker(photoUrl, name),
                       const SizedBox(height: 48),
                       _buildInputField(
                         label: l10n.fullName,
@@ -164,7 +156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildProfileImagePicker(String? photoUrl) {
+  Widget _buildProfileImagePicker(String? photoUrl, String name) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         final l10n = AppLocalizations.of(context)!;
@@ -208,14 +200,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ],
                     ),
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 56,
-                          backgroundImage: NetworkImage(
-                            photoUrl ?? 'https://i.pravatar.cc/150?u=fallback',
+                      child: Stack(
+                        children: [
+                          UserAvatar(
+                            photoUrl: photoUrl,
+                            name: name.isNotEmpty
+                                ? name
+                                : _nameController.text,
+                            radius: 56,
                           ),
-                        ),
                         if (isUploading)
                           Container(
                             decoration: BoxDecoration(

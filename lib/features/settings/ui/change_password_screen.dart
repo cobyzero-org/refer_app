@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:refer_app/core/theme.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import 'package:refer_app/core/di.dart';
 import 'package:refer_app/features/auth/repository/auth_repository.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
@@ -46,22 +47,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     if (mounted) {
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.passwordChangedSuccessfully),
-            backgroundColor: const Color(0xFF1E3932),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        AppSnackBar.success(context, l10n.passwordChangedSuccessfully);
         context.pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.errorChangingPassword),
-            backgroundColor: Colors.red.shade800,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        AppSnackBar.error(context, l10n.errorChangingPassword);
       }
     }
   }
@@ -92,7 +81,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     setState(() => _obscureCurrent = !_obscureCurrent),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Required field';
+                    return l10n.requiredField;
                   }
                   return null;
                 },
@@ -109,7 +98,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 24),
               _buildInputField(
                 label: l10n.confirmPassword,
-                hintText: l10n.passwordHint,
+                hintText: l10n.repeatPassword,
                 controller: _confirmPasswordController,
                 obscureText: _obscureConfirm,
                 onToggleObscure: () =>
@@ -138,6 +127,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     required VoidCallback onToggleObscure,
     String? Function(String?)? validator,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -157,14 +147,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             fontWeight: FontWeight.w600,
             color: Color(0xFF2D3132),
           ),
-          validator:
+              validator:
               validator ??
               (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Required field';
+                  return l10n.requiredField;
                 }
                 if (value.length < 6) {
-                  return 'Min 6 characters';
+                  return l10n.min6Chars;
                 }
                 return null;
               },

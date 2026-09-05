@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import '../../../l10n/app_localizations.dart';
 
 class FAQItem {
@@ -151,7 +152,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                     physics: const BouncingScrollPhysics(),
                     child: Row(
                       children: [
-                        _buildCategoryChip('ALL', 'All'),
+                        _buildCategoryChip('ALL', l10n.all),
                         _buildCategoryChip('GENERAL', l10n.faqCategoryGeneral),
                         _buildCategoryChip('PAYMENTS', l10n.faqCategoryPayments),
                         _buildCategoryChip('ORDERS', l10n.faqCategoryOrders),
@@ -258,9 +259,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                         child: OutlinedButton.icon(
                           onPressed: () {
                             // Logic or action to email
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('support@referapp.com')),
-                            );
+                            AppSnackBar.info(context, 'support@referapp.com');
                           },
                           icon: const Icon(Icons.email_outlined, color: primaryColor),
                           label: Text(
@@ -284,9 +283,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                         child: OutlinedButton.icon(
                           onPressed: () {
                             // Logic or action to phone call
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('+1 (800) 555-0199')),
-                            );
+                            AppSnackBar.info(context, '+1 (800) 555-0199');
                           },
                           icon: const Icon(Icons.phone_outlined, color: primaryColor),
                           label: Text(

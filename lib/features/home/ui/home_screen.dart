@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
 import '../../../core/theme.dart';
 import '../../../core/constants.dart';
+import '../../../core/widgets/user_avatar.dart';
 import '../../../core/models/product_category.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
@@ -100,19 +101,18 @@ class HomeScreen extends StatelessWidget {
           ),
           BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
+              String name = '';
               String? photoUrl;
-              if (state is HomeLoaded) photoUrl = state.user.photoUrl;
+              if (state is HomeLoaded) {
+                name = state.user.name;
+                photoUrl = state.user.photoUrl;
+              }
               return Padding(
                 padding: const EdgeInsets.only(right: 12, left: 4),
                 child: Semantics(
                   image: true,
                   label: 'Profile photo',
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundColor: AppColors.neutralGrouped,
-                    backgroundImage: NetworkImage(photoUrl ?? 'https://i.pravatar.cc/150?u=fallback'),
-                    onBackgroundImageError: (_, __) {},
-                  ),
+                  child: UserAvatar(photoUrl: photoUrl, name: name),
                 ),
               );
             },

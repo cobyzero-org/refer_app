@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import '../../../core/di.dart';
 import '../../../core/theme.dart';
+import '../../cart/bloc/cart_bloc.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -64,9 +66,9 @@ class _SignupScreenState extends State<SignupScreen> {
     final confirm = _confirmPassword.text;
 
     setState(() {
-      _nameError = name.isEmpty ? 'Enter your full name' : null;
-      _emailError = email.isEmpty || !email.contains('@') ? 'Enter a valid email' : null;
-      _passwordError = pwd.length < 6 ? 'Password must be at least 6 characters' : null;
+      _nameError = name.isEmpty ? l10n.enterFullName : null;
+      _emailError = email.isEmpty || !email.contains('@') ? l10n.enterValidEmail : null;
+      _passwordError = pwd.length < 6 ? l10n.passwordMinLength : null;
       _confirmError = confirm != pwd ? l10n.passwordsDoNotMatch : null;
     });
 
@@ -76,16 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     if (!_acceptTerms) {
-      HapticFeedback.selectionClick();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Please accept the Terms and Privacy Policy'),
-          backgroundColor: AppColors.text,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
+      AppSnackBar.error(context, l10n.pleaseAcceptTerms);
       return;
     }
 
@@ -113,35 +106,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state is AuthAuthenticated) {
-                        HapticFeedback.lightImpact();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.accountCreatedSuccess),
-                            backgroundColor: AppColors.text,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.all(16),
-                          ),
-                        );
+                        AppSnackBar.success(context, l10n.accountCreatedSuccess);
+                        // Igual que en login: reconectar el socket del carrito
+                        // con el token recién guardado.
+                        sl<CartBloc>().reconnect();
                         context.go('/main');
                       }
                       if (state is AuthError) {
-                        HapticFeedback.heavyImpact();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Row(
-                              children: [
-                                const Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
-                                const SizedBox(width: 10),
-                                Expanded(child: Text(state.message)),
-                              ],
-                            ),
-                            backgroundColor: AppColors.text,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.all(16),
-                          ),
-                        );
+                        AppSnackBar.error(context, state.message);
                       }
                     },
                     builder: (context, state) {
@@ -183,7 +155,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             const SizedBox(height: 16),
                             AuthInputField(
                               label: _toSentenceCase(l10n.password),
-                              hint: 'Minimum 6 characters',
+                              hint: l10n.minimum6Chars,
                               controller: _password,
                               focusNode: _passwordFocus,
                               isPassword: true,
@@ -196,7 +168,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             const SizedBox(height: 16),
                             AuthInputField(
                               label: _toSentenceCase(l10n.confirmPassword),
-                              hint: 'Repeat password',
+                              hint: l10n.repeatPassword,
                               controller: _confirmPassword,
                               focusNode: _confirmFocus,
                               isPassword: true,

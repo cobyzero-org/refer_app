@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'network/server_health.dart';
 import 'token_manager.dart';
 import 'constants.dart';
 
@@ -39,7 +40,18 @@ class ApiClient {
           }
           return handler.next(options);
         },
+        onResponse: (response, handler) {
+          // El servidor respondió: ya no está caído.
+          ServerHealth.markRecovered();
+          return handler.next(response);
+        },
         onError: (DioException e, handler) async {
+          // Servidor caído / en mantenimiento: avisar al notificador
+          // global para que la app muestre la vista de mantenimiento.
+          if (ServerHealth.isServerDownError(e)) {
+            ServerHealth.reportDown();
+            return handler.next(e);
+          }
           if (e.response?.statusCode == 401) {
             // Lógica para refresh token podría ir aquí
             await tokenManager.deleteTokens();

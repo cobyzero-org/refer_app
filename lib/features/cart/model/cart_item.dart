@@ -25,6 +25,34 @@ class CartItem {
     required this.starsReward,
   });
 
+  CartItem copyWith({
+    String? id,
+    String? productId,
+    String? name,
+    String? imageUrl,
+    String? size,
+    String? type,
+    List<String>? enhancements,
+    int? quantity,
+    double? unitPrice,
+    double? totalPrice,
+    int? starsReward,
+  }) {
+    return CartItem(
+      id: id ?? this.id,
+      productId: productId ?? this.productId,
+      name: name ?? this.name,
+      imageUrl: imageUrl ?? this.imageUrl,
+      size: size ?? this.size,
+      type: type ?? this.type,
+      enhancements: enhancements ?? this.enhancements,
+      quantity: quantity ?? this.quantity,
+      unitPrice: unitPrice ?? this.unitPrice,
+      totalPrice: totalPrice ?? this.totalPrice,
+      starsReward: starsReward ?? this.starsReward,
+    );
+  }
+
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
       id: json['id'] as String? ?? '',

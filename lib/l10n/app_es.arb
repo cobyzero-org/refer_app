@@ -99,6 +99,15 @@
   "serviceFee": "Tarifa de Servicio",
   "total": "Total",
   "placeOrder": "Realizar Pedido",
+  "devPaymentTitle": "Modo desarrollo",
+  "devPaymentMessage": "Estás en DEV: se omitirá el pago con tarjeta y el pedido se completará directamente por {amount}.",
+  "@devPaymentMessage": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "devPaymentConfirm": "Continuar sin pagar",
+  "devPaymentCancel": "Cancelar",
   "orderPlaced": "¡Pedido Realizado!",
   "orderSuccessDetail": "Tu café artesanal estará listo en 10-15 minutos.",
   "backToHome": "Volver al Inicio",
@@ -272,10 +281,75 @@
   "asap": "Lo antes posible",
   "scheduleLater": "Programar para después",
   "selectSpecificTime": "Seleccionar hora específica",
-  "stripePayment": "Pago con Stripe",
+  "stripePayment": "Tarjeta",
   "safeSecure": "Seguro y Confiable",
   "underMaintenance": "En Mantenimiento",
   "maintenanceDescription": "Actualmente estamos actualizando nuestros sistemas de tostado para servirle mejor. Volveremos pronto.",
   "tryAgain": "Intentar de nuevo",
-  "estimatedTime": "Tiempo estimado: ~30 mins"
+  "estimatedTime": "Tiempo estimado: ~30 mins",
+  "pleaseAcceptTerms": "Por favor acepta los Términos y la Política de Privacidad",
+  "recoveryCodeSent": "Código de recuperación enviado correctamente",
+  "passwordResetSuccess": "Contraseña restablecida. Por favor inicia sesión.",
+  "productAddedToCart": "¡{product} agregado al carrito!",
+  "@productAddedToCart": {
+    "placeholders": {
+      "product": {
+        "type": "String"
+      }
+    }
+  },
+  "enterValidEmail": "Ingresa un correo válido",
+  "enterPassword": "Ingresa tu contraseña",
+  "enterFullName": "Ingresa tu nombre completo",
+  "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+  "enter6DigitCode": "Ingresa el código de 6 dígitos",
+  "requiredField": "Campo requerido",
+  "min6Chars": "Mín. 6 caracteres",
+  "minimum6Chars": "Mínimo 6 caracteres",
+  "repeatPassword": "Repetir contraseña",
+  "verificationCode": "Código de verificación",
+  "enter6DigitCodeHint": "Ingresa el código de 6 dígitos",
+  "recoverPassword": "Recuperar contraseña",
+  "recoverPasswordSubtitle": "Ingresa tu correo electrónico para recibir un código de verificación de 6 dígitos y restablecer tu contraseña.",
+  "resetPasswordSubtitle": "Ingresa el código de recuperación de 6 dígitos enviado a {email} y elige tu nueva contraseña.",
+  "@resetPasswordSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "sendCode": "Enviar código",
+  "resetPassword": "Restablecer contraseña",
+  "agreeTermsPrivacy": "Al iniciar sesión aceptas nuestros Términos y Política de Privacidad.",
+  "back": "Atrás",
+  "updateRequiredTitle": "Actualización requerida",
+  "updateRequiredMessage": "Esta versión ya no es compatible. Actualiza a la versión {version} o superior para continuar.",
+  "@updateRequiredMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentVersion": "Versión actual: {version}",
+  "@currentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAvailableTitle": "Actualización disponible",
+  "updateAvailableMessage": "La versión {version} ya está disponible con mejoras. ¿Quieres actualizar ahora?",
+  "@updateAvailableMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNow": "Actualizar ahora",
+  "remindLater": "Más tarde",
+  "couldNotOpenStore": "No se pudo abrir la tienda"
 }

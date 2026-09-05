@@ -273,6 +273,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get placeOrder => 'Place Order';
 
   @override
+  String get devPaymentTitle => 'Development mode';
+
+  @override
+  String devPaymentMessage(Object amount) {
+    return 'You\'re in DEV: card payment will be skipped and the order will be completed directly for $amount.';
+  }
+
+  @override
+  String get devPaymentConfirm => 'Continue without paying';
+
+  @override
+  String get devPaymentCancel => 'Cancel';
+
+  @override
   String get orderPlaced => 'Order Placed!';
 
   @override
@@ -623,7 +637,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectSpecificTime => 'Select a specific time';
 
   @override
-  String get stripePayment => 'Stripe Payment';
+  String get stripePayment => 'Card';
 
   @override
   String get safeSecure => 'Safe & Secure';
@@ -640,4 +654,107 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get estimatedTime => 'Estimated time: ~30 mins';
+
+  @override
+  String get pleaseAcceptTerms => 'Please accept the Terms and Privacy Policy';
+
+  @override
+  String get recoveryCodeSent => 'Recovery code sent successfully';
+
+  @override
+  String get passwordResetSuccess =>
+      'Password reset successfully. Please log in.';
+
+  @override
+  String productAddedToCart(String product) {
+    return '$product added to cart!';
+  }
+
+  @override
+  String get enterValidEmail => 'Enter a valid email';
+
+  @override
+  String get enterPassword => 'Enter your password';
+
+  @override
+  String get enterFullName => 'Enter your full name';
+
+  @override
+  String get passwordMinLength => 'Password must be at least 6 characters';
+
+  @override
+  String get enter6DigitCode => 'Enter the 6-digit code';
+
+  @override
+  String get requiredField => 'Required field';
+
+  @override
+  String get min6Chars => 'Min 6 characters';
+
+  @override
+  String get minimum6Chars => 'Minimum 6 characters';
+
+  @override
+  String get repeatPassword => 'Repeat password';
+
+  @override
+  String get verificationCode => 'Verification code';
+
+  @override
+  String get enter6DigitCodeHint => 'Enter 6-digit code';
+
+  @override
+  String get recoverPassword => 'Recover password';
+
+  @override
+  String get recoverPasswordSubtitle =>
+      'Enter your email address to receive a 6-digit verification code to reset your password.';
+
+  @override
+  String resetPasswordSubtitle(String email) {
+    return 'Enter the 6-digit recovery code sent to $email and choose your new password.';
+  }
+
+  @override
+  String get sendCode => 'Send code';
+
+  @override
+  String get resetPassword => 'Reset password';
+
+  @override
+  String get agreeTermsPrivacy =>
+      'By signing in you agree to our Terms and Privacy Policy.';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get updateRequiredTitle => 'Update required';
+
+  @override
+  String updateRequiredMessage(String version) {
+    return 'This version is no longer supported. Update to version $version or later to continue.';
+  }
+
+  @override
+  String currentVersion(String version) {
+    return 'Current version: $version';
+  }
+
+  @override
+  String get updateAvailableTitle => 'Update available';
+
+  @override
+  String updateAvailableMessage(String version) {
+    return 'Version $version is available with improvements. Do you want to update now?';
+  }
+
+  @override
+  String get updateNow => 'Update now';
+
+  @override
+  String get remindLater => 'Later';
+
+  @override
+  String get couldNotOpenStore => 'Couldn\'t open the app store';
 }

@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:refer_app/features/search/ui/search_screen.dart';
 import '../features/splash/ui/splash_screen.dart';
 import '../features/splash/ui/maintenance_screen.dart';
+import '../features/splash/ui/update_required_screen.dart';
 import '../features/auth/ui/auth_screen.dart';
 import '../features/auth/ui/signup_screen.dart';
 import '../features/navigator/ui/main_navigator.dart';
@@ -32,6 +33,16 @@ final router = GoRouter(
     GoRoute(
       path: '/maintenance',
       builder: (context, state) => const MaintenanceScreen(),
+    ),
+    GoRoute(
+      path: '/update-required',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>? ?? {};
+        return UpdateRequiredScreen(
+          minVersion: extra['minVersion'] as String? ?? '',
+          installedVersion: extra['installedVersion'] as String? ?? '',
+        );
+      },
     ),
     GoRoute(path: '/auth', builder: (context, state) => const AuthScreen()),
     GoRoute(path: '/signup', builder: (context, state) => const SignupScreen()),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/network/server_health.dart';
 import '../../../core/theme.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -52,7 +53,12 @@ class MaintenanceScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-              FilledButton(onPressed: () => context.go('/'), style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 52), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), child: Text(l10n.tryAgain)),
+              FilledButton(onPressed: () {
+                // Reintentar: limpiar la bandera y pasar por splash,
+                // que vuelve a chequear el servidor.
+                ServerHealth.markRecovered();
+                context.go('/');
+              }, style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 52), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), child: Text(l10n.tryAgain)),
               const SizedBox(height: 24),
               Text(
                 l10n.estimatedTime,

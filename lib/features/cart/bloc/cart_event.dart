@@ -9,12 +9,27 @@ class CartAdded extends CartEvent {
   final List<String> enhancementIds;
   final int quantity;
 
+  /// Datos de display para la actualización optimista (el servidor confirma
+  /// después vía `cartUpdated` y reemplaza este estado provisional).
+  final String? productName;
+  final String? imageUrl;
+  final String? sizeLabel;
+  final String? typeLabel;
+  final List<String> enhancementNames;
+  final double? unitPrice;
+
   CartAdded({
     required this.productId,
     this.sizeId,
     this.typeId,
     required this.enhancementIds,
     this.quantity = 1,
+    this.productName,
+    this.imageUrl,
+    this.sizeLabel,
+    this.typeLabel,
+    this.enhancementNames = const [],
+    this.unitPrice,
   });
 }
 

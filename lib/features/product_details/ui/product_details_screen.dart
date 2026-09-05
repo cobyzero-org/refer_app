@@ -7,6 +7,7 @@ import 'package:refer_app/core/widgets/button_liquid_glass.dart';
 import 'package:refer_app/features/cart/bloc/cart_bloc.dart';
 import 'package:refer_app/features/cart/bloc/cart_event.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import 'package:refer_app/features/cart/bloc/cart_state.dart';
 import '../../../core/di.dart';
 import '../../../core/constants.dart';
@@ -32,10 +33,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String? _selectedSizeId;
   String? _selectedTypeId;
   final Set<String> _selectedEnhancementIds = {};
+  final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<double> _scrollOffset = ValueNotifier(0);
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(() {
+      _scrollOffset.value = _scrollController.offset;
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _scrollOffset.dispose();
+    super.dispose();
   }
 
   @override
@@ -80,15 +93,27 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               extendBody: true,
               body: Stack(
                 children: [
-                  CustomScrollView(
-                    paintOrder: SliverPaintOrder.lastIsTop,
-                    slivers: [
-                      _buildSliverAppBar(context, l10n, product),
-                      SliverToBoxAdapter(
-                        child: _buildProductContent(l10n, product),
-                      ),
-                      const SliverToBoxAdapter(child: SizedBox(height: 130)),
-                    ],
+                  // Foto fija detrás; el contenido hace scroll por encima.
+                  // Sin transforms: lo pintado coincide con el layout y
+                  // los taps (tallas, tipos, extras) siempre llegan.
+                  _buildImageHeader(product),
+                  SingleChildScrollView(
+                    controller: _scrollController,
+                    padding: EdgeInsets.only(
+                      top: _imageHeight(context) - _cardOverlap(context),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildProductContent(l10n, product),
+                        const SizedBox(height: 130),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    child: _buildOverlayBar(context, product),
                   ),
                   Positioned(
                     left: 0,
@@ -110,133 +135,180 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildSliverAppBar(
-    BuildContext context,
-    AppLocalizations l10n,
-    Product product,
-  ) {
-    final screenHeight = MediaQuery.of(context).size.height;
+  /// Alto de la foto del SliverAppBar (65% de la pantalla).
+  double _imageHeight(BuildContext context) =>
+      MediaQuery.of(context).size.height * 0.65;
 
-    return SliverAppBar(
-      expandedHeight: screenHeight * 0.65,
-      pinned: true,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_rounded, color: AppColors.text),
-        onPressed: () => context.pop(),
-        style: IconButton.styleFrom(minimumSize: const Size(44, 44)),
-      ),
-      title: Text(
-        product.name,
-        style: GoogleFonts.outfit(
-          color: AppColors.text,
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.1,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        BlocBuilder<CartBloc, CartState>(
-          builder: (context, state) {
-            int itemCount = 0;
-            if (state is CartLoaded) {
-              itemCount = state.items.length;
-            }
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.shopping_bag_outlined,
-                    color: AppColors.text,
-                  ),
-                  onPressed: () => context.push('/cart'),
-                  style: IconButton.styleFrom(minimumSize: const Size(44, 44)),
-                ),
-                if (itemCount > 0)
-                  Positioned(
-                    right: 6,
-                    top: 6,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 2,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 18,
-                        minHeight: 18,
-                      ),
-                      child: Text(
-                        itemCount > 9 ? '9+' : itemCount.toString(),
-                        style: GoogleFonts.outfit(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
-      ],
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          alignment: Alignment.topCenter,
-          fit: StackFit.expand,
-          children: [
-            Image.network(
-              product.imageUrl,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.coffee, size: 100, color: Colors.grey),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 400,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.0),
-                      Colors.white.withValues(alpha: 0.05),
-                      Colors.white.withValues(alpha: 0.2),
-                      Colors.white.withValues(alpha: 1),
-                      Colors.white.withValues(alpha: 1),
-                      Colors.white,
-                    ],
-                    stops: const [0.0, 0.3, 0.5, 0.7, 0.9, 1.0],
-                  ),
+  /// La tarjeta monta el 40% bajo de la foto (efecto flotante).
+  double _cardOverlap(BuildContext context) => _imageHeight(context) * 0.4;
+
+  /// Foto del producto, fija detrás del scroll.
+  Widget _buildImageHeader(Product product) {
+    return SizedBox(
+      height: _imageHeight(context),
+      width: double.infinity,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        fit: StackFit.expand,
+        children: [
+          Container(color: Colors.white),
+          Image.network(
+            product.imageUrl,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.coffee, size: 100, color: Colors.grey),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 400,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.0),
+                    Colors.white.withValues(alpha: 0.05),
+                    Colors.white.withValues(alpha: 0.2),
+                    Colors.white.withValues(alpha: 1),
+                    Colors.white.withValues(alpha: 1),
+                    Colors.white,
+                  ],
+                  stops: const [0.0, 0.3, 0.5, 0.7, 0.9, 1.0],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildProductContent(AppLocalizations l10n, Product product) {
+  /// Barra superior: transparente sobre la foto, fondo blanco + título
+  /// al hacer scroll (antes lo hacía el SliverAppBar pineado).
+  Widget _buildOverlayBar(BuildContext context, Product product) {
+    final fadeStart = _imageHeight(context) - _cardOverlap(context) - 160;
+    return AnimatedBuilder(
+      animation: _scrollOffset,
+      builder: (context, _) {
+        final t = (_scrollOffset.value / fadeStart.clamp(1.0, double.infinity))
+            .clamp(0.0, 1.0);
+        return Container(
+          color: Colors.white.withValues(alpha: t),
+          child: SafeArea(
+            bottom: false,
+            child: SizedBox(
+              height: kToolbarHeight,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded,
+                        color: AppColors.text),
+                    onPressed: () => context.pop(),
+                    style:
+                        IconButton.styleFrom(minimumSize: const Size(44, 44)),
+                  ),
+                  Expanded(
+                    child: Opacity(
+                      opacity: t,
+                      child: Text(
+                        product.name,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.outfit(
+                          color: AppColors.text,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  _buildCartButton(context),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCartButton(BuildContext context) {
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        int itemCount = 0;
+        if (state is CartLoaded) {
+          itemCount = state.items.length;
+        }
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.shopping_bag_outlined,
+                color: AppColors.text,
+              ),
+              onPressed: () => context.push('/cart'),
+              style: IconButton.styleFrom(minimumSize: const Size(44, 44)),
+            ),
+            if (itemCount > 0)
+              Positioned(
+                right: 6,
+                top: 6,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 2,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 18,
+                    minHeight: 18,
+                  ),
+                  child: Text(
+                    itemCount > 9 ? '9+' : itemCount.toString(),
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildProductContent(
+    AppLocalizations l10n,
+    Product product,
+  ) {
+    final hasSizes = product.availableSizes.isNotEmpty;
+    final hasTypes = product.types.isNotEmpty;
+    final hasEnhancements = product.enhancements.isNotEmpty;
+    final hasDescription = product.description.trim().isNotEmpty;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.separator),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
       ),
-      transform: Matrix4.translationValues(0, -32, 0),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,57 +345,66 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            product.description,
-            style: GoogleFonts.outfit(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-              height: 1.5,
+          if (hasDescription) ...[
+            const SizedBox(height: 12),
+            Text(
+              product.description,
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+                height: 1.5,
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
-          _buildHeading(l10n.selectSize),
-          const SizedBox(height: 16),
-          SizeSelector(
-            sizes: product.availableSizes,
-            selectedSizeId: _selectedSizeId ?? '',
-            onSizeSelected: (size) => setState(() => _selectedSizeId = size.id),
-          ),
-          const SizedBox(height: 24),
-          _buildHeading(l10n.milkChoice),
-          const SizedBox(height: 12),
-          ChoiceSelector(
-            choices: product.types,
-            selectedChoiceId: _selectedTypeId ?? '',
-            onChoiceSelected: (type) =>
-                setState(() => _selectedTypeId = type.id),
-          ),
-          const SizedBox(height: 24),
-          _buildHeading(l10n.enhancements),
-          const SizedBox(height: 12),
-          Column(
-            children: product.enhancements.map((enhancement) {
-              return EnhancementToggle(
-                icon: _getEnhancementIcon(enhancement.name),
-                label: enhancement.name,
-                price: enhancement.price > 0
-                    ? Money.formatPlus(enhancement.price)
-                    : null,
-                value: _selectedEnhancementIds.contains(enhancement.id),
-                onChanged: (v) {
-                  setState(() {
-                    if (v) {
-                      _selectedEnhancementIds.add(enhancement.id);
-                    } else {
-                      _selectedEnhancementIds.remove(enhancement.id);
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 24),
+          ],
+          if (hasSizes) ...[
+            const SizedBox(height: 24),
+            _buildHeading(l10n.selectSize),
+            const SizedBox(height: 16),
+            SizeSelector(
+              sizes: product.availableSizes,
+              selectedSizeId: _selectedSizeId ?? '',
+              onSizeSelected: (size) => setState(() => _selectedSizeId = size.id),
+            ),
+          ],
+          if (hasTypes) ...[
+            const SizedBox(height: 24),
+            _buildHeading(l10n.milkChoice),
+            const SizedBox(height: 12),
+            ChoiceSelector(
+              choices: product.types,
+              selectedChoiceId: _selectedTypeId ?? '',
+              onChoiceSelected: (type) =>
+                  setState(() => _selectedTypeId = type.id),
+            ),
+          ],
+          if (hasEnhancements) ...[
+            const SizedBox(height: 24),
+            _buildHeading(l10n.enhancements),
+            const SizedBox(height: 12),
+            Column(
+              children: product.enhancements.map((enhancement) {
+                return EnhancementToggle(
+                  icon: _getEnhancementIcon(enhancement.name),
+                  label: enhancement.name,
+                  price: enhancement.price > 0
+                      ? Money.formatPlus(enhancement.price)
+                      : null,
+                  value: _selectedEnhancementIds.contains(enhancement.id),
+                  onChanged: (v) {
+                    setState(() {
+                      if (v) {
+                        _selectedEnhancementIds.add(enhancement.id);
+                      } else {
+                        _selectedEnhancementIds.remove(enhancement.id);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+          ],
+          if (hasSizes || hasTypes || hasEnhancements)
+            const SizedBox(height: 24),
         ],
       ),
     );
@@ -333,7 +414,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     double price = product.price;
 
     // Add size price
-    if (_selectedSizeId != null) {
+    if (_selectedSizeId != null && product.availableSizes.isNotEmpty) {
       final selectedSize = product.availableSizes.firstWhere(
         (s) => s.id == _selectedSizeId,
         orElse: () => product.availableSizes.first,
@@ -342,7 +423,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     }
 
     // Add type price
-    if (_selectedTypeId != null) {
+    if (_selectedTypeId != null && product.types.isNotEmpty) {
       final selectedType = product.types.firstWhere(
         (t) => t.id == _selectedTypeId,
         orElse: () => product.types.first,
@@ -387,6 +468,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: ButtonLiquidGlass(
           onTap: () {
+            final selectedSize = _selectedSizeId == null
+                ? null
+                : product.availableSizes
+                    .where((s) => s.id == _selectedSizeId)
+                    .firstOrNull;
+            final selectedType = _selectedTypeId == null
+                ? null
+                : product.types
+                    .where((t) => t.id == _selectedTypeId)
+                    .firstOrNull;
+            final selectedEnhancements = product.enhancements
+                .where((e) => _selectedEnhancementIds.contains(e.id))
+                .toList();
             sl<CartBloc>().add(
               CartAdded(
                 productId: product.id,
@@ -394,20 +488,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 typeId: _selectedTypeId,
                 enhancementIds: _selectedEnhancementIds.toList(),
                 quantity: 1,
+                productName: product.name,
+                imageUrl: product.imageUrl,
+                sizeLabel: selectedSize?.name,
+                typeLabel: selectedType?.name,
+                enhancementNames:
+                    selectedEnhancements.map((e) => e.name).toList(),
+                unitPrice: _calculateCurrentPrice(product),
               ),
             );
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('${product.name} added to cart!'),
-                backgroundColor: AppColors.text,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                margin: const EdgeInsets.all(16),
-                duration: const Duration(seconds: 2),
-              ),
+            AppSnackBar.success(
+              context,
+              l10n.productAddedToCart(product.name),
             );
           },
           title: l10n.addToOrder,

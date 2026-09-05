@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refer_app/l10n/app_localizations.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 import '../../../core/di.dart';
 import '../../../core/theme.dart';
 import '../bloc/auth_bloc.dart';
@@ -31,9 +32,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void _submit(BuildContext blocContext) {
+    final l10n = AppLocalizations.of(context)!;
     final email = _email.text.trim();
     setState(() {
-      _emailError = email.isEmpty || !email.contains('@') ? 'Enter a valid email' : null;
+      _emailError = email.isEmpty || !email.contains('@') ? l10n.enterValidEmail : null;
     });
     if (_emailError != null) {
       HapticFeedback.selectionClick();
@@ -65,7 +67,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded, color: AppColors.text),
             onPressed: () => context.pop(),
-            tooltip: 'Back',
+            tooltip: l10n.back,
             style: IconButton.styleFrom(minimumSize: const Size(44, 44)),
           ),
         ),
@@ -81,41 +83,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state is ForgotPasswordSuccess) {
-                        HapticFeedback.lightImpact();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Row(
-                              children: [
-                                Icon(Icons.check_circle_outline_rounded, color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Expanded(child: Text('Recovery code sent successfully')),
-                              ],
-                            ),
-                            backgroundColor: AppColors.text,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.all(16),
-                          ),
-                        );
+                        AppSnackBar.success(context, l10n.recoveryCodeSent);
                         context.push('/reset-password?email=${Uri.encodeComponent(_email.text)}');
                       }
                       if (state is AuthError) {
-                        HapticFeedback.heavyImpact();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Row(
-                              children: [
-                                const Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
-                                const SizedBox(width: 10),
-                                Expanded(child: Text(state.message)),
-                              ],
-                            ),
-                            backgroundColor: AppColors.text,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.all(16),
-                          ),
-                        );
+                        AppSnackBar.error(context, state.message);
                       }
                     },
                     builder: (context, state) {
@@ -124,10 +96,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const AuthHeader(title: 'Recover password'),
+                            AuthHeader(title: l10n.recoverPassword),
                             const SizedBox(height: 16),
                             Text(
-                              'Enter your email address to receive a 6-digit verification code to reset your password.',
+                              l10n.recoverPasswordSubtitle,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: AppColors.textSecondary,
@@ -151,7 +123,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             Semantics(
                               button: true,
                               enabled: !isLoading,
-                              label: 'Send code',
+                              label: l10n.sendCode,
                               child: FilledButton(
                                 onPressed: isLoading ? null : () => _submit(context),
                                 style: FilledButton.styleFrom(
@@ -167,12 +139,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                         width: 20,
                                         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.2),
                                       )
-                                    : const Row(
+                                    : Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text('Send code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                          SizedBox(width: 8),
-                                          Icon(Icons.send_rounded, size: 18),
+                                          Text(l10n.sendCode, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                          const SizedBox(width: 8),
+                                          const Icon(Icons.send_rounded, size: 18),
                                         ],
                                       ),
                               ),

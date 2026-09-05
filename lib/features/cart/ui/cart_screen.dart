@@ -53,12 +53,14 @@ class CartScreen extends StatelessWidget {
                           decoration: BoxDecoration(color: AppColors.neutralGrouped, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.separator)),
                           child: Column(children: [
                             _buildSummaryRow(l10n.subtotal, Money.format(total)),
-                            const SizedBox(height: 8),
-                            _buildSummaryRow(l10n.estimatedTax, Money.format(total * 0.08)),
+                            if (TaxConfig.enabled) ...[
+                              const SizedBox(height: 8),
+                              _buildSummaryRow('${l10n.estimatedTax} (${TaxConfig.percentLabel})', Money.format(total * TaxConfig.effectiveRate)),
+                            ],
                             const Divider(height: 24, color: AppColors.separator),
                             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                               Text(l10n.total, style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.text)),
-                              Text(Money.format(total * 1.08), style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.primary)),
+                              Text(Money.format(TaxConfig.applyTo(total)), style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.primary)),
                             ]),
                           ]),
                         ),
@@ -84,7 +86,7 @@ class CartScreen extends StatelessWidget {
                       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                         Text(l10n.go_to_checkout, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
                         const SizedBox(width: 8),
-                        Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(8)), child: Text(Money.format(total * 1.08), style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white))),
+                        Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(8)), child: Text(Money.format(TaxConfig.applyTo(total)), style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white))),
                       ]),
                     ))),
                   ),

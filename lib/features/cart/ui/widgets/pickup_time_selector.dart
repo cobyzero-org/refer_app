@@ -4,6 +4,7 @@ import '../../bloc/pickup_time_bloc.dart';
 import '../../bloc/pickup_time_event.dart';
 import '../../bloc/pickup_time_state.dart';
 import '../../../../l10n/app_localizations.dart';
+import 'package:refer_app/core/widgets/app_snackbar.dart';
 
 class PickupTimeSelector extends StatelessWidget {
   const PickupTimeSelector({super.key});
@@ -127,16 +128,10 @@ class PickupTimeSelector extends StatelessWidget {
 
       if (scheduled.isBefore(now)) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.selectFutureTime),
-              backgroundColor: Colors.red.shade800,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          );
+            AppSnackBar.error(
+              context,
+              AppLocalizations.of(context)!.selectFutureTime,
+            );
         }
         return;
       }

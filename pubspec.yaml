@@ -60,6 +60,8 @@ dependencies:
   liquid_glass_widgets: ^0.21.1
   cached_network_image: ^3.4.1
   flutter_dotenv: ^6.0.1
+  package_info_plus: ^9.0.1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
